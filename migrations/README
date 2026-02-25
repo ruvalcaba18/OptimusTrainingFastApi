@@ -1,1 +1,87 @@
-Generic single-database configuration.
+# Migrations — Optimus Training API
+
+Este directorio contiene el sistema de migraciones de base de datos gestionado
+con **Alembic**, el estándar de migraciones para proyectos Python + SQLAlchemy.
+
+---
+
+## ¿Qué es una migración?
+
+Una migración es un archivo `.py` versionado que describe un cambio en la
+estructura de la base de datos (crear tabla, agregar columna, cambiar tipo, etc.).
+Funcionan como un historial de git pero para tu DB — puedes avanzar y retroceder.
+
+---
+
+## Estructura
+
+```
+migrations/
+├── env.py              → Configuración de Alembic (lee .env, importa modelos)
+├── script.py.mako      → Plantilla para generar nuevos archivos de migración
+├── README              → Este archivo
+└── versions/           → Historial de migraciones (se sube a git)
+    └── YYYYMMDD_HHmm-<rev>_<descripcion>.py
+```
+
+---
+
+## Flujo de trabajo
+
+### 1. Crear una migración (tras modificar un modelo)
+
+```bash
+alembic revision --autogenerate -m "descripcion_del_cambio"
+```
+
+> Siempre **revisa** el archivo generado en `versions/` antes de aplicarlo.
+> Alembic es inteligente pero no perfecto.
+
+### 2. Aplicar migraciones a la base de datos
+
+```bash
+alembic upgrade head
+```
+
+### 3. Ver el estado actual
+
+```bash
+alembic current
+alembic history --verbose
+```
+
+### 4. Revertir una migración (rollback)
+
+```bash
+alembic downgrade -1          # Retrocede una migración
+alembic downgrade <rev_id>    # Retrocede a una revisión específica
+alembic downgrade base        # Limpia todo — ¡cuidado en producción!
+```
+
+---
+
+## Agregar un nuevo modelo a las migraciones
+
+Cuando crees un modelo nuevo en `app/models/`, regístralo en `env.py`:
+
+```python
+# migrations/env.py — sección de imports
+from app.models import User          # ya registrado
+from app.models.sport import Sport   # ← agrega aquí el nuevo modelo
+```
+
+Luego genera y aplica:
+
+```bash
+alembic revision --autogenerate -m "add_sport_table"
+alembic upgrade head
+```
+
+---
+
+## Reglas del equipo
+
+- ✅ Los archivos en `versions/` **siempre se suben a git** junto al código que los generó
+- ✅ El mensaje de migración debe ser descriptivo: `add_profile_picture_to_users`, no `update`
+- ❌ Nunca edites a mano una migración ya aplicada en producción
+- ❌ La URL de la base de datos **nunca** va en `alembic.ini` — se lee del `.env`
