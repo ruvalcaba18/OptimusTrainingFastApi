@@ -1,10 +1,29 @@
+# ─── Web framework ───────────────────────────────────────────────────────────
 fastapi
 uvicorn[standard]
+
+# ─── Pydantic / validation ───────────────────────────────────────────────────
 pydantic[email]
+pydantic-settings
+
+# ─── Auth / security ──────────────────────────────────────────────────────────
 python-jose[cryptography]
 passlib[bcrypt]
+bcrypt==4.0.1
+
+# ─── File uploads ─────────────────────────────────────────────────────────────
 python-multipart
+aiofiles
+
+# ─── Config ───────────────────────────────────────────────────────────────────
 python-dotenv
-pydantic-settings
+
+# ─── Database ─────────────────────────────────────────────────────────────────
 sqlalchemy
 psycopg2-binary
+alembic
+
+# ─── Testing ──────────────────────────────────────────────────────────────────
+pytest
+pytest-asyncio
+httpx
