@@ -57,7 +57,8 @@ OptimusTrainingFastApi/
 │   │
 │   ├── services/                         # ← CAPA 3: lógica de negocio pura
 │   │   ├── user_service.py
-│   │   └── upload_service.py             # Validación y guardado de fotos
+│   │   ├── upload_service.py             # Validación y guardado de fotos
+│   │   └── email_service.py              # Envío de correos (MOCK)
 │   │
 │   ├── database/                         # ← CAPA 4: configuración de DB
 │   │   ├── __init__.py                   # re-exporta Base, get_db, engine
@@ -75,7 +76,8 @@ OptimusTrainingFastApi/
 │   │   │   ├── user_response.py          # + profile_picture_url, created_at
 │   │   │   ├── user_login.py
 │   │   │   ├── token.py
-│   │   │   └── training_type.py          # Enum: casa | afuera | gimnasio | mixto
+│   │   │   ├── training_type.py          # Enum: casa | afuera | gimnasio | mixto
+│   │   │   └── password_reset.py         # Schemas para recuperación
 │   │   ├── sports/                       # Schemas del dominio deportes (listo para crecer)
 │   │   └── common/                       # Schemas reutilizables entre dominios
 │   │       ├── pagination.py             # PaginatedResponse[T] genérico
@@ -178,8 +180,12 @@ Toda la API vive bajo el prefijo `/api/v1`.
 | Método | Ruta | Descripción | Auth |
 |--------|------|-------------|------|
 | `POST` | `/api/v1/auth/login` | Login con email + password → JWT | ❌ |
+| `POST` | `/api/v1/auth/login/access-token` | Login compatible con Swagger | ❌ |
+| `POST` | `/api/v1/auth/refresh-token` | Refrescar access token | ❌ |
+| `POST` | `/api/v1/auth/password-recovery/{email}` | Iniciar recuperación de contraseña | ❌ |
+| `POST` | `/api/v1/auth/reset-password` | Restablecer contraseña con token | ❌ |
 
-**Body:**
+**Body (Login):**
 ```json
 {
   "email": "usuario@email.com",
@@ -187,10 +193,11 @@ Toda la API vive bajo el prefijo `/api/v1`.
 }
 ```
 
-**Response:**
+**Response (Login/Refresh):**
 ```json
 {
   "access_token": "eyJ...",
+  "refresh_token": "eyJ...",
   "token_type": "bearer"
 }
 ```

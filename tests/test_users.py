@@ -23,9 +23,11 @@ class TestCreateUser:
         resp = client.post("/api/v1/users/", json=self.PAYLOAD)
         assert resp.status_code == status.HTTP_201_CREATED
         data = resp.json()
-        assert data["email"] == self.PAYLOAD["email"]
-        assert "hashed_password" not in data
-        assert data["is_active"] is True
+        assert data["user"]["email"] == self.PAYLOAD["email"]
+        assert "hashed_password" not in data["user"]
+        assert data["user"]["is_active"] is True
+        assert "token" in data
+        assert "access_token" in data["token"]
 
     def test_create_user_duplicate_email(self, client):
         client.post("/api/v1/users/", json=self.PAYLOAD)

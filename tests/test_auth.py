@@ -15,6 +15,16 @@ class TestLogin:
         assert "access_token" in data
         assert data["token_type"] == "bearer"
 
+    def test_login_access_token_success(self, client, test_user):
+        resp = client.post(
+            "/api/v1/auth/login/access-token",
+            data={"username": "testuser@optimus.com", "password": "Passw0rd!"},
+        )
+        assert resp.status_code == status.HTTP_200_OK
+        data = resp.json()
+        assert "access_token" in data
+        assert data["token_type"] == "bearer"
+
     def test_login_wrong_password(self, client, test_user):
         resp = client.post(
             "/api/v1/auth/login",

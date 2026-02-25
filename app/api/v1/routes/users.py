@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.controllers.users.user_controller import user_controller
-from app.schemas.users import UserCreate, UserResponse, UserUpdate
+from app.schemas.users import UserCreate, UserResponse, UserUpdate, UserRegistrationResponse
 from app.api.deps import get_current_user
 from app.models.user import User
 
@@ -26,12 +26,12 @@ def read_users(
     return user_controller.list_users(db, skip=skip, limit=limit)
 
 
-@router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED, summary="Crear usuario")
+@router.post("/", response_model=UserRegistrationResponse, status_code=status.HTTP_201_CREATED, summary="Crear usuario")
 def create_user(
     user_in: UserCreate,
     db: Session = Depends(get_db),
 ) -> Any:
-    """Registra un nuevo usuario deportivo."""
+    """Registra un nuevo usuario deportivo y devuelve un token de acceso."""
     return user_controller.create_user(db, user_in=user_in)
 
 

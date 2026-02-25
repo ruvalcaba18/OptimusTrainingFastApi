@@ -2,13 +2,22 @@
 User controller — handles HTTP-level logic and calls services.
 No direct database queries here; that's the service's job.
 """
+from datetime import timedelta
 from fastapi import HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
 from app.models.user import User
-from app.schemas.users import UserCreate, UserUpdate, UserResponse
+from app.schemas.users import (
+    UserCreate, 
+    UserUpdate, 
+    UserResponse, 
+    UserRegistrationResponse, 
+    Token
+)
 from app.services.user_service import user_service
 from app.services.upload_service import save_profile_picture, delete_profile_picture
+from app.core import security
+from app.core.config import settings
 
 
 class UserController:
@@ -28,14 +37,27 @@ class UserController:
 
     # ─── Create ───────────────────────────────────────────────────────────
     @staticmethod
-    def create_user(db: Session, user_in: UserCreate) -> UserResponse:
+    def create_user(db: Session, user_in: UserCreate) -> UserRegistrationResponse:
         existing = user_service.get_by_email(db, email=user_in.email)
         if existing:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Ya existe un usuario con este correo.",
             )
-        return user_service.create(db, user_in=user_in)
+        
+        user = user_service.create(db, user_in=user_in)
+        
+        # Generar token automáticamente al registrarse
+        access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        token = Token(
+            access_token=security.create_access_token(
+                user.email, expires_delta=access_token_expires
+            ),
+            refresh_token=security.create_refresh_token(user.email),
+            token_type="bearer",
+        )
+        
+        return UserRegistrationResponse(user=UserResponse.model_validate(user), token=token)
 
     # ─── Update ───────────────────────────────────────────────────────────
     @staticmethod

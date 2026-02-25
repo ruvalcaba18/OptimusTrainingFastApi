@@ -14,7 +14,17 @@ class Settings(BaseSettings):
     # ─── Security ─────────────────────────────────────────────────────────
     SECRET_KEY: str = "change-me-in-production-use-a-256-bit-random-secret"
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24       # 24 hours
+    REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
+    PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int = 60    # 1 hour
+
+    # ─── Email (Mocked for now) ───────────────────────────────────────────
+    EMAILS_FROM_NAME: str = "Optimus Training"
+    EMAILS_FROM_EMAIL: str = "info@optimus.com"
+    SMTP_HOST: str = "smtp.gmail.com"
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
 
     # ─── Database ─────────────────────────────────────────────────────────
     SQLALCHEMY_DATABASE_URI: str = "postgresql://postgres:password@localhost/optimus_db"
