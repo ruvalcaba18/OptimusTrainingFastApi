@@ -1,10 +1,15 @@
+
 from typing import List, Optional
 from sqlalchemy.orm import Session
+
 from app.models.user import User
 from app.schemas.users import UserCreate, UserUpdate
 from app.core.security import get_password_hash
 
+
 class UserService:
+    # ─── Read ────────────────────────────────────────────────────────────────
+
     @staticmethod
     def get_by_email(db: Session, email: str) -> Optional[User]:
         return db.query(User).filter(User.email == email).first()
@@ -16,6 +21,8 @@ class UserService:
     @staticmethod
     def get_multi(db: Session, skip: int = 0, limit: int = 100) -> List[User]:
         return db.query(User).offset(skip).limit(limit).all()
+
+    # ─── Write ───────────────────────────────────────────────────────────────
 
     @staticmethod
     def create(db: Session, user_in: UserCreate) -> User:
@@ -29,7 +36,8 @@ class UserService:
             weight=user_in.weight,
             height=user_in.height,
             exercise_frequency=user_in.exercise_frequency,
-            training_type=user_in.training_type.value
+            training_type=user_in.training_type.value,
+            is_active=True,
         )
         db.add(db_user)
         db.commit()
@@ -39,15 +47,25 @@ class UserService:
     @staticmethod
     def update(db: Session, db_obj: User, user_in: UserUpdate) -> User:
         update_data = user_in.model_dump(exclude_unset=True)
+
         if "password" in update_data:
-            hashed_password = get_password_hash(update_data["password"])
-            db_obj.hashed_password = hashed_password
-            del update_data["password"]
-        
+            update_data["hashed_password"] = get_password_hash(update_data.pop("password"))
+
+        if "training_type" in update_data and update_data["training_type"] is not None:
+            update_data["training_type"] = update_data["training_type"].value
+
         for field, value in update_data.items():
             if hasattr(db_obj, field):
                 setattr(db_obj, field, value)
-        
+
+        db.add(db_obj)
+        db.commit()
+        db.refresh(db_obj)
+        return db_obj
+
+    @staticmethod
+    def update_profile_picture(db: Session, db_obj: User, url: str) -> User:
+        db_obj.profile_picture_url = url
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)
@@ -60,5 +78,6 @@ class UserService:
             db.delete(db_user)
             db.commit()
         return db_user
+
 
 user_service = UserService()

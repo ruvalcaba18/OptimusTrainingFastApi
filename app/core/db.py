@@ -1,16 +1,6 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from app.core.config import settings
-
-engine = create_engine(settings.SQLALCHEMY_DATABASE_URI)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-Base = declarative_base()
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+"""
+Backward compatibility shim.
+The canonical DB session is now in app/database/session.py.
+This file re-exports it so any code that still imports from app.core.db continues to work.
+"""
+from app.database import Base, engine, SessionLocal, get_db  # noqa: F401

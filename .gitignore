@@ -1,19 +1,25 @@
-# Entornos virtuales
+# ─────────────────────────────────────────────────────────────────────────────
+# Optimus Training API — .gitignore
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ─── Entornos virtuales ───────────────────────────────────────────────────────
+.venv/
 venv/
 env/
 ENV/
-.venv/
 virtualenv/
 
-# Python
+# ─── Python bytecode ─────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+
+# ─── Distribución / packaging ────────────────────────────────────────────────
 build/
-develop-eggs/
 dist/
+develop-eggs/
 downloads/
 eggs/
 .eggs/
@@ -28,16 +34,60 @@ wheels/
 *.egg
 MANIFEST
 
-# Testing
+# ─── Variables de entorno (nunca subir credenciales) ─────────────────────────
+.env
+.env.local
+.env.*.local
+.env.dev
+.env.staging
+.env.prod
+# .env.example sí se sube — es la plantilla pública
+
+# ─── Base de datos locales ────────────────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+test.db
+
+# ─── Testing ──────────────────────────────────────────────────────────────────
 .pytest_cache/
 .coverage
+.coverage.*
 htmlcov/
 .tox/
 .hypothesis/
 nosetests.xml
 coverage.xml
+*.cover
+junit*.xml
 
-# IDE y editores
+# ─── Uploads de usuarios (fotos reales no van al repo) ───────────────────────
+app/uploads/profile_pictures/*
+!app/uploads/profile_pictures/.gitkeep
+# Si tienes otras carpetas de uploads en el futuro, agrégalas aquí:
+# app/uploads/documents/*
+# !app/uploads/documents/.gitkeep
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+*.log
+logs/
+*.out
+
+# ─── Cache ────────────────────────────────────────────────────────────────────
+.cache/
+*.cache
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+
+# ─── Archivos temporales ─────────────────────────────────────────────────────
+*.tmp
+*.temp
+.tmp/
+temp/
+
+# ─── IDEs y editores ─────────────────────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
@@ -45,49 +95,25 @@ coverage.xml
 *~
 .sublime-project
 .sublime-workspace
-*.sublime-project
-*.sublime-workspace
 
-# OS
+# ─── Sistema operativo ───────────────────────────────────────────────────────
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
 Thumbs.db
-.env.local
-.env.*.local
+ehthumbs.db
+Desktop.ini
 
-# Configuración sensible
-.env
-.env.local
-.env.*.local
-.env.dev
-.env.prod
-config/local*.py
+# ─── Herramientas de profiling / debug ───────────────────────────────────────
+*.prof
+*.lprof
+profile_output/
 
-# Base de datos
-*.db
-*.sqlite
-*.sqlite3
-db.sqlite3
+# ─── Alembic ──────────────────────────────────────────────────────────────────
+# Los archivos .py de versiones SÍ se suben (son el historial de migraciones)
+# Solo ignoramos el bytecode compilado dentro de migrations/
+migrations/__pycache__/
+migrations/versions/__pycache__/
 
-# Logs
-*.log
-logs/
-
-# Archivos temporales
-*.tmp
-*.temp
-.tmp/
-temp/
-
-# Cache
-.cache/
-*.cache
-
-# Otros
-dist/
-*.egg-info/
-.pytest_cache/
-.coverage
-htmlcov/
-.mypy_cache/
-.dmypy.json
-dmypy.json
