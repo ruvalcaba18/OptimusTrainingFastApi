@@ -62,13 +62,16 @@ class AuthController:
             )
             
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-        return Token(
+        token = Token(
             access_token=security.create_access_token(
                 user.email, expires_delta=access_token_expires
             ),
             refresh_token=refresh_token, # Reuse refresh token or rotate it? reusing for now.
             token_type="bearer",
         )
+        # Transactional commit just in case refresh logic ever modifies DB (e.g. rotating tokens)
+        db.commit()
+        return token
 
     @staticmethod
     def recover_password(db: Session, email: str) -> dict:
@@ -104,8 +107,13 @@ class AuthController:
         if not user:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
         
-        user_service.update(db, db_obj=user, user_in=UserUpdate(password=new_password))
-        return {"message": "Contraseña actualizada correctamente."}
+        try:
+            user_service.update(db, db_obj=user, user_in=UserUpdate(password=new_password))
+            db.commit()
+            return {"message": "Contraseña actualizada correctamente."}
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 auth_controller = AuthController()

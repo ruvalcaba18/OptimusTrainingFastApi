@@ -40,7 +40,7 @@ class UserService:
             is_active=True,
         )
         db.add(db_user)
-        db.commit()
+        db.flush()  # Ensures session has the user but waits for commit in controller
         db.refresh(db_user)
         return db_user
 
@@ -59,7 +59,7 @@ class UserService:
                 setattr(db_obj, field, value)
 
         db.add(db_obj)
-        db.commit()
+        db.flush()
         db.refresh(db_obj)
         return db_obj
 
@@ -67,7 +67,7 @@ class UserService:
     def update_profile_picture(db: Session, db_obj: User, url: str) -> User:
         db_obj.profile_picture_url = url
         db.add(db_obj)
-        db.commit()
+        db.flush()
         db.refresh(db_obj)
         return db_obj
 
@@ -76,7 +76,7 @@ class UserService:
         db_user = db.query(User).filter(User.id == user_id).first()
         if db_user:
             db.delete(db_user)
-            db.commit()
+            db.flush()
         return db_user
 
 

@@ -19,6 +19,17 @@ API de deportes y entrenamiento construida con **FastAPI**, diseñada para escal
 
 ---
 
+## 🔒 Integridad de Datos (Principios ACID)
+
+La API garantiza la integridad de los datos siguiendo los principios ACID mediante:
+
+- **Atomicidad**: Implementación del patrón *Unit of Work* en los Controllers. Las transacciones se confirman (`commit`) solo si todos los pasos internos (DB, servicios, lógica) tienen éxito. Si ocurre un error, se realiza un `rollback` automático.
+- **Consistencia**: Validaciones estrictas con **Pydantic v2** antes de la persistencia y restricciones de integridad (`unique`, `nullable`) a nivel de base de datos.
+- **Aislamiento**: Uso de PostgreSQL con niveles de aislamiento robustos y sesiones aisladas por cada solicitud HTTP mediante el pool de conexiones.
+- **Durabilidad**: Persistencia garantizada por el motor de PostgreSQL una vez confirmada la transacción.
+
+---
+
 ## 🛠️ Stack tecnológico
 
 | Librería | Uso |

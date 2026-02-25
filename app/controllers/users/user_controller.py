@@ -45,19 +45,26 @@ class UserController:
                 detail="Ya existe un usuario con este correo.",
             )
         
-        user = user_service.create(db, user_in=user_in)
-        
-        # Generar token automáticamente al registrarse
-        access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-        token = Token(
-            access_token=security.create_access_token(
-                user.email, expires_delta=access_token_expires
-            ),
-            refresh_token=security.create_refresh_token(user.email),
-            token_type="bearer",
-        )
-        
-        return UserRegistrationResponse(user=UserResponse.model_validate(user), token=token)
+        try:
+            user = user_service.create(db, user_in=user_in)
+            
+            # Generar token automáticamente al registrarse
+            access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+            token = Token(
+                access_token=security.create_access_token(
+                    user.email, expires_delta=access_token_expires
+                ),
+                refresh_token=security.create_refresh_token(user.email),
+                token_type="bearer",
+            )
+            db.commit()
+            return UserRegistrationResponse(user=UserResponse.model_validate(user), token=token)
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Error al crear usuario: {str(e)}"
+            )
 
     # ─── Update ───────────────────────────────────────────────────────────
     @staticmethod
@@ -68,7 +75,14 @@ class UserController:
         # Only the owner can update their own profile
         if user.id != current_user.id:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No autorizado")
-        return user_service.update(db, db_obj=user, user_in=user_in)
+        
+        try:
+            updated_user = user_service.update(db, db_obj=user, user_in=user_in)
+            db.commit()
+            return updated_user
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
     # ─── Upload profile picture ────────────────────────────────────────────
     @staticmethod
@@ -81,8 +95,14 @@ class UserController:
         if user.id != current_user.id:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No autorizado")
 
-        url = await save_profile_picture(user_id=user_id, file=file)
-        return user_service.update_profile_picture(db, db_obj=user, url=url)
+        try:
+            url = await save_profile_picture(user_id=user_id, file=file)
+            updated_user = user_service.update_profile_picture(db, db_obj=user, url=url)
+            db.commit()
+            return updated_user
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
     # ─── Delete ───────────────────────────────────────────────────────────
     @staticmethod
@@ -92,8 +112,15 @@ class UserController:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
         if user.id != current_user.id:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No autorizado")
-        delete_profile_picture(user_id=user_id)
-        return user_service.delete(db, user_id=user_id)
+        
+        try:
+            delete_profile_picture(user_id=user_id)
+            deleted_user = user_service.delete(db, user_id=user_id)
+            db.commit()
+            return deleted_user
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 user_controller = UserController()

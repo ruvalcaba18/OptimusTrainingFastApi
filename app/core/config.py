@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     # ─── Security ─────────────────────────────────────────────────────────
     SECRET_KEY: str = "change-me-in-production-use-a-256-bit-random-secret"
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24       # 24 hours
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 120           # 2 hours
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
     PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int = 60    # 1 hour
 
