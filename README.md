@@ -8,25 +8,34 @@ API de deportes y entrenamiento construida con **FastAPI**, diseñada para escal
 
 - **Arquitectura de capas** — Routes, Controllers, Services, Database, Models con separación total de responsabilidades.
 - **Versionado de API** — Toda la API vive bajo `/api/v1/`. Agregar `v2` no rompe nada.
+- **3 módulos de negocio** — Enterprise (pausas activas), Coach (geolocalización + booking), Social (eventos + competencias).
 - **Foto de perfil** — Endpoint dedicado para subir imagen JPG/PNG/WEBP (máx 5 MB) por usuario.
 - **Archivos estáticos** — Las fotos se sirven en `/uploads/profile_pictures/` vía HTTP.
 - **Pool de conexiones** — Configurado para alta concurrencia (`pool_size=10`, `max_overflow=20`).
 - **Autenticación JWT** — Tokens Bearer con expiración configurable.
 - **Validación estricta** — Pydantic v2 (email, teléfono regex, enum de tipo de entrenamiento).
 - **Schemas comunes reutilizables** — `PaginatedResponse[T]` genérico y `MessageResponse`.
-- **Tests con SQLite en memoria** — 15 tests, sin necesitar PostgreSQL en CI.
 - **Documentación automática** — Swagger UI y ReDoc integrados.
 
 ---
 
-## 🔒 Integridad de Datos (Principios ACID)
+## 🔒 Integridad de Datos — Principios ACID
 
-La API garantiza la integridad de los datos siguiendo los principios ACID mediante:
+Todos los módulos garantizan integridad ACID en operaciones críticas:
 
-- **Atomicidad**: Implementación del patrón *Unit of Work* en los Controllers. Las transacciones se confirman (`commit`) solo si todos los pasos internos (DB, servicios, lógica) tienen éxito. Si ocurre un error, se realiza un `rollback` automático.
-- **Consistencia**: Validaciones estrictas con **Pydantic v2** antes de la persistencia y restricciones de integridad (`unique`, `nullable`) a nivel de base de datos.
-- **Aislamiento**: Uso de PostgreSQL con niveles de aislamiento robustos y sesiones aisladas por cada solicitud HTTP mediante el pool de conexiones.
-- **Durabilidad**: Persistencia garantizada por el motor de PostgreSQL una vez confirmada la transacción.
+| Principio | Implementación |
+|-----------|---------------|
+| **Atomicity** | Patrón *Unit of Work* en controllers: `flush()` en el service, `commit()` único en el controller, `rollback()` en todo `except`. |
+| **Consistency** | `UniqueConstraint` a nivel DB (ej. `uq_event_participant`), validaciones Pydantic v2 pre-persistencia, verificaciones de estado antes de mutar. |
+| **Isolation** | `with_for_update()` (row-level lock) en operaciones concurrentes críticas: redención de código de empresa, join a evento/competencia con cupo, booking de coach. |
+| **Durability** | PostgreSQL garantiza persistencia tras cada `COMMIT`. |
+
+### Ejemplos de operaciones protegidas con row-level lock
+
+- **Canje de código de empresa** — dos usuarios no pueden usar el mismo código simultáneamente.
+- **Join a evento/competencia con cupo** — se bloquea la fila del evento para contar participantes antes de insertar.
+- **Score update en competencia** — se bloquea la fila del participante para evitar escrituras concurrentes.
+- **Booking de coach** — se bloquea el perfil del coach para verificar disponibilidad.
 
 ---
 
@@ -52,67 +61,76 @@ OptimusTrainingFastApi/
 │
 ├── app/
 │   ├── api/
-│   │   ├── deps.py                       # Dependencias reutilizables (get_current_user)
+│   │   ├── deps.py                         # Dependencias reutilizables (get_current_user)
 │   │   └── v1/
-│   │       ├── router.py                 # Agrega todos los routers de v1
-│   │       └── routes/                   # ← CAPA 1: solo declaran endpoints HTTP
+│   │       ├── router.py                   # Agrega todos los routers de v1
+│   │       └── routes/                     # ← CAPA 1: solo declaran endpoints HTTP
 │   │           ├── auth.py
-│   │           └── users.py              # incluye POST /{id}/photo
+│   │           ├── users.py
+│   │           ├── enterprise.py           # Módulo Enterprise
+│   │           ├── coaches.py              # Módulo Coach
+│   │           ├── events.py              # Módulo Social — Eventos
+│   │           └── competitions.py        # Módulo Social — Competencias
 │   │
-│   ├── controllers/                      # ← CAPA 2: lógica HTTP + autorización
-│   │   ├── __init__.py                   # re-exporta todos los controllers
+│   ├── controllers/                        # ← CAPA 2: lógica HTTP + autorización + ACID
+│   │   ├── __init__.py
 │   │   ├── auth/
-│   │   │   └── auth_controller.py
-│   │   └── users/
-│   │       └── user_controller.py
+│   │   ├── users/
+│   │   ├── enterprise/
+│   │   │   └── enterprise_controller.py
+│   │   ├── coaches/
+│   │   │   └── coach_controller.py
+│   │   ├── events/
+│   │   │   └── event_controller.py
+│   │   └── competitions/
+│   │       └── competition_controller.py
 │   │
-│   ├── services/                         # ← CAPA 3: lógica de negocio pura
+│   ├── services/                           # ← CAPA 3: data-access + row-level locks
 │   │   ├── user_service.py
-│   │   ├── upload_service.py             # Validación y guardado de fotos
-│   │   └── email_service.py              # Envío de correos (MOCK)
+│   │   ├── upload_service.py
+│   │   ├── enterprise_service.py
+│   │   ├── coach_service.py
+│   │   ├── event_service.py
+│   │   └── competition_service.py
 │   │
-│   ├── database/                         # ← CAPA 4: configuración de DB
-│   │   ├── __init__.py                   # re-exporta Base, get_db, engine
-│   │   └── session/
-│   │       └── session.py               # Engine + pool + SessionLocal + Base
+│   ├── database/                           # ← CAPA 4: configuración de DB
+│   │   └── session/session.py
 │   │
-│   ├── models/                           # ← CAPA 5: modelos SQLAlchemy
-│   │   └── user.py                       # + profile_picture_url, is_active, timestamps
+│   ├── models/                             # ← CAPA 5: modelos SQLAlchemy
+│   │   ├── __init__.py                     # Importa todos los modelos (Alembic los detecta)
+│   │   ├── user.py
+│   │   ├── enterprise.py                   # Enterprise, EnterpriseCode, EnterpriseMember
+│   │   ├── active_break.py                 # ActiveBreakSession, ActiveBreakLog
+│   │   ├── coach.py                        # CoachProfile
+│   │   ├── coach_booking.py                # CoachBooking
+│   │   ├── event.py                        # Event, EventParticipant (UniqueConstraint)
+│   │   └── competition.py                  # Competition, CompetitionParticipant (UniqueConstraint)
 │   │
-│   ├── schemas/                          # Pydantic — dividido por dominio
-│   │   ├── users/                        # Schemas del dominio usuarios
-│   │   │   ├── user_base.py
-│   │   │   ├── user_create.py
-│   │   │   ├── user_update.py
-│   │   │   ├── user_response.py          # + profile_picture_url, created_at
-│   │   │   ├── user_login.py
-│   │   │   ├── token.py
-│   │   │   ├── training_type.py          # Enum: casa | afuera | gimnasio | mixto
-│   │   │   └── password_reset.py         # Schemas para recuperación
-│   │   ├── sports/                       # Schemas del dominio deportes (listo para crecer)
-│   │   └── common/                       # Schemas reutilizables entre dominios
-│   │       ├── pagination.py             # PaginatedResponse[T] genérico
-│   │       └── response.py              # MessageResponse
+│   ├── schemas/                            # Pydantic — dividido por dominio
+│   │   ├── users/
+│   │   ├── common/
+│   │   │   ├── pagination.py               # PaginatedResponse[T] genérico
+│   │   │   └── response.py                 # MessageResponse
+│   │   ├── enterprise/
+│   │   │   ├── enterprise_enums.py         # BreakDuration, BreakCategory
+│   │   │   ├── enterprise_schemas.py
+│   │   │   └── active_break_schemas.py
+│   │   ├── coaches/
+│   │   │   ├── coach_enums.py              # CoachSpecialty, BookingStatus, SessionType
+│   │   │   ├── coach_schemas.py
+│   │   │   └── booking_schemas.py
+│   │   ├── events/
+│   │   │   ├── event_enums.py              # EventType, EventStatus
+│   │   │   └── event_schemas.py
+│   │   └── competitions/
+│   │       ├── competition_enums.py        # CompetitionStatus
+│   │       └── competition_schemas.py
 │   │
-│   ├── core/                             # Configuración global
-│   │   ├── config.py                     # Settings con pydantic-settings + .env
-│   │   ├── security.py                   # JWT + bcrypt helpers
-│   │   ├── middleware.py                 # AuthMiddleware + X-Process-Time
-│   │   └── db.py                         # Shim de compatibilidad → database/session
-│   │
-│   ├── uploads/
-│   │   └── profile_pictures/             # Fotos de perfil (servidas en /uploads/...)
-│   │       └── .gitkeep                  # Mantiene el folder en git aunque esté vacío
-│   │
-│   └── main.py                           # Entry point: app, middlewares, rutas, uploads
+│   └── main.py
 │
 ├── tests/
-│   ├── conftest.py                       # Fixtures: client, db, test_user, auth_headers
-│   ├── test_auth.py                      # Tests de login
-│   └── test_users.py                     # Tests de CRUD + foto de perfil
-│
-├── .env.example                          # Plantilla de variables de entorno
-├── .gitignore
+├── migrations/
+├── .env.example
 ├── requirements.txt
 └── README.md
 ```
@@ -156,7 +174,13 @@ SQLALCHEMY_DATABASE_URI="postgresql://usuario:contraseña@localhost/optimus_db"
 CREATE DATABASE optimus_db;
 ```
 
-### 5. Iniciar el servidor
+### 5. Aplicar migraciones
+
+```bash
+alembic upgrade head
+```
+
+### 6. Iniciar el servidor
 
 ```bash
 uvicorn app.main:app --reload
@@ -166,52 +190,23 @@ El servidor arranca en **http://127.0.0.1:8000**
 
 ---
 
-## 🧪 Tests
-
-Los tests usan **SQLite en memoria** — no necesitas PostgreSQL para correrlos.
-
-```bash
-pytest tests/ -v
-```
-
-Resultado esperado:
-
-```
-15 passed in ~3s
-```
-
----
-
 ## 📖 Endpoints — API v1
 
-Toda la API vive bajo el prefijo `/api/v1`.
+Toda la API vive bajo el prefijo `/api/v1`. Todos los endpoints marcados con ✅ requieren `Authorization: Bearer <token>`.
+
+> **Convención REST**: Los IDs solo aparecen al final del path (`/resource/{id}`). Los IDs de contexto van como query params (GET) o en el body (POST/PUT).
+
+---
 
 ### 🔐 Autenticación
 
 | Método | Ruta | Descripción | Auth |
 |--------|------|-------------|------|
-| `POST` | `/api/v1/auth/login` | Login con email + password → JWT | ❌ |
-| `POST` | `/api/v1/auth/login/access-token` | Login compatible con Swagger | ❌ |
-| `POST` | `/api/v1/auth/refresh-token` | Refrescar access token | ❌ |
-| `POST` | `/api/v1/auth/password-recovery/{email}` | Iniciar recuperación de contraseña | ❌ |
-| `POST` | `/api/v1/auth/reset-password` | Restablecer contraseña con token | ❌ |
-
-**Body (Login):**
-```json
-{
-  "email": "usuario@email.com",
-  "password": "MiContraseña123"
-}
-```
-
-**Response (Login/Refresh):**
-```json
-{
-  "access_token": "eyJ...",
-  "refresh_token": "eyJ...",
-  "token_type": "bearer"
-}
-```
+| `POST` | `/auth/login` | Login con email + password → JWT | ❌ |
+| `POST` | `/auth/login/access-token` | Login compatible con Swagger | ❌ |
+| `POST` | `/auth/refresh-token` | Refrescar access token | ❌ |
+| `POST` | `/auth/password-recovery/{email}` | Iniciar recuperación | ❌ |
+| `POST` | `/auth/reset-password` | Restablecer con token | ❌ |
 
 ---
 
@@ -219,36 +214,161 @@ Toda la API vive bajo el prefijo `/api/v1`.
 
 | Método | Ruta | Descripción | Auth |
 |--------|------|-------------|------|
-| `POST` | `/api/v1/users/` | Crear usuario | ❌ |
-| `GET` | `/api/v1/users/` | Listar usuarios (paginado) | ✅ |
-| `GET` | `/api/v1/users/me` | Mi perfil | ✅ |
-| `GET` | `/api/v1/users/{id}` | Perfil por ID | ✅ |
-| `PUT` | `/api/v1/users/{id}` | Actualizar perfil | ✅ (dueño) |
-| `POST` | `/api/v1/users/{id}/photo` | Subir foto de perfil | ✅ (dueño) |
-| `DELETE` | `/api/v1/users/{id}` | Eliminar usuario | ✅ (dueño) |
-
-**Subir foto de perfil:**
-```bash
-curl -X POST "http://localhost:8000/api/v1/users/1/photo" \
-  -H "Authorization: Bearer <token>" \
-  -F "file=@mi_foto.jpg"
-```
-
-La foto queda accesible en: `http://localhost:8000/uploads/profile_pictures/<nombre>.jpg`
+| `POST` | `/users/` | Crear usuario | ❌ |
+| `GET` | `/users/` | Listar usuarios (paginado) | ✅ |
+| `GET` | `/users/me` | Mi perfil | ✅ |
+| `GET` | `/users/{id}` | Perfil por ID | ✅ |
+| `PUT` | `/users/{id}` | Actualizar perfil | ✅ dueño |
+| `POST` | `/users/{id}/photo` | Subir foto de perfil | ✅ dueño |
+| `DELETE` | `/users/{id}` | Eliminar usuario | ✅ dueño |
 
 ---
 
-### 📋 Reglas de validación
+### 🏢 Enterprise — Pausas Activas
 
-| Campo | Regla |
-|---|---|
-| `email` | Formato email válido |
-| `password` | Mínimo 8 caracteres |
-| `phone` | Regex: `+?[\d\s-]{7,15}` |
-| `training_type` | Enum: `casa` \| `afuera` \| `gimnasio` \| `mixto` |
-| `age` | Mayor a 0 |
-| `weight` / `height` | Mayor a 0 |
-| Foto de perfil | JPG, PNG, WEBP — máx 5 MB |
+Valida que un empleado pertenece a una empresa mediante un **código de un solo uso** que expira.
+
+| Método | Ruta | Descripción | Auth |
+|--------|------|-------------|------|
+| `POST` | `/enterprise/` | Crear empresa | ✅ |
+| `GET` | `/enterprise/my-enterprise` | Ver mi empresa | ✅ |
+| `POST` | `/enterprise/validate-code` | Canjear código de empresa (**ACID lock**) | ✅ |
+| `POST` | `/enterprise/codes` | Generar N códigos (`enterprise_id` en body) | ✅ |
+| `GET` | `/enterprise/codes` | Listar códigos (`enterprise_id` en query) | ✅ |
+| `GET` | `/enterprise/members` | Listar miembros (`enterprise_id` en query) | ✅ |
+| `POST` | `/enterprise/active-breaks` | Crear plantilla de pausa activa | ✅ |
+| `GET` | `/enterprise/active-breaks` | Listar pausas (filtro: `duration`, `category`) | ✅ |
+| `GET` | `/enterprise/active-breaks/{id}` | Detalle de pausa | ✅ |
+| `POST` | `/enterprise/break-logs` | Iniciar pausa (`session_id` en body) | ✅ |
+| `PUT` | `/enterprise/break-logs/{id}` | Completar pausa | ✅ |
+| `GET` | `/enterprise/my-stats` | Estadísticas personales de pausas | ✅ |
+
+**Flujo de validación de código:**
+```json
+POST /api/v1/enterprise/validate-code
+{ "code": "A3K9-M2X7" }
+```
+- El código se busca con **row-level lock** (`SELECT ... FOR UPDATE`).
+- Si es válido, no usado y no expirado → usuario se vincula a la empresa.
+- El código queda marcado como `is_used = true` — no puede reusarse.
+
+**Duraciones de pausa:** `10` | `20` | `30` minutos  
+**Categorías:** `stretching` | `cardio` | `strength` | `mindfulness` | `mobility`
+
+---
+
+### 🏅 Coach — Coaches y Booking
+
+Los coaches se muestran en un mapa usando la fórmula de **Haversine** para calcular distancia.
+
+| Método | Ruta | Descripción | Auth |
+|--------|------|-------------|------|
+| `POST` | `/coaches/` | Registrarse como coach | ✅ |
+| `GET` | `/coaches/` | Listar coaches (filtro: `specialty`) | ✅ |
+| `GET` | `/coaches/nearby` | **Buscar en mapa** (`lat`, `lng`, `radius_km`) | ✅ |
+| `GET` | `/coaches/{id}` | Ver perfil de coach | ✅ |
+| `PUT` | `/coaches/{id}` | Actualizar perfil (solo dueño) | ✅ |
+| `DELETE` | `/coaches/{id}` | Desactivar perfil (soft delete) | ✅ |
+| `POST` | `/coaches/bookings` | Solicitar sesión (`coach_id` en body) | ✅ |
+| `GET` | `/coaches/bookings/my-sessions` | Mis sesiones como atleta | ✅ |
+| `GET` | `/coaches/bookings/my-clients` | Mis clientes como coach | ✅ |
+| `PUT` | `/coaches/bookings/{id}` | Aceptar / rechazar sesión (solo coach) | ✅ |
+| `POST` | `/coaches/reviews` | Calificar sesión (`booking_id` en body) | ✅ |
+
+**Búsqueda por mapa:**
+```
+GET /api/v1/coaches/nearby?lat=19.4326&lng=-99.1332&radius_km=15&specialty=running
+```
+Retorna cada coach con `distance_km` calculada, ordenados del más cercano al más lejano.
+
+**Precio automático al crear booking:**
+```
+total_price = hourly_rate × (duration_minutes / 60)
+```
+
+**Rating automático tras review:**  
+El `avg_rating` y `total_reviews` del coach se recalculan automáticamente.
+
+**Especialidades:** `personal_trainer` | `yoga` | `crossfit` | `running` | `swimming` | `nutrition` | `physiotherapy` | `strength` | `functional` | `other`
+
+**Estados de booking:** `pending` → `accepted` | `rejected` → `completed`
+
+---
+
+### 🎉 Social — Eventos
+
+| Método | Ruta | Descripción | Auth |
+|--------|------|-------------|------|
+| `POST` | `/events/` | Crear evento | ✅ |
+| `GET` | `/events/` | Listar eventos (filtro: `event_type`, `status`) | ✅ |
+| `GET` | `/events/{id}` | Detalle con conteo de participantes | ✅ |
+| `PUT` | `/events/{id}` | Actualizar evento (solo creador) | ✅ |
+| `DELETE` | `/events/{id}` | Cancelar evento (soft cancel) | ✅ |
+| `POST` | `/events/participants` | Unirse a evento (`event_id` en body, **ACID lock**) | ✅ |
+| `DELETE` | `/events/participants` | Salir de evento (`event_id` en body) | ✅ |
+| `GET` | `/events/participants/list` | Listar participantes (`event_id` en query) | ✅ |
+
+**ACID en join:**  
+Se bloquea la fila del evento (`SELECT ... FOR UPDATE`) para validar el cupo antes de insertar. Si el evento tiene `max_participants`, nadie puede excederlo por concurrencia.
+
+**Tipos de evento:** `running` | `cycling` | `swimming` | `crossfit` | `yoga` | `hiking` | `other`
+
+---
+
+### 🏆 Social — Competencias
+
+| Método | Ruta | Descripción | Auth |
+|--------|------|-------------|------|
+| `POST` | `/competitions/` | Crear competencia | ✅ |
+| `GET` | `/competitions/` | Listar (filtro: `sport_type`, `status`) | ✅ |
+| `GET` | `/competitions/{id}` | Detalle de competencia | ✅ |
+| `PUT` | `/competitions/{id}` | Actualizar (solo creador) | ✅ |
+| `POST` | `/competitions/participants` | Inscribirse (`competition_id` en body, **ACID lock**) | ✅ |
+| `PUT` | `/competitions/scores` | Actualizar score (**idempotente**, solo creador) | ✅ |
+| `GET` | `/competitions/ranking` | Ver ranking (`competition_id` en query) | ✅ |
+
+**ACID en inscripción:**  
+Se bloquea la fila de la competencia durante la inscripción para validar cupo con exactitud.
+
+**Idempotencia en scores:**  
+`PUT /competitions/scores` sigue semántica PUT — llamarlo dos veces con el mismo score produce el mismo resultado. Las posiciones se recalculan automáticamente después de cada actualización.
+
+**Estados:** `upcoming` → `in_progress` → `finished` | `cancelled`
+
+---
+
+## 🗄️ Migraciones con Alembic
+
+```bash
+# Al agregar nuevos modelos, generar la migración
+alembic revision --autogenerate -m "nombre_del_cambio"
+
+# Aplicar
+alembic upgrade head
+
+# Rollback de una migración
+alembic downgrade -1
+
+# Ver estado actual
+alembic current
+
+# Ver historial
+alembic history --verbose
+```
+
+### Migración completa (todos los módulos)
+
+```bash
+alembic revision --autogenerate -m "add_enterprise_coach_social_modules"
+alembic upgrade head
+```
+
+Esto creará las tablas:
+- `enterprises`, `enterprise_codes`, `enterprise_members`
+- `active_break_sessions`, `active_break_logs`
+- `coach_profiles`, `coach_bookings`
+- `events`, `event_participants`
+- `competitions`, `competition_participants`
 
 ---
 
@@ -262,109 +382,35 @@ La foto queda accesible en: `http://localhost:8000/uploads/profile_pictures/<nom
 
 ---
 
-## 🧩 Cómo agregar un nuevo dominio (ej. `sports`)
+## 🧩 Cómo agregar un nuevo dominio
 
-Sigue este orden de capas para mantener consistencia:
+Sigue este orden de capas:
 
 ```bash
 # 1. Schema
-app/schemas/sports/sport.py          # SportBase, SportCreate, SportResponse
-app/schemas/sports/__init__.py       # exportar desde aquí
+app/schemas/nuevo_dominio/__init__.py
+app/schemas/nuevo_dominio/enums.py
+app/schemas/nuevo_dominio/schemas.py
 
 # 2. Model
-app/models/sport.py                  # clase Sport(Base)
-app/models/__init__.py               # agregar import de Sport
+app/models/nuevo_dominio.py          # clase(Base) con UniqueConstraint donde aplique
+app/models/__init__.py               # agregar import
 
-# 3. Service
-app/services/sport_service.py        # SportService con métodos CRUD
+# 3. Service  (flush, not commit — con with_for_update() en operaciones críticas)
+app/services/nuevo_dominio_service.py
 
-# 4. Controller
-app/controllers/sports/
+# 4. Controller  (commit/rollback aquí, validaciones ACID)
+app/controllers/nuevo_dominio/
     __init__.py
-    sport_controller.py              # SportController con lógica HTTP
+    nuevo_dominio_controller.py
 
-# 5. Route
-app/api/v1/routes/sports.py          # endpoints thin que llaman al controller
+# 5. Route  (thin layer — solo HTTP in/out)
+app/api/v1/routes/nuevo_dominio.py
 
-# 6. Registrar en el router principal
+# 6. Registrar
 # app/api/v1/router.py
-api_router.include_router(sports.router, prefix="/sports", tags=["Deportes"])
+api_router.include_router(nuevo_dominio.router, prefix="/nuevo-dominio", tags=["..."])
 ```
-
----
-
-## 🗄️ Migraciones con Alembic
-
-Alembic es el equivalente de `prisma migrate` para Python + SQLAlchemy. Las migraciones son archivos `.py` versionados que describen los cambios en la base de datos.
-
-### Flujo de trabajo diario
-
-```bash
-# 1. Activar entorno virtual
-source .venv/bin/activate
-
-# 2. Al cambiar / agregar un modelo, generar la migración automáticamente
-alembic revision --autogenerate -m "descripcion_del_cambio"
-# Ejemplo: alembic revision --autogenerate -m "add_sport_table"
-
-# 3. Revisar el archivo generado en migrations/versions/ ← SIEMPRE hazlo
-# Alembic es bueno pero a veces necesita ajuste manual
-
-# 4. Aplicar la migración a la base de datos
-alembic upgrade head
-```
-
-### Otros comandos útiles
-
-```bash
-# Ver el estado actual de migraciones
-alembic current
-
-# Ver el historial completo
-alembic history --verbose
-
-# Retroceder una migración (rollback)
-alembic downgrade -1
-
-# Retroceder a una revisión específica
-alembic downgrade <revision_id>
-
-# Retroceder TODO (base de datos limpia — ¡cuidado en producción!)
-alembic downgrade base
-
-# Generar SQL sin aplicarlo (útil para revisar antes de producción)
-alembic upgrade head --sql > migration_preview.sql
-```
-
-### Agregar un nuevo modelo a las migraciones
-
-Cuando crees un modelo nuevo (ej. `app/models/sport.py`), agrégalo en `migrations/env.py`:
-
-```python
-# migrations/env.py — sección de imports de modelos
-from app.models import User          # ya está
-from app.models.sport import Sport   # ← agrega esta línea
-```
-
-Luego corre:
-
-```bash
-alembic revision --autogenerate -m "add_sport_table"
-alembic upgrade head
-```
-
-### Estructura de migrations/
-
-```
-migrations/
-├── env.py           ← configuración (no tocar salvo para agregar modelos)
-├── script.py.mako   ← plantilla de cada archivo de migración
-├── README
-└── versions/        ← archivos de migración (SÍ se suben a git)
-    └── 20260225_1248-abc123_add_sport_table.py
-```
-
-> **Regla de oro**: Los archivos en `versions/` son el historial de tu base de datos — siempre súbelos a git junto con el código que los generó.
 
 ---
 
