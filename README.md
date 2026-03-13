@@ -8,7 +8,7 @@ API de deportes y entrenamiento construida con **FastAPI**, diseñada para escal
 
 - **Arquitectura de capas** — Routes, Controllers, Services, Database, Models con separación total de responsabilidades.
 - **Versionado de API** — Toda la API vive bajo `/api/v1/`. Agregar `v2` no rompe nada.
-- **3 módulos de negocio** — Enterprise (pausas activas), Coach (geolocalización + booking), Social (eventos + competencias).
+- **4 módulos de negocio** — Enterprise (pausas activas), Coach (geolocalización + booking), Social (eventos + competencias) y **Training** (planes deportivos + seguimiento).
 - **Foto de perfil** — Endpoint dedicado para subir imagen JPG/PNG/WEBP (máx 5 MB) por usuario.
 - **Archivos estáticos** — Las fotos se sirven en `/uploads/profile_pictures/` vía HTTP.
 - **Pool de conexiones** — Configurado para alta concurrencia (`pool_size=10`, `max_overflow=20`).
@@ -70,7 +70,8 @@ OptimusTrainingFastApi/
 │   │           ├── enterprise.py           # Módulo Enterprise
 │   │           ├── coaches.py              # Módulo Coach
 │   │           ├── events.py              # Módulo Social — Eventos
-│   │           └── competitions.py        # Módulo Social — Competencias
+│   │           ├── competitions.py        # Módulo Social — Competencias
+│   │           └── training.py            # Módulo Training — Planes Deportivos
 │   │
 │   ├── controllers/                        # ← CAPA 2: lógica HTTP + autorización + ACID
 │   │   ├── __init__.py
@@ -82,8 +83,9 @@ OptimusTrainingFastApi/
 │   │   │   └── coach_controller.py
 │   │   ├── events/
 │   │   │   └── event_controller.py
-│   │   └── competitions/
-│   │       └── competition_controller.py
+│   │   ├── competitions/
+│   │   │   └── competition_controller.py
+│   │   └── training_controller.py
 │   │
 │   ├── services/                           # ← CAPA 3: data-access + row-level locks
 │   │   ├── user_service.py
@@ -91,7 +93,8 @@ OptimusTrainingFastApi/
 │   │   ├── enterprise_service.py
 │   │   ├── coach_service.py
 │   │   ├── event_service.py
-│   │   └── competition_service.py
+│   │   ├── competition_service.py
+│   │   └── training_service.py
 │   │
 │   ├── database/                           # ← CAPA 4: configuración de DB
 │   │   └── session/session.py
@@ -104,7 +107,8 @@ OptimusTrainingFastApi/
 │   │   ├── coach.py                        # CoachProfile
 │   │   ├── coach_booking.py                # CoachBooking
 │   │   ├── event.py                        # Event, EventParticipant (UniqueConstraint)
-│   │   └── competition.py                  # Competition, CompetitionParticipant (UniqueConstraint)
+│   │   ├── competition.py                  # Competition, CompetitionParticipant (UniqueConstraint)
+│   │   └── training.py                     # CoachAthlete, TrainingPlan, DailyWorkout, ExerciseDetail
 │   │
 │   ├── schemas/                            # Pydantic — dividido por dominio
 │   │   ├── users/
@@ -122,9 +126,11 @@ OptimusTrainingFastApi/
 │   │   ├── events/
 │   │   │   ├── event_enums.py              # EventType, EventStatus
 │   │   │   └── event_schemas.py
-│   │   └── competitions/
-│   │       ├── competition_enums.py        # CompetitionStatus
-│   │       └── competition_schemas.py
+│   │   ├── competitions/
+│   │   │   ├── competition_enums.py        # CompetitionStatus
+│   │   │   └── competition_schemas.py
+│   │   └── training/
+│   │       └── training_schemas.py
 │   │
 │   └── main.py
 │
@@ -327,6 +333,29 @@ Se bloquea la fila del evento (`SELECT ... FOR UPDATE`) para validar el cupo ant
 | `PUT` | `/competitions/scores` | Actualizar score (**idempotente**, solo creador) | ✅ |
 | `GET` | `/competitions/ranking` | Ver ranking (`competition_id` en query) | ✅ |
 
+---
+
+### 🏋️ Training — Planes Deportivos y Seguimiento
+
+Gestión de la relación coach-atleta, creación de planes mensuales y validación diaria de ejercicios.
+
+| Método | Ruta | Descripción | Auth |
+|--------|------|-------------|------|
+| `POST` | `/training/assign/{coach_id}` | Atleta solicita a un coach (máx 10 atletas) | ✅ |
+| `GET` | `/training/my-athletes` | Coach ve su lista de atletas asignados | ✅ |
+| `POST` | `/training/plans` | Coach crea plan mensual para un atleta | ✅ |
+| `POST` | `/training/plans/{plan_id}/workouts` | Coach añade entrenamiento diario al plan | ✅ |
+| `PUT` | `/training/workouts/{workout_id}` | Coach modifica ejercicios de un entrenamiento | ✅ |
+| `POST` | `/training/plans/{plan_id}/accept` | Atleta aprueba el plan propuesto | ✅ |
+| `POST` | `/workouts/{workout_id}/validate` | Coach valida que se hizo el ejercicio (**Desbloquea siguiente**) | ✅ |
+| `GET` | `/training/payment-status/{coach_id}` | Verificar si el coach validó 15+ días para pago | ✅ |
+
+**Reglas de negocio:**
+- **Límite de atletas:** Un coach no puede tener más de 10 atletas activos.
+- **Validación y Progreso:** El atleta solo puede ver/realizar el ejercicio del día siguiente si el coach validó el anterior.
+- **Elegibilidad de Pago:** El coach debe validar al menos 15 días de entrenamiento en el mes para cobrar su cuota.
+- **Ejercicios:** Cada día de entrenamiento permite definir hasta 8 ejercicios detallados.
+
 **ACID en inscripción:**  
 Se bloquea la fila de la competencia durante la inscripción para validar cupo con exactitud.
 
@@ -369,6 +398,7 @@ Esto creará las tablas:
 - `coach_profiles`, `coach_bookings`
 - `events`, `event_participants`
 - `competitions`, `competition_participants`
+- `coach_athletes`, `training_plans`, `daily_workouts`, `exercise_details`
 
 ---
 

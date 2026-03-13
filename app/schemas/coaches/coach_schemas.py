@@ -25,6 +25,7 @@ class CoachBase(BaseModel):
     state: Optional[str] = None
     service_radius_km: float = Field(default=10.0, gt=0)
     available_hours: Optional[str] = None  # JSON string
+    is_searchable: bool = True
 
 
 class CoachCreate(CoachBase):
@@ -47,6 +48,7 @@ class CoachUpdate(BaseModel):
     service_radius_km: Optional[float] = Field(None, gt=0)
     is_available: Optional[bool] = None
     available_hours: Optional[str] = None
+    is_searchable: Optional[bool] = None
 
 
 class CoachResponse(CoachBase):
@@ -57,6 +59,7 @@ class CoachResponse(CoachBase):
     total_reviews: int
     is_verified: bool
     is_active: bool
+    is_searchable: bool
     created_at: datetime
     updated_at: Optional[datetime] = None
 

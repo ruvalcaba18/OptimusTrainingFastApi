@@ -19,5 +19,10 @@ __all__ = [
     "EventParticipant",
     "Competition",
     "CompetitionParticipant",
+    "CoachAthlete",
+    "TrainingPlan",
+    "DailyWorkout",
+    "ExerciseDetail",
 ]
+from app.models.training import CoachAthlete, TrainingPlan, DailyWorkout, ExerciseDetail
 

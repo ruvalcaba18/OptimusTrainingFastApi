@@ -47,6 +47,7 @@ class CoachProfile(Base):
     # ─── Status ───────────────────────────────────────────────────────────
     is_verified = Column(Boolean, default=False, nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)
+    is_searchable = Column(Boolean, default=True, nullable=False)
 
     # ─── Timestamps ───────────────────────────────────────────────────────
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
