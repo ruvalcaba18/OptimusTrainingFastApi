@@ -152,7 +152,7 @@ git clone <repo-url>
 cd OptimusTrainingFastApi
 
 python3 -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
+source .venv/bin/activate        
 ```
 
 ### 2. Instalar dependencias
