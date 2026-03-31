@@ -73,6 +73,6 @@ class ExerciseDetail(Base):
     sets = Column(Integer, default=0)
     reps = Column(Integer, default=0)
     weight = Column(Float, default=0.0)
-    order = Column(Integer, default=0)  # to keep order of 8 exercises
+    order = Column(Integer, default=0)                                
 
     workout = relationship("DailyWorkout", back_populates="exercises")

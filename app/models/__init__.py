@@ -25,4 +25,3 @@ __all__ = [
     "ExerciseDetail",
 ]
 from app.models.training import CoachAthlete, TrainingPlan, DailyWorkout, ExerciseDetail
-

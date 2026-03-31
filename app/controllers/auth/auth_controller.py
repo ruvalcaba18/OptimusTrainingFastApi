@@ -1,6 +1,3 @@
-"""
-Auth controller — handles login HTTP logic.
-"""
 from datetime import timedelta
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
@@ -66,10 +63,10 @@ class AuthController:
             access_token=security.create_access_token(
                 user.email, expires_delta=access_token_expires
             ),
-            refresh_token=refresh_token, # Reuse refresh token or rotate it? reusing for now.
+            refresh_token=refresh_token,                                                     
             token_type="bearer",
         )
-        # Transactional commit just in case refresh logic ever modifies DB (e.g. rotating tokens)
+                                                                                                 
         db.commit()
         return token
 
@@ -81,7 +78,7 @@ class AuthController:
             token = security.create_password_reset_token(email)
             email_service.send_password_reset_email(email, token)
         
-        # Always return Success for security (don't reveal if email exists)
+                                                                           
         return {"message": "Si el correo está registrado, se ha enviado un enlace de recuperación."}
 
     @staticmethod

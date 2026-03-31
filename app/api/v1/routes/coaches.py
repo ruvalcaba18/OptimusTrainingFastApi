@@ -1,14 +1,9 @@
-"""
-Coach routes for API v1.
-Thin layer: validates HTTP input, calls controller, returns response.
-
-Diseño RESTful plano — los IDs siempre van al final del path.
-"""
 from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
+from app.core.cache import cache_get, cache_set, cache_delete_pattern, make_key
 from app.database import get_db
 from app.api.deps import get_current_user
 from app.models.user import User
@@ -27,9 +22,6 @@ from app.schemas.coaches import (
 router = APIRouter()
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━  Profile  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
 @router.post(
     "/",
     response_model=CoachResponse,
@@ -41,10 +33,6 @@ def register_coach(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """
-    Registra al usuario autenticado como coach.
-    Requiere ubicación (lat/lng) para aparecer en el mapa.
-    """
     return coach_controller.register_coach(
         db, coach_in=coach_in, current_user=current_user
     )
@@ -62,7 +50,6 @@ def list_coaches(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Lista todos los coaches activos, opcionalmente filtrados por especialidad."""
     return coach_controller.list_coaches(
         db, specialty=specialty, skip=skip, limit=limit
     )
@@ -73,7 +60,7 @@ def list_coaches(
     response_model=list[CoachNearbyResponse],
     summary="Buscar coaches cercanos",
 )
-def get_nearby_coaches(
+async def get_nearby_coaches(
     lat: float = Query(..., ge=-90, le=90, description="Latitud del atleta"),
     lng: float = Query(..., ge=-180, le=180, description="Longitud del atleta"),
     radius_km: float = Query(10.0, gt=0, description="Radio de búsqueda en km"),
@@ -83,20 +70,21 @@ def get_nearby_coaches(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """
-    Busca coaches disponibles dentro de un radio en kilómetros
-    desde las coordenadas del atleta. Usa fórmula de Haversine.
-    Ideal para mostrar en un mapa.
-    """
-    return coach_controller.get_nearby_coaches(
-        db,
-        lat=lat,
-        lng=lng,
-        radius_km=radius_km,
-        specialty=specialty,
-        skip=skip,
-        limit=limit,
+    cache_key = make_key(
+        "coaches", "nearby",
+        round(lat, 2), round(lng, 2),
+        radius_km, specialty, skip, limit,
     )
+    cached = await cache_get(cache_key)
+    if cached is not None:
+        return cached
+    result = coach_controller.get_nearby_coaches(
+        db, lat=lat, lng=lng, radius_km=radius_km,
+        specialty=specialty, skip=skip, limit=limit,
+    )
+    serialized = [r.model_dump() for r in result]
+    await cache_set(cache_key, serialized, ttl=180)
+    return result
 
 
 @router.get(
@@ -104,13 +92,18 @@ def get_nearby_coaches(
     response_model=CoachResponse,
     summary="Ver perfil de coach",
 )
-def get_coach(
+async def get_coach(
     coach_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Retorna el perfil completo de un coach."""
-    return coach_controller.get_coach(db, coach_id=coach_id)
+    cache_key = make_key("coach", "profile", coach_id)
+    cached = await cache_get(cache_key)
+    if cached is not None:
+        return cached
+    result = coach_controller.get_coach(db, coach_id=coach_id)
+    await cache_set(cache_key, result.model_dump(), ttl=300)
+    return result
 
 
 @router.put(
@@ -118,16 +111,18 @@ def get_coach(
     response_model=CoachResponse,
     summary="Actualizar perfil de coach",
 )
-def update_coach(
+async def update_coach(
     coach_id: int,
     coach_in: CoachUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Actualiza el perfil del coach. Solo el dueño puede editarlo."""
-    return coach_controller.update_coach(
+    result = coach_controller.update_coach(
         db, coach_id=coach_id, coach_in=coach_in, current_user=current_user
     )
+    await cache_delete_pattern(f"coach:profile:{coach_id}")
+    await cache_delete_pattern("coaches:nearby:*")
+    return result
 
 
 @router.delete(
@@ -140,13 +135,9 @@ def deactivate_coach(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Desactiva el perfil del coach (soft delete). Solo el dueño puede hacerlo."""
     return coach_controller.deactivate_coach(
         db, coach_id=coach_id, current_user=current_user
     )
-
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━  Bookings  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
 @router.post(
@@ -160,10 +151,6 @@ def create_booking(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """
-    El atleta solicita una sesión con un coach.
-    El coach_id va en el body. El precio se calcula automáticamente.
-    """
     return coach_controller.create_booking(
         db, booking_in=booking_in, current_user=current_user
     )
@@ -180,7 +167,6 @@ def list_my_bookings(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Retorna las sesiones donde el usuario actúa como atleta."""
     return coach_controller.list_my_bookings(
         db, current_user=current_user, skip=skip, limit=limit
     )
@@ -197,7 +183,6 @@ def list_coach_bookings(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Retorna las sesiones donde el usuario actúa como coach."""
     return coach_controller.list_coach_bookings(
         db, current_user=current_user, skip=skip, limit=limit
     )
@@ -214,19 +199,12 @@ def update_booking_status(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """
-    El coach acepta, rechaza o marca como completada una sesión.
-    Solo el coach dueño puede cambiar el estado.
-    """
     return coach_controller.update_booking_status(
         db,
         booking_id=booking_id,
         status_in=status_in,
         current_user=current_user,
     )
-
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━  Reviews  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
 @router.post(
@@ -240,11 +218,6 @@ def create_review(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """
-    El atleta califica una sesión completada (1.0 - 5.0).
-    El booking_id va en el body. Solo sesiones con status 'completed'.
-    El rating promedio del coach se recalcula automáticamente.
-    """
     return coach_controller.create_review(
         db, review_in=review_in, current_user=current_user
     )

@@ -1,7 +1,3 @@
-"""
-Enterprise controller — handles HTTP-level logic and calls the service.
-No direct database queries here; that's the service's job.
-"""
 from datetime import datetime, timezone
 from typing import Optional
 
@@ -28,8 +24,7 @@ from app.schemas.enterprise import (
 
 class EnterpriseController:
 
-    # ━━━━━━━━━━━━━━━━━━━━━  Enterprise CRUD  ━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def create_enterprise(
         db: Session, enterprise_in: EnterpriseCreate
@@ -55,20 +50,11 @@ class EnterpriseController:
             )
         return enterprise
 
-    # ━━━━━━━━━━━━━━━━━━━━━━  Code validation  ━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def validate_code(
         db: Session, code_in: ValidateCodeRequest, current_user: User
     ) -> ValidateCodeResponse:
-        """
-        Valida un código de empresa:
-        1. Buscar el código
-        2. Verificar que no esté usado
-        3. Verificar que no esté expirado
-        4. Marcar como usado y vincular al usuario
-        5. Crear membresía
-        """
         db_code = enterprise_service.get_code_by_value(db, code_in.code)
 
         if not db_code:
@@ -89,7 +75,7 @@ class EnterpriseController:
                 detail="Este código ha expirado.",
             )
 
-        # Verificar si el usuario ya es miembro de esta empresa
+                                                               
         existing = enterprise_service.get_membership(
             db, user_id=current_user.id, enterprise_id=db_code.enterprise_id
         )
@@ -100,10 +86,10 @@ class EnterpriseController:
             )
 
         try:
-            # Marcar código como usado
+                                      
             enterprise_service.redeem_code(db, db_code, user_id=current_user.id)
 
-            # Crear membresía
+                             
             enterprise_service.create_membership(
                 db, enterprise_id=db_code.enterprise_id, user_id=current_user.id
             )
@@ -124,8 +110,7 @@ class EnterpriseController:
                 detail=f"Error al validar código: {str(e)}",
             )
 
-    # ━━━━━━━━━━━━━━━━━━━━━━  Code generation  ━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def generate_codes(
         db: Session, code_req: CodeGenerateRequest
@@ -167,8 +152,7 @@ class EnterpriseController:
             db, enterprise_id=enterprise_id, skip=skip, limit=limit
         )
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━  My Enterprise  ━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def get_my_enterprise(
         db: Session, current_user: User
@@ -179,7 +163,7 @@ class EnterpriseController:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="No estás vinculado a ninguna empresa. Valida tu código primero.",
             )
-        # Retornar la empresa de la primera membresía activa
+                                                            
         enterprise = enterprise_service.get_enterprise_by_id(
             db, memberships[0].enterprise_id
         )
@@ -199,8 +183,7 @@ class EnterpriseController:
             db, enterprise_id=enterprise_id, skip=skip, limit=limit
         )
 
-    # ━━━━━━━━━━━━━━━━━━━━━  Active Breaks  ━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                      
     @staticmethod
     def create_active_break(
         db: Session, break_in: ActiveBreakCreate
@@ -249,7 +232,7 @@ class EnterpriseController:
                 detail="Pausa activa no encontrada",
             )
 
-        # Buscar la empresa del usuario (si tiene)
+                                                  
         memberships = enterprise_service.get_user_memberships(db, user_id=current_user.id)
         enterprise_id = memberships[0].enterprise_id if memberships else None
 

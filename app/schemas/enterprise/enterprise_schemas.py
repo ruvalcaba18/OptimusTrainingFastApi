@@ -1,13 +1,7 @@
-"""
-Schemas para Enterprise, EnterpriseCode y EnterpriseMember.
-"""
 from datetime import datetime
 from typing import Optional, List
 
 from pydantic import BaseModel, EmailStr, Field
-
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  Enterprise  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
 class EnterpriseBase(BaseModel):
@@ -30,16 +24,11 @@ class EnterpriseResponse(EnterpriseBase):
     model_config = {"from_attributes": True}
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  Enterprise Code  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
 class ValidateCodeRequest(BaseModel):
-    """Payload que envía el empleado para validar su código."""
     code: str = Field(..., min_length=1, max_length=20)
 
 
 class CodeGenerateRequest(BaseModel):
-    """Payload para que el admin genere N códigos."""
     enterprise_id: int = Field(..., description="ID de la empresa")
     quantity: int = Field(..., ge=1, le=500, description="Cantidad de códigos a generar")
     expire_in_days: int = Field(
@@ -61,12 +50,8 @@ class EnterpriseCodeResponse(BaseModel):
 
 
 class ValidateCodeResponse(BaseModel):
-    """Respuesta tras validar el código exitosamente."""
     message: str
     enterprise: EnterpriseResponse
-
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━  Enterprise Member  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
 class EnterpriseMemberResponse(BaseModel):

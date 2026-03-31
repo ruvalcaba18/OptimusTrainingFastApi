@@ -1,7 +1,3 @@
-"""
-Enterprise service — data-access layer.
-No HTTP logic here; that belongs in the controller.
-"""
 import secrets
 import string
 from datetime import datetime, timedelta, timezone
@@ -21,8 +17,7 @@ from app.schemas.enterprise import (
 
 class EnterpriseService:
 
-    # ━━━━━━━━━━━━━━━━━━━━━━  Enterprise CRUD  ━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                         
     @staticmethod
     def create_enterprise(db: Session, enterprise_in: EnterpriseCreate) -> Enterprise:
         db_enterprise = Enterprise(
@@ -45,14 +40,12 @@ class EnterpriseService:
     ) -> List[Enterprise]:
         return db.query(Enterprise).offset(skip).limit(limit).all()
 
-    # ━━━━━━━━━━━━━━━━━━━━━━  Code generation  ━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                         
     @staticmethod
     def _generate_unique_code(length: int = 8) -> str:
-        """Genera un código alfanumérico en mayúsculas (ej: A3K9-M2X7)."""
         chars = string.ascii_uppercase + string.digits
         raw = "".join(secrets.choice(chars) for _ in range(length))
-        # Formato XXXX-XXXX para legibilidad
+                                            
         return f"{raw[:4]}-{raw[4:]}"
 
     @staticmethod
@@ -62,12 +55,11 @@ class EnterpriseService:
         quantity: int,
         expire_in_days: int = 7,
     ) -> List[EnterpriseCode]:
-        """Genera N códigos únicos para una empresa con fecha de expiración."""
         expires_at = datetime.now(timezone.utc) + timedelta(days=expire_in_days)
         codes: List[EnterpriseCode] = []
 
         for _ in range(quantity):
-            # Reintentar si hay colisión (muy improbable)
+                                                         
             for _attempt in range(5):
                 code_str = EnterpriseService._generate_unique_code()
                 exists = (
@@ -78,7 +70,7 @@ class EnterpriseService:
                 if not exists:
                     break
             else:
-                # Si tras 5 intentos no se pudo, usar uno más largo
+                                                                   
                 code_str = EnterpriseService._generate_unique_code(length=12)
 
             db_code = EnterpriseCode(
@@ -96,7 +88,6 @@ class EnterpriseService:
 
     @staticmethod
     def get_code_by_value(db: Session, code: str) -> Optional[EnterpriseCode]:
-        """ACID: row-level lock para evitar redención concurrente del mismo código."""
         return (
             db.query(EnterpriseCode)
             .filter(EnterpriseCode.code == code.upper().strip())
@@ -121,7 +112,6 @@ class EnterpriseService:
     def redeem_code(
         db: Session, db_code: EnterpriseCode, user_id: int
     ) -> EnterpriseCode:
-        """Marca el código como usado y registra quién lo canjeó."""
         db_code.is_used = True
         db_code.used_by_user_id = user_id
         db_code.used_at = datetime.now(timezone.utc)
@@ -130,8 +120,7 @@ class EnterpriseService:
         db.refresh(db_code)
         return db_code
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━  Membership  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                        
     @staticmethod
     def get_membership(
         db: Session, user_id: int, enterprise_id: int
@@ -183,8 +172,7 @@ class EnterpriseService:
             .all()
         )
 
-    # ━━━━━━━━━━━━━━━━━━━━━  Active Break Sessions  ━━━━━━━━━━━━━━━━━━━━━
-
+                                                                         
     @staticmethod
     def create_active_break(
         db: Session, break_in: ActiveBreakCreate
@@ -228,8 +216,7 @@ class EnterpriseService:
             query = query.filter(ActiveBreakSession.category == category)
         return query.order_by(ActiveBreakSession.created_at.desc()).offset(skip).limit(limit).all()
 
-    # ━━━━━━━━━━━━━━━━━━━━━━  Active Break Logs  ━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                        
     @staticmethod
     def start_break_log(
         db: Session,
@@ -268,7 +255,6 @@ class EnterpriseService:
 
     @staticmethod
     def get_user_break_stats(db: Session, user_id: int) -> dict:
-        """Calcula estadísticas de pausas activas para un usuario."""
         logs = (
             db.query(ActiveBreakLog)
             .filter(ActiveBreakLog.user_id == user_id)
@@ -278,7 +264,7 @@ class EnterpriseService:
         total_started = len(logs)
         total_completed = sum(1 for l in logs if l.completed)
 
-        # Calcular minutos totales (solo completadas)
+                                                     
         total_minutes = 0
         by_category: dict[str, int] = {}
 

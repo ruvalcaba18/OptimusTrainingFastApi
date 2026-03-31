@@ -1,6 +1,3 @@
-"""
-Coach enums — especialidades y estados de booking.
-"""
 from enum import Enum
 
 

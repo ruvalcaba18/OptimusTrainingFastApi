@@ -1,4 +1,3 @@
-
 from typing import List, Optional
 from sqlalchemy.orm import Session
 
@@ -8,7 +7,7 @@ from app.core.security import get_password_hash
 
 
 class UserService:
-    # ─── Read ────────────────────────────────────────────────────────────────
+                                                                               
 
     @staticmethod
     def get_by_email(db: Session, email: str) -> Optional[User]:
@@ -22,8 +21,7 @@ class UserService:
     def get_multi(db: Session, skip: int = 0, limit: int = 100) -> List[User]:
         return db.query(User).offset(skip).limit(limit).all()
 
-    # ─── Write ───────────────────────────────────────────────────────────────
-
+                                                                               
     @staticmethod
     def create(db: Session, user_in: UserCreate) -> User:
         db_user = User(
@@ -40,7 +38,7 @@ class UserService:
             is_active=True,
         )
         db.add(db_user)
-        db.flush()  # Ensures session has the user but waits for commit in controller
+        db.flush()                                                                   
         db.refresh(db_user)
         return db_user
 

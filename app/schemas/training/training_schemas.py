@@ -18,8 +18,6 @@ class WorkoutStatus(str, Enum):
     SKIPPED = "skipped"
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━  Exercise Detail  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 class ExerciseDetailBase(BaseModel):
     name: str = Field(..., max_length=100)
     description: Optional[str] = None
@@ -39,8 +37,6 @@ class ExerciseDetailResponse(ExerciseDetailBase):
 
     model_config = {"from_attributes": True}
 
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━  Daily Workout  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 class DailyWorkoutBase(BaseModel):
     date: date
@@ -67,8 +63,6 @@ class DailyWorkoutResponse(DailyWorkoutBase):
     model_config = {"from_attributes": True}
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━  Training Plan  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 class TrainingPlanBase(BaseModel):
     month: int = Field(..., ge=1, le=12)
     year: int = Field(..., ge=2024)
@@ -93,8 +87,6 @@ class TrainingPlanResponse(TrainingPlanBase):
 
     model_config = {"from_attributes": True}
 
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━  Coach Athlete Relationship  ━━━━━━━━━━━━━━━━━━━━━━━
 
 class CoachAthleteResponse(BaseModel):
     id: int

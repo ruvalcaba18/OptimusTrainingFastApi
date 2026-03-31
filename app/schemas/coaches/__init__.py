@@ -14,17 +14,17 @@ from .booking_schemas import (
 )
 
 __all__ = [
-    # Enums
+           
     "CoachSpecialty",
     "BookingStatus",
     "SessionType",
-    # Coach
+           
     "CoachBase",
     "CoachCreate",
     "CoachUpdate",
     "CoachResponse",
     "CoachNearbyResponse",
-    # Booking
+             
     "BookingCreate",
     "BookingStatusUpdate",
     "BookingResponse",

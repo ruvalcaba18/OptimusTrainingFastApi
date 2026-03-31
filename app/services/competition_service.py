@@ -1,12 +1,3 @@
-"""
-Competition service — data-access layer con ACID.
-
-ACID guarantees:
-  - Atomicity: flush() sin commit (commit en controller).
-  - Consistency: UniqueConstraint + validación de capacidad pre-insert.
-  - Isolation: with_for_update() en join y score update.
-  - Idempotency: score update es idempotente (PUT semántico).
-"""
 from typing import List, Optional
 
 from sqlalchemy import func as sa_func
@@ -18,8 +9,7 @@ from app.schemas.competitions import CompetitionCreate, CompetitionUpdate
 
 class CompetitionService:
 
-    # ━━━━━━━━━━━━━━━━━━━━━  Competition CRUD  ━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def create(
         db: Session, creator_id: int, comp_in: CompetitionCreate
@@ -51,7 +41,6 @@ class CompetitionService:
 
     @staticmethod
     def get_by_id_for_update(db: Session, comp_id: int) -> Optional[Competition]:
-        """Row-level lock — bloquea la competencia durante la transacción."""
         return (
             db.query(Competition)
             .filter(Competition.id == comp_id)
@@ -97,8 +86,7 @@ class CompetitionService:
         db.refresh(db_obj)
         return db_obj
 
-    # ━━━━━━━━━━━━━━━━━━━━  Participants (ACID)  ━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def get_participant(
         db: Session, comp_id: int, user_id: int
@@ -116,7 +104,6 @@ class CompetitionService:
     def get_participant_for_update(
         db: Session, comp_id: int, user_id: int
     ) -> Optional[CompetitionParticipant]:
-        """Row-level lock en el participante para score update."""
         return (
             db.query(CompetitionParticipant)
             .filter(
@@ -152,7 +139,6 @@ class CompetitionService:
     def update_score(
         db: Session, participant: CompetitionParticipant, score: float
     ) -> CompetitionParticipant:
-        """Idempotente — siempre establece el score al valor dado."""
         participant.score = score
         db.add(participant)
         db.flush()
@@ -161,10 +147,6 @@ class CompetitionService:
 
     @staticmethod
     def recalculate_positions(db: Session, comp_id: int) -> None:
-        """
-        Recalcula las posiciones de todos los participantes con score,
-        ordenados de mayor a menor.
-        """
         participants = (
             db.query(CompetitionParticipant)
             .filter(

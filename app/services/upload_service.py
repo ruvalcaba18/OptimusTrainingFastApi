@@ -13,7 +13,6 @@ MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 
 
 def _validate_image(file: UploadFile) -> str:
-    """Return the file extension after validating type and size."""
     ext = Path(file.filename).suffix.lower()
     if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
@@ -24,10 +23,6 @@ def _validate_image(file: UploadFile) -> str:
 
 
 async def save_profile_picture(user_id: int, file: UploadFile) -> str:
-    """
-    Save the uploaded file for a given user.
-    Returns the relative URL path to access it.
-    """
     ext = _validate_image(file)
 
     content = await file.read()
@@ -50,6 +45,5 @@ async def save_profile_picture(user_id: int, file: UploadFile) -> str:
 
 
 def delete_profile_picture(user_id: int) -> None:
-    """Remove all profile pictures for a given user."""
     for old in UPLOAD_DIR.glob(f"{user_id}_*"):
         old.unlink(missing_ok=True)

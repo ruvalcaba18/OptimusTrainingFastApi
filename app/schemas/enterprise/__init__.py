@@ -20,10 +20,10 @@ from .active_break_schemas import (
 )
 
 __all__ = [
-    # Enums
+           
     "BreakDuration",
     "BreakCategory",
-    # Enterprise
+                
     "EnterpriseBase",
     "EnterpriseCreate",
     "EnterpriseResponse",
@@ -32,7 +32,7 @@ __all__ = [
     "CodeGenerateRequest",
     "EnterpriseCodeResponse",
     "EnterpriseMemberResponse",
-    # Active Break
+                  
     "ActiveBreakBase",
     "ActiveBreakCreate",
     "ActiveBreakUpdate",

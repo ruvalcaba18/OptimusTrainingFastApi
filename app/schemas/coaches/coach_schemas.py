@@ -1,16 +1,7 @@
-"""
-Schemas para CoachProfile.
-"""
 from datetime import datetime
 from typing import Optional
-
 from pydantic import BaseModel, Field
-
 from .coach_enums import CoachSpecialty
-
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━  Coach Profile  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 
 class CoachBase(BaseModel):
     bio: Optional[str] = None
@@ -24,17 +15,14 @@ class CoachBase(BaseModel):
     city: Optional[str] = None
     state: Optional[str] = None
     service_radius_km: float = Field(default=10.0, gt=0)
-    available_hours: Optional[str] = None  # JSON string
+    available_hours: Optional[str] = None               
     is_searchable: bool = True
 
-
 class CoachCreate(CoachBase):
-    """Payload para registrarse como coach."""
     pass
 
 
 class CoachUpdate(BaseModel):
-    """Todos los campos son opcionales para actualización parcial."""
     bio: Optional[str] = None
     specialty: Optional[CoachSpecialty] = None
     experience_years: Optional[int] = Field(None, ge=0)
@@ -67,6 +55,5 @@ class CoachResponse(CoachBase):
 
 
 class CoachNearbyResponse(BaseModel):
-    """Coach con la distancia calculada desde el punto de búsqueda."""
     coach: CoachResponse
     distance_km: float

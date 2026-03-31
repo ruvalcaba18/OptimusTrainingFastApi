@@ -1,7 +1,3 @@
-"""
-User routes for API v1.
-Thin layer: validates HTTP input, calls controller, returns response.
-"""
 from typing import Any
 from fastapi import APIRouter, Depends, UploadFile, File, status
 from sqlalchemy.orm import Session
@@ -22,7 +18,6 @@ def read_users(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Retorna una lista paginada de usuarios. Requiere autenticación."""
     return user_controller.list_users(db, skip=skip, limit=limit)
 
 
@@ -31,7 +26,6 @@ def create_user(
     user_in: UserCreate,
     db: Session = Depends(get_db),
 ) -> Any:
-    """Registra un nuevo usuario deportivo y devuelve un token de acceso."""
     return user_controller.create_user(db, user_in=user_in)
 
 
@@ -39,7 +33,6 @@ def create_user(
 def read_user_me(
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Devuelve el perfil del usuario autenticado."""
     return current_user
 
 

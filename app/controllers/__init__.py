@@ -1,14 +1,3 @@
-"""
-Controllers package.
-
-Subdirectories:
-  users/        → UserController (CRUD + foto de perfil)
-  auth/         → AuthController (login)
-  enterprise/   → EnterpriseController (empresas, códigos, pausas activas)
-  coaches/      → CoachController (coaches, bookings, reviews)
-  events/       → EventController (eventos sociales, participantes)
-  competitions/ → CompetitionController (competencias, scores, ranking)
-"""
 from app.controllers.users.user_controller import user_controller, UserController
 from app.controllers.auth.auth_controller import auth_controller, AuthController
 from app.controllers.enterprise.enterprise_controller import enterprise_controller, EnterpriseController
@@ -30,4 +19,3 @@ __all__ = [
     "competition_controller",
     "CompetitionController",
 ]
-

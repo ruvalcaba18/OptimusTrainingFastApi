@@ -1,41 +1,59 @@
 # Optimus Training API 🏋️
 
-API de deportes y entrenamiento construida con **FastAPI**, diseñada para escalar a **100 mil usuarios**. Sigue una arquitectura de capas clara: Routes → Controllers → Services → Database → Models.
+API de deportes y entrenamiento construida con **FastAPI + PostgreSQL + Redis**, diseñada para escalar a **1 millón de usuarios**. Arquitectura de capas: Routes → Controllers → Services → Database → Models.
 
 ---
 
 ## ✨ Características
 
-- **Arquitectura de capas** — Routes, Controllers, Services, Database, Models con separación total de responsabilidades.
-- **Versionado de API** — Toda la API vive bajo `/api/v1/`. Agregar `v2` no rompe nada.
-- **4 módulos de negocio** — Enterprise (pausas activas), Coach (geolocalización + booking), Social (eventos + competencias) y **Training** (planes deportivos + seguimiento).
-- **Foto de perfil** — Endpoint dedicado para subir imagen JPG/PNG/WEBP (máx 5 MB) por usuario.
-- **Archivos estáticos** — Las fotos se sirven en `/uploads/profile_pictures/` vía HTTP.
-- **Pool de conexiones** — Configurado para alta concurrencia (`pool_size=10`, `max_overflow=20`).
-- **Autenticación JWT** — Tokens Bearer con expiración configurable.
-- **Validación estricta** — Pydantic v2 (email, teléfono regex, enum de tipo de entrenamiento).
-- **Schemas comunes reutilizables** — `PaginatedResponse[T]` genérico y `MessageResponse`.
-- **Documentación automática** — Swagger UI y ReDoc integrados.
+- **Arquitectura de 5 capas** — Routes, Controllers, Services, Database, Models con separación total de responsabilidades.
+- **Autenticación JWT** completa — Access token + Refresh token + Recuperación de contraseña.
+- **Social Auth** — Sign In con Apple, Google y Facebook (validación server-side, sin depender del cliente).
+- **Redis Cache** — Nearest coaches (Haversine), rankings, catálogo de pausas activas. Falla silenciosamente si Redis no está disponible.
+- **Rate Limiting** — `slowapi` con `200 req/min` por IP por defecto.
+- **Error Handling Unificado** — Todos los errores retornan `{"error": {"code": "...", "message": "..."}}`.
+- **OWASP Top 10** — Ver sección de seguridad.
+- **Pool de conexiones** — `pool_size=20`, `max_overflow=40` para alta concurrencia.
+- **ACID en operaciones críticas** — Row-level locks en bookings, join a eventos, canje de códigos.
+- **Logging estructurado** — `logs/access.log` y `logs/errors.log` con rotación automática.
+- **55 tests unitarios** — Cobertura de auth, social auth, users, providers, security.
 
 ---
 
-## 🔒 Integridad de Datos — Principios ACID
+## 🔒 OWASP Top 10 — Estado del proyecto
 
-Todos los módulos garantizan integridad ACID en operaciones críticas:
+| # | Riesgo | Estado | Implementación |
+|---|--------|--------|----------------|
+| A01 | Broken Access Control | ✅ | `get_current_user` en cada endpoint, validación de ownership en controller |
+| A02 | Cryptographic Failures | ✅ | `bcrypt` para passwords, JWT HS256 con SECRET_KEY requerido del `.env` |
+| A03 | Injection | ✅ | SQLAlchemy ORM — nunca SQL crudo con input del usuario |
+| A04 | Insecure Design | ✅ | Rate limiting `slowapi`, ACID con row-level locks |
+| A05 | Security Misconfiguration | ✅ | CORS configurable por env, headers: `X-Frame-Options`, `X-Content-Type-Options`, `X-XSS-Protection` |
+| A06 | Vulnerable Components | ⚠️ | Ejecutar `pip-audit` periódicamente |
+| A07 | Authentication Failures | ✅ | Token expiry, refresh token, blacklist (Redis), validación estricta |
+| A08 | Data Integrity Failures | ✅ | Pydantic v2 pre-persistencia, `UniqueConstraint` en DB |
+| A09 | Logging and Monitoring | ✅ | Access log + error log con `RotatingFileHandler`, códigos de error estructurados |
+| A10 | SSRF | ✅ | httpx con timeout configurado en llamadas a Apple/Google/Facebook |
 
-| Principio | Implementación |
-|-----------|---------------|
-| **Atomicity** | Patrón *Unit of Work* en controllers: `flush()` en el service, `commit()` único en el controller, `rollback()` en todo `except`. |
-| **Consistency** | `UniqueConstraint` a nivel DB (ej. `uq_event_participant`), validaciones Pydantic v2 pre-persistencia, verificaciones de estado antes de mutar. |
-| **Isolation** | `with_for_update()` (row-level lock) en operaciones concurrentes críticas: redención de código de empresa, join a evento/competencia con cupo, booking de coach. |
-| **Durability** | PostgreSQL garantiza persistencia tras cada `COMMIT`. |
+---
 
-### Ejemplos de operaciones protegidas con row-level lock
+## 🗄️ Redis — Estrategia de Cache
 
-- **Canje de código de empresa** — dos usuarios no pueden usar el mismo código simultáneamente.
-- **Join a evento/competencia con cupo** — se bloquea la fila del evento para contar participantes antes de insertar.
-- **Score update en competencia** — se bloquea la fila del participante para evitar escrituras concurrentes.
-- **Booking de coach** — se bloquea el perfil del coach para verificar disponibilidad.
+Redis falla **silenciosamente** — si el servidor no está disponible, la app sigue funcionando sin cache.
+
+| Endpoint | Clave | TTL | Por qué |
+|---|---|---|---|
+| `GET /coaches/nearby` | `coaches:nearby:{lat}:{lng}:{radius}:{specialty}` | **3 min** | Query Haversine más costosa del proyecto — SQL trigonométrico sobre todos los coaches |
+| `GET /coaches/{id}` | `coach:profile:{id}` | **5 min** | Perfil leído frecuentemente, rara vez actualizado |
+| `GET /competitions/ranking` | `ranking:{competition_id}` | **1 min** | Recalcula posiciones sobre todos los participantes |
+| `POST /competitions/scores` | invalidar `ranking:{id}` | — | Cache bust inmediato al actualizar un score |
+| `GET /enterprise/active-breaks` | `active_breaks:{duration}:{category}` | **10 min** | Catálogo casi estático, consultado por todos los empleados |
+| `POST /enterprise/active-breaks` | invalidar `active_breaks:*` | — | Cache bust cuando se crea una nueva pausa |
+
+**Token blacklisting** (logout):
+```
+blacklist:{jti}  →  TTL = tiempo restante del token
+```
 
 ---
 
@@ -44,13 +62,15 @@ Todos los módulos garantizan integridad ACID en operaciones críticas:
 | Librería | Uso |
 |---|---|
 | [FastAPI](https://fastapi.tiangolo.com/) | Framework web principal |
-| [SQLAlchemy](https://www.sqlalchemy.org/) | ORM + gestión de conexiones |
-| [PostgreSQL](https://www.postgresql.org/) | Base de datos en producción |
+| [SQLAlchemy](https://www.sqlalchemy.org/) | ORM + connection pool |
+| [PostgreSQL](https://www.postgresql.org/) | Base de datos principal |
+| [Redis](https://redis.io/) | Cache + rate limit + token blacklist |
 | [Pydantic v2](https://docs.pydantic.dev/) | Validación y serialización |
-| [Python-JOSE](https://python-jose.readthedocs.io/) | Generación y verificación de JWT |
+| [Python-JOSE](https://python-jose.readthedocs.io/) | JWT (HS256) |
 | [Passlib + bcrypt](https://passlib.readthedocs.io/) | Hash seguro de contraseñas |
-| [python-multipart](https://andrew-d.github.io/python-multipart/) | Soporte de uploads de archivos |
-| [pytest + httpx](https://docs.pytest.org/) | Suite de tests |
+| [slowapi](https://github.com/laurentS/slowapi) | Rate limiting por IP |
+| [httpx](https://www.python-httpx.org/) | HTTP async para social auth |
+| [pytest + pytest-asyncio](https://docs.pytest.org/) | Suite de tests (55 tests) |
 
 ---
 
@@ -61,84 +81,79 @@ OptimusTrainingFastApi/
 │
 ├── app/
 │   ├── api/
-│   │   ├── deps.py                         # Dependencias reutilizables (get_current_user)
+│   │   ├── deps.py                         # get_current_user (JWT decode)
 │   │   └── v1/
-│   │       ├── router.py                   # Agrega todos los routers de v1
-│   │       └── routes/                     # ← CAPA 1: solo declaran endpoints HTTP
+│   │       ├── router.py
+│   │       └── routes/                     # CAPA 1 — HTTP in/out + cache async
 │   │           ├── auth.py
 │   │           ├── users.py
-│   │           ├── enterprise.py           # Módulo Enterprise
-│   │           ├── coaches.py              # Módulo Coach
-│   │           ├── events.py              # Módulo Social — Eventos
-│   │           ├── competitions.py        # Módulo Social — Competencias
-│   │           └── training.py            # Módulo Training — Planes Deportivos
+│   │           ├── social_auth.py          # Apple / Google / Facebook
+│   │           ├── enterprise.py           # Cache: active-breaks (10 min)
+│   │           ├── coaches.py              # Cache: nearby (3 min), profile (5 min)
+│   │           ├── events.py
+│   │           ├── competitions.py         # Cache: ranking (1 min)
+│   │           └── training.py
 │   │
-│   ├── controllers/                        # ← CAPA 2: lógica HTTP + autorización + ACID
-│   │   ├── __init__.py
+│   ├── controllers/                        # CAPA 2 — lógica HTTP + autorización + ACID
 │   │   ├── auth/
+│   │   │   ├── auth_controller.py
+│   │   │   └── social_auth_controller.py
 │   │   ├── users/
 │   │   ├── enterprise/
-│   │   │   └── enterprise_controller.py
 │   │   ├── coaches/
-│   │   │   └── coach_controller.py
 │   │   ├── events/
-│   │   │   └── event_controller.py
 │   │   ├── competitions/
-│   │   │   └── competition_controller.py
 │   │   └── training_controller.py
 │   │
-│   ├── services/                           # ← CAPA 3: data-access + row-level locks
+│   ├── services/                           # CAPA 3 — data-access + row-level locks
 │   │   ├── user_service.py
 │   │   ├── upload_service.py
 │   │   ├── enterprise_service.py
 │   │   ├── coach_service.py
 │   │   ├── event_service.py
 │   │   ├── competition_service.py
-│   │   └── training_service.py
+│   │   ├── training_service.py
+│   │   └── social_auth/
+│   │       ├── apple_provider.py
+│   │       ├── google_provider.py
+│   │       └── facebook_provider.py
 │   │
-│   ├── database/                           # ← CAPA 4: configuración de DB
+│   ├── database/                           # CAPA 4 — DB (pool_size=20, max_overflow=40)
 │   │   └── session/session.py
 │   │
-│   ├── models/                             # ← CAPA 5: modelos SQLAlchemy
-│   │   ├── __init__.py                     # Importa todos los modelos (Alembic los detecta)
+│   ├── models/                             # CAPA 5 — SQLAlchemy models
 │   │   ├── user.py
-│   │   ├── enterprise.py                   # Enterprise, EnterpriseCode, EnterpriseMember
-│   │   ├── active_break.py                 # ActiveBreakSession, ActiveBreakLog
-│   │   ├── coach.py                        # CoachProfile
-│   │   ├── coach_booking.py                # CoachBooking
-│   │   ├── event.py                        # Event, EventParticipant (UniqueConstraint)
-│   │   ├── competition.py                  # Competition, CompetitionParticipant (UniqueConstraint)
-│   │   └── training.py                     # CoachAthlete, TrainingPlan, DailyWorkout, ExerciseDetail
+│   │   ├── enterprise.py
+│   │   ├── active_break.py
+│   │   ├── coach.py
+│   │   ├── coach_booking.py
+│   │   ├── event.py
+│   │   ├── competition.py
+│   │   └── training.py
 │   │
-│   ├── schemas/                            # Pydantic — dividido por dominio
-│   │   ├── users/
-│   │   ├── common/
-│   │   │   ├── pagination.py               # PaginatedResponse[T] genérico
-│   │   │   └── response.py                 # MessageResponse
-│   │   ├── enterprise/
-│   │   │   ├── enterprise_enums.py         # BreakDuration, BreakCategory
-│   │   │   ├── enterprise_schemas.py
-│   │   │   └── active_break_schemas.py
-│   │   ├── coaches/
-│   │   │   ├── coach_enums.py              # CoachSpecialty, BookingStatus, SessionType
-│   │   │   ├── coach_schemas.py
-│   │   │   └── booking_schemas.py
-│   │   ├── events/
-│   │   │   ├── event_enums.py              # EventType, EventStatus
-│   │   │   └── event_schemas.py
-│   │   ├── competitions/
-│   │   │   ├── competition_enums.py        # CompetitionStatus
-│   │   │   └── competition_schemas.py
-│   │   └── training/
-│   │       └── training_schemas.py
+│   ├── schemas/                            # Pydantic v2 — por dominio
 │   │
-│   └── main.py
+│   ├── core/
+│   │   ├── config.py                       # Settings (pydantic-settings)
+│   │   ├── security.py                     # JWT + bcrypt
+│   │   ├── middleware.py                   # SecurityMiddleware (headers + logging)
+│   │   ├── redis_client.py                 # Redis connection + blacklist
+│   │   ├── cache.py                        # cache_get / cache_set / cache_delete
+│   │   ├── error_handlers.py               # Todos los exception handlers
+│   │   └── logging_config.py              # RotatingFileHandler
+│   │
+│   └── main.py                             # FastAPI app + lifespan + rate limiter
 │
 ├── tests/
+│   ├── conftest.py
+│   ├── test_auth.py
+│   ├── test_social_auth.py
+│   ├── test_unit.py
+│   └── test_users.py
+├── logs/                                   # access.log + errors.log (auto-creado)
 ├── migrations/
-├── .env.example
-├── requirements.txt
-└── README.md
+├── .env
+└── requirements.txt
 ```
 
 ---
@@ -152,7 +167,7 @@ git clone <repo-url>
 cd OptimusTrainingFastApi
 
 python3 -m venv .venv
-source .venv/bin/activate        
+source .venv/bin/activate
 ```
 
 ### 2. Instalar dependencias
@@ -161,32 +176,54 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 3. Configurar variables de entorno
+### 3. Redis (requerido para cache y rate limiting)
+
+```bash
+# macOS
+brew install redis && brew services start redis
+
+# Docker
+docker run -d -p 6379:6379 redis:alpine
+```
+
+### 4. Configurar variables de entorno
 
 ```bash
 cp .env.example .env
 ```
 
-Edita `.env` con tus valores reales:
+Variables **requeridas** (sin default — la app no arranca sin ellas):
 
 ```env
 SECRET_KEY="genera-uno-con: openssl rand -hex 32"
-SQLALCHEMY_DATABASE_URI="postgresql://usuario:contraseña@localhost/optimus_db"
+SQLALCHEMY_DATABASE_URI="postgresql://usuario:password@localhost/optimus_db"
 ```
 
-### 4. Crear la base de datos (PostgreSQL)
+Variables opcionales:
+
+```env
+REDIS_URL="redis://localhost:6379/0"
+RATE_LIMIT_ENABLED=true
+ALLOWED_ORIGINS=["https://tudominio.com","https://app.tudominio.com"]
+
+# Social Auth
+APPLE_CLIENT_ID="com.tuempresa.optimus"
+GOOGLE_CLIENT_ID="xxxx.apps.googleusercontent.com"
+FACEBOOK_APP_ID="xxxx"
+FACEBOOK_APP_SECRET="xxxx"
+```
+
+### 5. Base de datos
 
 ```sql
 CREATE DATABASE optimus_db;
 ```
 
-### 5. Aplicar migraciones
-
 ```bash
 alembic upgrade head
 ```
 
-### 6. Iniciar el servidor
+### 6. Iniciar servidor
 
 ```bash
 uvicorn app.main:app --reload
@@ -196,258 +233,84 @@ El servidor arranca en **http://127.0.0.1:8000**
 
 ---
 
-## 📖 Endpoints — API v1
+## 🧪 Tests
 
-Toda la API vive bajo el prefijo `/api/v1`. Todos los endpoints marcados con ✅ requieren `Authorization: Bearer <token>`.
+```bash
+# Correr todos los tests (SQLite in-memory, sin PostgreSQL ni Redis)
+python -m pytest tests/ -v
 
-> **Convención REST**: Los IDs solo aparecen al final del path (`/resource/{id}`). Los IDs de contexto van como query params (GET) o en el body (POST/PUT).
+# Con cobertura
+pip install pytest-cov
+python -m pytest tests/ --cov=app --cov-report=term-missing
+```
+
+**55 tests — 4 archivos:**
+
+| Archivo | Tests | Qué cubre |
+|---|---|---|
+| `test_auth.py` | 8 | Login, refresh token, casos de error |
+| `test_social_auth.py` | 15 | Apple/Google/Facebook — nuevo usuario, existente, desactivado |
+| `test_unit.py` | 15 | JWT tokens, bcrypt, providers (mocked HTTP) |
+| `test_users.py` | 17 | CRUD completo, permisos, validaciones, foto de perfil |
 
 ---
+
+## 📖 Endpoints — API v1
+
+Todos bajo `/api/v1`. Los que tienen ✅ requieren `Authorization: Bearer <token>`.
 
 ### 🔐 Autenticación
 
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| `POST` | `/auth/login` | Login con email + password → JWT | ❌ |
-| `POST` | `/auth/login/access-token` | Login compatible con Swagger | ❌ |
-| `POST` | `/auth/refresh-token` | Refrescar access token | ❌ |
-| `POST` | `/auth/password-recovery/{email}` | Iniciar recuperación | ❌ |
-| `POST` | `/auth/reset-password` | Restablecer con token | ❌ |
-
----
+| Método | Ruta | Auth |
+|--------|------|------|
+| `POST` | `/auth/login` | ❌ |
+| `POST` | `/auth/login/access-token` | ❌ |
+| `POST` | `/auth/refresh-token` | ❌ |
+| `POST` | `/auth/password-recovery/{email}` | ❌ |
+| `POST` | `/auth/reset-password` | ❌ |
+| `POST` | `/auth/social/{provider}` | ❌ — `provider`: `apple` \| `google` \| `facebook` |
 
 ### 👤 Usuarios
 
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| `POST` | `/users/` | Crear usuario | ❌ |
-| `GET` | `/users/` | Listar usuarios (paginado) | ✅ |
-| `GET` | `/users/me` | Mi perfil | ✅ |
-| `GET` | `/users/{id}` | Perfil por ID | ✅ |
-| `PUT` | `/users/{id}` | Actualizar perfil | ✅ dueño |
-| `POST` | `/users/{id}/photo` | Subir foto de perfil | ✅ dueño |
-| `DELETE` | `/users/{id}` | Eliminar usuario | ✅ dueño |
+| Método | Ruta | Auth |
+|--------|------|------|
+| `POST` | `/users/` | ❌ |
+| `GET` | `/users/` | ✅ |
+| `GET` | `/users/me` | ✅ |
+| `GET` | `/users/{id}` | ✅ |
+| `PUT` | `/users/{id}` | ✅ dueño |
+| `POST` | `/users/{id}/photo` | ✅ dueño |
+| `DELETE` | `/users/{id}` | ✅ dueño |
+
+### 🏢 Enterprise, 🏅 Coach, 🎉 Events, 🏆 Competencias, 🏋️ Training
+
+Ver `/api/v1/docs` para la documentación interactiva completa.
 
 ---
 
-### 🏢 Enterprise — Pausas Activas
-
-Valida que un empleado pertenece a una empresa mediante un **código de un solo uso** que expira.
-
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| `POST` | `/enterprise/` | Crear empresa | ✅ |
-| `GET` | `/enterprise/my-enterprise` | Ver mi empresa | ✅ |
-| `POST` | `/enterprise/validate-code` | Canjear código de empresa (**ACID lock**) | ✅ |
-| `POST` | `/enterprise/codes` | Generar N códigos (`enterprise_id` en body) | ✅ |
-| `GET` | `/enterprise/codes` | Listar códigos (`enterprise_id` en query) | ✅ |
-| `GET` | `/enterprise/members` | Listar miembros (`enterprise_id` en query) | ✅ |
-| `POST` | `/enterprise/active-breaks` | Crear plantilla de pausa activa | ✅ |
-| `GET` | `/enterprise/active-breaks` | Listar pausas (filtro: `duration`, `category`) | ✅ |
-| `GET` | `/enterprise/active-breaks/{id}` | Detalle de pausa | ✅ |
-| `POST` | `/enterprise/break-logs` | Iniciar pausa (`session_id` en body) | ✅ |
-| `PUT` | `/enterprise/break-logs/{id}` | Completar pausa | ✅ |
-| `GET` | `/enterprise/my-stats` | Estadísticas personales de pausas | ✅ |
-
-**Flujo de validación de código:**
-```json
-POST /api/v1/enterprise/validate-code
-{ "code": "A3K9-M2X7" }
-```
-- El código se busca con **row-level lock** (`SELECT ... FOR UPDATE`).
-- Si es válido, no usado y no expirado → usuario se vincula a la empresa.
-- El código queda marcado como `is_used = true` — no puede reusarse.
-
-**Duraciones de pausa:** `10` | `20` | `30` minutos  
-**Categorías:** `stretching` | `cardio` | `strength` | `mindfulness` | `mobility`
-
----
-
-### 🏅 Coach — Coaches y Booking
-
-Los coaches se muestran en un mapa usando la fórmula de **Haversine** para calcular distancia.
-
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| `POST` | `/coaches/` | Registrarse como coach | ✅ |
-| `GET` | `/coaches/` | Listar coaches (filtro: `specialty`) | ✅ |
-| `GET` | `/coaches/nearby` | **Buscar en mapa** (`lat`, `lng`, `radius_km`) | ✅ |
-| `GET` | `/coaches/{id}` | Ver perfil de coach | ✅ |
-| `PUT` | `/coaches/{id}` | Actualizar perfil (solo dueño) | ✅ |
-| `DELETE` | `/coaches/{id}` | Desactivar perfil (soft delete) | ✅ |
-| `POST` | `/coaches/bookings` | Solicitar sesión (`coach_id` en body) | ✅ |
-| `GET` | `/coaches/bookings/my-sessions` | Mis sesiones como atleta | ✅ |
-| `GET` | `/coaches/bookings/my-clients` | Mis clientes como coach | ✅ |
-| `PUT` | `/coaches/bookings/{id}` | Aceptar / rechazar sesión (solo coach) | ✅ |
-| `POST` | `/coaches/reviews` | Calificar sesión (`booking_id` en body) | ✅ |
-
-**Búsqueda por mapa:**
-```
-GET /api/v1/coaches/nearby?lat=19.4326&lng=-99.1332&radius_km=15&specialty=running
-```
-Retorna cada coach con `distance_km` calculada, ordenados del más cercano al más lejano.
-
-**Precio automático al crear booking:**
-```
-total_price = hourly_rate × (duration_minutes / 60)
-```
-
-**Rating automático tras review:**  
-El `avg_rating` y `total_reviews` del coach se recalculan automáticamente.
-
-**Especialidades:** `personal_trainer` | `yoga` | `crossfit` | `running` | `swimming` | `nutrition` | `physiotherapy` | `strength` | `functional` | `other`
-
-**Estados de booking:** `pending` → `accepted` | `rejected` → `completed`
-
----
-
-### 🎉 Social — Eventos
-
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| `POST` | `/events/` | Crear evento | ✅ |
-| `GET` | `/events/` | Listar eventos (filtro: `event_type`, `status`) | ✅ |
-| `GET` | `/events/{id}` | Detalle con conteo de participantes | ✅ |
-| `PUT` | `/events/{id}` | Actualizar evento (solo creador) | ✅ |
-| `DELETE` | `/events/{id}` | Cancelar evento (soft cancel) | ✅ |
-| `POST` | `/events/participants` | Unirse a evento (`event_id` en body, **ACID lock**) | ✅ |
-| `DELETE` | `/events/participants` | Salir de evento (`event_id` en body) | ✅ |
-| `GET` | `/events/participants/list` | Listar participantes (`event_id` en query) | ✅ |
-
-**ACID en join:**  
-Se bloquea la fila del evento (`SELECT ... FOR UPDATE`) para validar el cupo antes de insertar. Si el evento tiene `max_participants`, nadie puede excederlo por concurrencia.
-
-**Tipos de evento:** `running` | `cycling` | `swimming` | `crossfit` | `yoga` | `hiking` | `other`
-
----
-
-### 🏆 Social — Competencias
-
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| `POST` | `/competitions/` | Crear competencia | ✅ |
-| `GET` | `/competitions/` | Listar (filtro: `sport_type`, `status`) | ✅ |
-| `GET` | `/competitions/{id}` | Detalle de competencia | ✅ |
-| `PUT` | `/competitions/{id}` | Actualizar (solo creador) | ✅ |
-| `POST` | `/competitions/participants` | Inscribirse (`competition_id` en body, **ACID lock**) | ✅ |
-| `PUT` | `/competitions/scores` | Actualizar score (**idempotente**, solo creador) | ✅ |
-| `GET` | `/competitions/ranking` | Ver ranking (`competition_id` en query) | ✅ |
-
----
-
-### 🏋️ Training — Planes Deportivos y Seguimiento
-
-Gestión de la relación coach-atleta, creación de planes mensuales y validación diaria de ejercicios.
-
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| `POST` | `/training/assign/{coach_id}` | Atleta solicita a un coach (máx 10 atletas) | ✅ |
-| `GET` | `/training/my-athletes` | Coach ve su lista de atletas asignados | ✅ |
-| `POST` | `/training/plans` | Coach crea plan mensual para un atleta | ✅ |
-| `POST` | `/training/plans/{plan_id}/workouts` | Coach añade entrenamiento diario al plan | ✅ |
-| `PUT` | `/training/workouts/{workout_id}` | Coach modifica ejercicios de un entrenamiento | ✅ |
-| `POST` | `/training/plans/{plan_id}/accept` | Atleta aprueba el plan propuesto | ✅ |
-| `POST` | `/workouts/{workout_id}/validate` | Coach valida que se hizo el ejercicio (**Desbloquea siguiente**) | ✅ |
-| `GET` | `/training/payment-status/{coach_id}` | Verificar si el coach validó 15+ días para pago | ✅ |
-
-**Reglas de negocio:**
-- **Límite de atletas:** Un coach no puede tener más de 10 atletas activos.
-- **Validación y Progreso:** El atleta solo puede ver/realizar el ejercicio del día siguiente si el coach validó el anterior.
-- **Elegibilidad de Pago:** El coach debe validar al menos 15 días de entrenamiento en el mes para cobrar su cuota.
-- **Ejercicios:** Cada día de entrenamiento permite definir hasta 8 ejercicios detallados.
-
-**ACID en inscripción:**  
-Se bloquea la fila de la competencia durante la inscripción para validar cupo con exactitud.
-
-**Idempotencia en scores:**  
-`PUT /competitions/scores` sigue semántica PUT — llamarlo dos veces con el mismo score produce el mismo resultado. Las posiciones se recalculan automáticamente después de cada actualización.
-
-**Estados:** `upcoming` → `in_progress` → `finished` | `cancelled`
-
----
-
-## 🗄️ Migraciones con Alembic
+## 🗄️ Migraciones
 
 ```bash
-# Al agregar nuevos modelos, generar la migración
-alembic revision --autogenerate -m "nombre_del_cambio"
-
-# Aplicar
+alembic revision --autogenerate -m "descripcion"
 alembic upgrade head
-
-# Rollback de una migración
 alembic downgrade -1
-
-# Ver estado actual
 alembic current
-
-# Ver historial
-alembic history --verbose
-```
-
-### Migración completa (todos los módulos)
-
-```bash
-alembic revision --autogenerate -m "add_enterprise_coach_social_modules"
-alembic upgrade head
-```
-
-Esto creará las tablas:
-- `enterprises`, `enterprise_codes`, `enterprise_members`
-- `active_break_sessions`, `active_break_logs`
-- `coach_profiles`, `coach_bookings`
-- `events`, `event_participants`
-- `competitions`, `competition_participants`
-- `coach_athletes`, `training_plans`, `daily_workouts`, `exercise_details`
-
----
-
-## 🔌 Documentación interactiva
-
-| UI | URL |
-|---|---|
-| **Swagger UI** | http://127.0.0.1:8000/api/v1/docs |
-| **ReDoc** | http://127.0.0.1:8000/api/v1/redoc |
-| **OpenAPI JSON** | http://127.0.0.1:8000/api/v1/openapi.json |
-
----
-
-## 🧩 Cómo agregar un nuevo dominio
-
-Sigue este orden de capas:
-
-```bash
-# 1. Schema
-app/schemas/nuevo_dominio/__init__.py
-app/schemas/nuevo_dominio/enums.py
-app/schemas/nuevo_dominio/schemas.py
-
-# 2. Model
-app/models/nuevo_dominio.py          # clase(Base) con UniqueConstraint donde aplique
-app/models/__init__.py               # agregar import
-
-# 3. Service  (flush, not commit — con with_for_update() en operaciones críticas)
-app/services/nuevo_dominio_service.py
-
-# 4. Controller  (commit/rollback aquí, validaciones ACID)
-app/controllers/nuevo_dominio/
-    __init__.py
-    nuevo_dominio_controller.py
-
-# 5. Route  (thin layer — solo HTTP in/out)
-app/api/v1/routes/nuevo_dominio.py
-
-# 6. Registrar
-# app/api/v1/router.py
-api_router.include_router(nuevo_dominio.router, prefix="/nuevo-dominio", tags=["..."])
 ```
 
 ---
 
 ## 🔒 Seguridad en producción
 
-- Cambia `SECRET_KEY` por un valor generado con `openssl rand -hex 32`
-- Restringe `allow_origins` en CORS a tus dominios reales
-- Usa HTTPS (Nginx + Certbot o un load balancer)
-- Considera Redis para blacklist de tokens revocados
-- Activa rate limiting (ej. `slowapi`)
+```bash
+# Checks recomendados antes de deploy
+pip install pip-audit
+pip-audit                          # Audita dependencias con CVEs conocidos
+
+openssl rand -hex 32               # Generar SECRET_KEY seguro
+```
+
+- `SECRET_KEY` y `SQLALCHEMY_DATABASE_URI` son requeridos — la app falla inmediatamente si no están
+- `ALLOWED_ORIGINS` — restringir a tus dominios reales (no `["*"]`)
+- HTTPS obligatorio en producción (Nginx + Certbot o load balancer con TLS)
+- Redis en producción con autenticación: `redis://:password@host:6379/0`
+- Rate limit ajustable por IP — considerar `100/minute` en producción

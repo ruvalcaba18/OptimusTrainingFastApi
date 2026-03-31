@@ -1,6 +1,3 @@
-"""
-Competition enums — estados de competencia.
-"""
 from enum import Enum
 
 

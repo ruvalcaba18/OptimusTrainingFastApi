@@ -1,6 +1,3 @@
-"""
-Event enums — tipos de evento y estados.
-"""
 from enum import Enum
 
 

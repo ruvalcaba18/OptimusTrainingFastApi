@@ -18,4 +18,3 @@ class UserResponse(UserBase):
 class UserRegistrationResponse(BaseModel):
     user: UserResponse
     token: Token
-

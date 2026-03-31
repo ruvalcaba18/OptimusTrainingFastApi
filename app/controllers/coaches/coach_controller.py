@@ -1,7 +1,3 @@
-"""
-Coach controller — handles HTTP-level logic and calls the service.
-No direct database queries here; that's the service's job.
-"""
 from typing import Optional
 
 from fastapi import HTTPException, status
@@ -23,13 +19,11 @@ from app.schemas.coaches import (
 
 class CoachController:
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━  Profile  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def register_coach(
         db: Session, coach_in: CoachCreate, current_user: User
     ) -> CoachResponse:
-        """Registrar al usuario autenticado como coach."""
         existing = coach_service.get_by_user_id(db, user_id=current_user.id)
         if existing:
             raise HTTPException(
@@ -123,8 +117,7 @@ class CoachController:
                 detail=f"Error al desactivar coach: {str(e)}",
             )
 
-    # ━━━━━━━━━━━━━━━━━━━━━  Nearby search  ━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def get_nearby_coaches(
         db: Session,
@@ -152,13 +145,12 @@ class CoachController:
             for coach, distance in results
         ]
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━  Bookings  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def create_booking(
         db: Session, booking_in: BookingCreate, current_user: User
     ) -> BookingResponse:
-        # ACID: row-level lock para verificar disponibilidad sin race condition
+                                                                               
         coach = coach_service.get_by_id_for_update(db, booking_in.coach_id)
         if not coach:
             raise HTTPException(
@@ -193,7 +185,6 @@ class CoachController:
     def list_my_bookings(
         db: Session, current_user: User, skip: int = 0, limit: int = 50
     ) -> list[BookingResponse]:
-        """Retorna bookings donde el usuario es atleta."""
         return coach_service.get_bookings_by_athlete(
             db, athlete_id=current_user.id, skip=skip, limit=limit
         )
@@ -202,7 +193,6 @@ class CoachController:
     def list_coach_bookings(
         db: Session, current_user: User, skip: int = 0, limit: int = 50
     ) -> list[BookingResponse]:
-        """Retorna bookings donde el usuario es coach."""
         coach = coach_service.get_by_user_id(db, user_id=current_user.id)
         if not coach:
             raise HTTPException(
@@ -220,7 +210,7 @@ class CoachController:
         status_in: BookingStatusUpdate,
         current_user: User,
     ) -> BookingResponse:
-        # ACID: row-level lock para evitar cambios de estado concurrentes
+                                                                         
         booking = coach_service.get_booking_by_id_for_update(db, booking_id)
         if not booking:
             raise HTTPException(
@@ -228,7 +218,7 @@ class CoachController:
                 detail="Reservación no encontrada",
             )
 
-        # Solo el coach dueño puede cambiar el status
+                                                     
         coach = coach_service.get_by_id(db, booking.coach_id)
         if not coach or coach.user_id != current_user.id:
             raise HTTPException(
@@ -252,8 +242,7 @@ class CoachController:
                 detail=f"Error al actualizar reservación: {str(e)}",
             )
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━  Reviews  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def create_review(
         db: Session, review_in: ReviewCreate, current_user: User
@@ -287,7 +276,7 @@ class CoachController:
                 rating=review_in.rating,
                 review=review_in.review,
             )
-            # Recalcular rating promedio del coach
+                                                  
             coach_service.recalculate_coach_rating(db, coach_id=booking.coach_id)
             db.commit()
             return reviewed

@@ -1,15 +1,9 @@
-"""
-Schemas para ActiveBreakSession y ActiveBreakLog.
-"""
 from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel, Field
 
 from .enterprise_enums import BreakCategory, BreakDuration
-
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━  Active Break Session  ━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
 class ActiveBreakBase(BaseModel):
@@ -45,11 +39,7 @@ class ActiveBreakResponse(ActiveBreakBase):
     model_config = {"from_attributes": True}
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━  Active Break Log  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
 class ActiveBreakLogCreate(BaseModel):
-    """Payload para iniciar una pausa activa."""
     session_id: int = Field(..., description="ID de la pausa activa a iniciar")
 
 
@@ -65,11 +55,7 @@ class ActiveBreakLogResponse(BaseModel):
     model_config = {"from_attributes": True}
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  User Stats  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
 class ActiveBreakStatsResponse(BaseModel):
-    """Estadísticas personales de pausas activas."""
     total_sessions_started: int
     total_sessions_completed: int
     total_minutes: int

@@ -17,9 +17,6 @@ def login_access_token(
     db: Session = Depends(get_db),
     form_data: OAuth2PasswordRequestForm = Depends()
 ) -> Any:
-    """
-    OAuth2 compatible token login, retrieve an access token for future requests
-    """
     user = user_service.get_by_email(db, email=form_data.username)
     if not user or not security.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
@@ -40,8 +37,8 @@ def login(
     db: Session = Depends(get_db),
     user_in: UserLogin = Depends()
 ) -> Any:
-    # Note: changed user_in to use Depends if needed or just Body, 
-    # but in our previous impl it was a direct schema. Fixed to match.
+                                                                   
+                                                                      
     pass
 
 @router.post("/login", response_model=Token)
@@ -49,9 +46,6 @@ def login(
     user_in: UserLogin,
     db: Session = Depends(get_db)
 ) -> Any:
-    """
-    Simple login with JSON body
-    """
     user = user_service.get_by_email(db, email=user_in.email)
     if not user or not security.verify_password(user_in.password, user.hashed_password):
         raise HTTPException(

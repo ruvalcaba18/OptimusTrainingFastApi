@@ -1,12 +1,3 @@
-"""
-Event controller — handles HTTP-level logic with ACID guarantees.
-
-ACID:
-  - Atomicity: try/except con db.commit() / db.rollback().
-  - Consistency: valida capacidad y estado antes de mutar.
-  - Isolation: with_for_update() al unirse a un evento.
-  - Idempotency: si ya estás unido, retorna 409 en vez de crear duplicado.
-"""
 from typing import Optional
 
 from fastapi import HTTPException, status
@@ -26,8 +17,7 @@ from app.schemas.events import (
 
 class EventController:
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━  Event CRUD  ━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def create_event(
         db: Session, event_in: EventCreate, current_user: User
@@ -145,21 +135,12 @@ class EventController:
                 detail=f"Error al cancelar evento: {str(e)}",
             )
 
-    # ━━━━━━━━━━━━━━━━  Participants (ACID + Idempotent)  ━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def join_event(
         db: Session, join_in: JoinEventRequest, current_user: User
     ) -> EventParticipantResponse:
-        """
-        ACID join:
-        1. Lock the event row (with_for_update) to prevent race conditions.
-        2. Check if already joined (idempotency → 409).
-        3. Validate capacity.
-        4. Add participant.
-        5. Commit or rollback.
-        """
-        # 1. Row-level lock
+                           
         event = event_service.get_by_id_for_update(db, join_in.event_id)
         if not event:
             raise HTTPException(
@@ -172,7 +153,7 @@ class EventController:
                 detail="No puedes unirte a un evento cancelado",
             )
 
-        # 2. Idempotency check
+                              
         existing = event_service.get_participant(
             db, event_id=join_in.event_id, user_id=current_user.id
         )
@@ -182,7 +163,7 @@ class EventController:
                 detail="Ya estás inscrito en este evento",
             )
 
-        # 3. Capacity validation
+                                
         if event.max_participants is not None:
             current_count = event_service.count_participants(db, event.id)
             if current_count >= event.max_participants:
@@ -191,7 +172,7 @@ class EventController:
                     detail="El evento ha alcanzado el máximo de participantes",
                 )
 
-        # 4. Add
+                
         try:
             participant = event_service.add_participant(
                 db, event_id=join_in.event_id, user_id=current_user.id
@@ -216,7 +197,7 @@ class EventController:
                 detail="Evento no encontrado",
             )
 
-        # Idempotency: si no estás unido, 404
+                                             
         existing = event_service.get_participant(
             db, event_id=leave_in.event_id, user_id=current_user.id
         )

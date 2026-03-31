@@ -17,21 +17,19 @@ from app.schemas.training import (
 
 class TrainingController:
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━  Athlete Management  ━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                              
     @staticmethod
     def assign_athlete_to_coach(
         db: Session, coach_id: int, current_user: User
     ) -> CoachAthleteResponse:
-        """Asignar un atleta al coach especificado."""
-        # Verificar que el coach existe
+                                       
         coach = coach_service.get_by_id(db, coach_id)
         if not coach:
             raise HTTPException(status_code=404, detail="Coach no encontrado")
             
         try:
-            # Aquí asumimos que el current_user es el atleta que quiere al coach
-            # o que hay una lógica previa de "requerimiento de servicio"
+                                                                                
+                                                                        
             relation = training_service.assign_athlete(db, coach_id, current_user.id)
             db.commit()
             return relation
@@ -43,20 +41,17 @@ class TrainingController:
 
     @staticmethod
     def list_my_athletes(db: Session, current_user: User) -> List[CoachAthleteResponse]:
-        """Listar atletas asignados al coach (current_user)."""
         coach = coach_service.get_by_user_id(db, current_user.id)
         if not coach:
             raise HTTPException(status_code=404, detail="Perfil de coach no encontrado")
             
         return training_service.list_coach_athletes(db, coach.id)
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━  Training Plan  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                             
     @staticmethod
     def create_monthly_plan(
         db: Session, plan_in: TrainingPlanCreate, current_user: User
     ) -> TrainingPlanResponse:
-        """Coach crea un plan mensual para un atleta."""
         coach = coach_service.get_by_user_id(db, current_user.id)
         if not coach:
             raise HTTPException(status_code=403, detail="Solo coaches pueden crear planes")
@@ -72,7 +67,6 @@ class TrainingController:
     def add_workout_to_plan(
         db: Session, plan_id: int, workout_in: DailyWorkoutCreate, current_user: User
     ) -> DailyWorkoutResponse:
-        """Coach añade un entrenamiento a un plan."""
         plan = training_service.get_plan_by_id(db, plan_id)
         if not plan:
             raise HTTPException(status_code=404, detail="Plan no encontrado")
@@ -93,7 +87,6 @@ class TrainingController:
     def modify_workout(
         db: Session, workout_id: int, exercises: List[ExerciseDetailCreate], current_user: User
     ) -> DailyWorkoutResponse:
-        """Coach modifica los ejercicios de un entrenamiento."""
         workout = training_service.get_workout_by_id(db, workout_id)
         if not workout:
             raise HTTPException(status_code=404, detail="Entrenamiento no encontrado")
@@ -113,7 +106,6 @@ class TrainingController:
 
     @staticmethod
     def athlete_accept_plan(db: Session, plan_id: int, current_user: User) -> TrainingPlanResponse:
-        """Atleta acepta el plan propuesto."""
         plan = training_service.get_plan_by_id(db, plan_id)
         if not plan:
             raise HTTPException(status_code=404, detail="Plan no encontrado")
@@ -128,13 +120,11 @@ class TrainingController:
             db.rollback()
             raise HTTPException(status_code=500, detail=str(e))
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━  Validation  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                           
     @staticmethod
     def validate_workout_completion(
         db: Session, workout_id: int, current_user: User
     ) -> DailyWorkoutResponse:
-        """Coach valida que el atleta hizo el ejercicio."""
         workout = training_service.get_workout_by_id(db, workout_id)
         if not workout:
             raise HTTPException(status_code=404, detail="Entrenamiento no encontrado")
@@ -154,7 +144,6 @@ class TrainingController:
 
     @staticmethod
     def check_payment_status(db: Session, coach_id: int, month: int, year: int) -> dict:
-        """Verificar si el coach es elegible para pago."""
         is_eligible = training_service.check_coach_payment_eligibility(db, coach_id, month, year)
         return {
             "coach_id": coach_id,

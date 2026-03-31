@@ -1,7 +1,3 @@
-"""
-Coach service — data-access layer.
-No HTTP logic here; that belongs in the controller.
-"""
 from typing import List, Optional, Tuple
 
 from sqlalchemy import func as sa_func
@@ -14,8 +10,7 @@ from app.schemas.coaches import CoachCreate, CoachUpdate, BookingCreate
 
 class CoachService:
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━  Profile CRUD  ━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                        
     @staticmethod
     def get_by_user_id(db: Session, user_id: int) -> Optional[CoachProfile]:
         return (
@@ -98,8 +93,7 @@ class CoachService:
         db.refresh(db_obj)
         return db_obj
 
-    # ━━━━━━━━━━━━━━━━━━━━━  Geolocation search  ━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                        
     @staticmethod
     def get_nearby(
         db: Session,
@@ -110,11 +104,6 @@ class CoachService:
         skip: int = 0,
         limit: int = 20,
     ) -> List[Tuple[CoachProfile, float]]:
-        """
-        Busca coaches activos y disponibles dentro de un radio en km
-        usando la fórmula de Haversine en SQL.
-        Retorna tuplas (CoachProfile, distance_km).
-        """
         earth_radius_km = 6371.0
 
         dlat = sa_func.radians(CoachProfile.latitude - lat)
@@ -151,11 +140,9 @@ class CoachService:
             .all()
         )
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━  Bookings  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def get_by_id_for_update(db: Session, coach_id: int) -> Optional[CoachProfile]:
-        """Row-level lock — bloquea el perfil durante la transacción de booking."""
         return (
             db.query(CoachProfile)
             .filter(CoachProfile.id == coach_id)
@@ -167,7 +154,6 @@ class CoachService:
     def get_booking_by_id_for_update(
         db: Session, booking_id: int
     ) -> Optional[CoachBooking]:
-        """Row-level lock — bloquea el booking durante cambio de status."""
         return (
             db.query(CoachBooking)
             .filter(CoachBooking.id == booking_id)
@@ -182,7 +168,7 @@ class CoachService:
         athlete_id: int,
         booking_in: BookingCreate,
     ) -> CoachBooking:
-        # Calcular precio = tarifa por hora * duración en horas
+                                                               
         hours = booking_in.duration_minutes / 60.0
         total_price = round(coach.hourly_rate * hours, 2)
 
@@ -254,8 +240,7 @@ class CoachService:
         db.refresh(booking)
         return booking
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━  Reviews  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def add_review(
         db: Session,
@@ -272,7 +257,6 @@ class CoachService:
 
     @staticmethod
     def recalculate_coach_rating(db: Session, coach_id: int) -> None:
-        """Recalcula avg_rating y total_reviews del coach a partir de sus bookings."""
         result = (
             db.query(
                 sa_func.avg(CoachBooking.athlete_rating),

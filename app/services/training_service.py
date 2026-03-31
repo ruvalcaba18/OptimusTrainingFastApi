@@ -8,12 +8,11 @@ from app.schemas.training import TrainingPlanCreate, DailyWorkoutCreate, Exercis
 
 
 class TrainingService:
-    # ━━━━━━━━━━━━━━━━━━━━━━━━  Athlete Management  ━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                                                              
 
     @staticmethod
     def assign_athlete(db: Session, coach_id: int, athlete_id: int) -> CoachAthlete:
-        """Asignar un atleta a un coach (máximo 10 activos)."""
-        # Contar atletas activos
+                                
         active_count = db.query(CoachAthlete).filter(
             CoachAthlete.coach_id == coach_id,
             CoachAthlete.is_active == True
@@ -21,7 +20,7 @@ class TrainingService:
         if active_count >= 10:
             raise ValueError("El coach ya tiene el máximo de 10 atletas permitidos.")
         
-        # Verificar si ya existe la relación
+                                            
         existing = db.query(CoachAthlete).filter(
             CoachAthlete.coach_id == coach_id,
             CoachAthlete.athlete_id == athlete_id
@@ -46,12 +45,10 @@ class TrainingService:
             CoachAthlete.is_active == True
         ).all()
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━  Training Plan  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                             
     @staticmethod
     def create_plan(db: Session, coach_id: int, plan_in: TrainingPlanCreate) -> TrainingPlan:
-        """Crear un plan de entrenamiento mensual."""
-        # Verificar si ya existe un plan para este mes/año
+                                                          
         existing = db.query(TrainingPlan).filter(
             TrainingPlan.coach_id == coach_id,
             TrainingPlan.athlete_id == plan_in.athlete_id,
@@ -86,11 +83,9 @@ class TrainingService:
         db.refresh(plan)
         return plan
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━  Daily Workouts  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                            
     @staticmethod
     def add_workout(db: Session, plan_id: int, workout_in: DailyWorkoutCreate) -> DailyWorkout:
-        """Añadir un entrenamiento diario con hasta 8 ejercicios."""
         db_workout = DailyWorkout(
             plan_id=plan_id,
             date=workout_in.date,
@@ -123,15 +118,14 @@ class TrainingService:
     def update_workout_exercises(
         db: Session, workout_id: int, exercises_in: List[ExerciseDetailCreate]
     ) -> DailyWorkout:
-        """Modificar ejercicios de un entrenamiento (realizado por el coach)."""
         db_workout = db.query(DailyWorkout).filter(DailyWorkout.id == workout_id).first()
         if not db_workout:
             return None
             
-        # Eliminar ejercicios anteriores
+                                        
         db.query(ExerciseDetail).filter(ExerciseDetail.workout_id == workout_id).delete()
         
-        # Añadir nuevos (max 8)
+                               
         for i, ex_in in enumerate(exercises_in[:8]):
             db_ex = ExerciseDetail(
                 workout_id=workout_id,
@@ -150,7 +144,6 @@ class TrainingService:
 
     @staticmethod
     def validate_daily_workout(db: Session, workout_id: int) -> DailyWorkout:
-        """El coach valida que el atleta realizó el ejercicio."""
         db_workout = db.query(DailyWorkout).filter(DailyWorkout.id == workout_id).first()
         if not db_workout:
             return None
@@ -164,22 +157,17 @@ class TrainingService:
         db.refresh(db_workout)
         return db_workout
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━  Business Logic  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                            
     @staticmethod
     def can_see_next_workout(db: Session, plan_id: int, current_date: date) -> bool:
-        """
-        El atleta puede ver el siguiente ejercicio si el anterior fue validado.
-        Asumiendo orden cronológico.
-        """
-        # Buscar el entrenamiento del día anterior o el último completado
+                                                                         
         last_workout = db.query(DailyWorkout).filter(
             DailyWorkout.plan_id == plan_id,
             DailyWorkout.date < current_date
         ).order_by(DailyWorkout.date.desc()).first()
         
         if not last_workout:
-            # Es el primer día del plan
+                                       
             return True
             
         return last_workout.coach_validated
@@ -188,10 +176,6 @@ class TrainingService:
     def check_coach_payment_eligibility(
         db: Session, coach_id: int, month: int, year: int
     ) -> bool:
-        """
-        Un coach debe haber validado al menos 15 días en el mes 
-        para recibir su pago.
-        """
         validated_days = db.query(DailyWorkout).join(TrainingPlan).filter(
             TrainingPlan.coach_id == coach_id,
             TrainingPlan.month == month,

@@ -1,9 +1,3 @@
-"""
-Event routes for API v1.
-Thin layer: validates HTTP input, calls controller, returns response.
-
-Diseño RESTful plano — IDs solo al final del path.
-"""
 from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, Query, status
@@ -25,10 +19,6 @@ from app.schemas.common.response import MessageResponse
 
 router = APIRouter()
 
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━  Events  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
 @router.post(
     "/",
     response_model=EventResponse,
@@ -40,11 +30,9 @@ def create_event(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Crea un nuevo evento deportivo. Requiere autenticación."""
     return event_controller.create_event(
         db, event_in=event_in, current_user=current_user
     )
-
 
 @router.get(
     "/",
@@ -59,11 +47,9 @@ def list_events(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Lista eventos públicos con filtros opcionales."""
     return event_controller.list_events(
         db, event_type=event_type, event_status=event_status, skip=skip, limit=limit
     )
-
 
 @router.get(
     "/{event_id}",
@@ -75,9 +61,7 @@ def get_event(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Retorna el detalle de un evento con el conteo de participantes."""
     return event_controller.get_event(db, event_id=event_id)
-
 
 @router.put(
     "/{event_id}",
@@ -90,11 +74,9 @@ def update_event(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Actualiza un evento. Solo el creador puede editarlo."""
     return event_controller.update_event(
         db, event_id=event_id, event_in=event_in, current_user=current_user
     )
-
 
 @router.delete(
     "/{event_id}",
@@ -106,14 +88,9 @@ def cancel_event(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Cancela un evento (soft cancel). Solo el creador puede hacerlo."""
     return event_controller.cancel_event(
         db, event_id=event_id, current_user=current_user
     )
-
-
-# ━━━━━━━━━━━━━━━━━━━━━━  Participants  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 
 @router.post(
     "/participants",
@@ -126,15 +103,9 @@ def join_event(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """
-    Unirse a un evento. El event_id va en el body.
-    ACID: usa row-level lock para validar capacidad.
-    Idempotente: retorna 409 si ya estás inscrito.
-    """
     return event_controller.join_event(
         db, join_in=join_in, current_user=current_user
     )
-
 
 @router.delete(
     "/participants",
@@ -146,11 +117,9 @@ def leave_event(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Salir de un evento. El event_id va en el body."""
     return event_controller.leave_event(
         db, leave_in=leave_in, current_user=current_user
     )
-
 
 @router.get(
     "/participants/list",
@@ -159,12 +128,10 @@ def leave_event(
 )
 def list_participants(
     event_id: int = Query(..., description="ID del evento"),
-    skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Retorna los participantes de un evento. El event_id va como query param."""
     return event_controller.list_participants(
         db, event_id=event_id, skip=skip, limit=limit
     )

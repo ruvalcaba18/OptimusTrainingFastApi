@@ -1,15 +1,9 @@
-"""
-Schemas para Competition y CompetitionParticipant.
-"""
 from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel, Field
 
 from .competition_enums import CompetitionStatus
-
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━  Competition  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
 class CompetitionBase(BaseModel):
@@ -58,16 +52,11 @@ class CompetitionResponse(CompetitionBase):
     model_config = {"from_attributes": True}
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━  Participant  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
 class JoinCompetitionRequest(BaseModel):
-    """Payload para inscribirse — idempotente."""
     competition_id: int = Field(..., description="ID de la competencia")
 
 
 class ScoreUpdateRequest(BaseModel):
-    """Payload para actualizar score — idempotente (PUT semántico)."""
     competition_id: int = Field(..., description="ID de la competencia")
     user_id: int = Field(..., description="ID del participante")
     score: float = Field(..., description="Score del participante")
@@ -85,6 +74,5 @@ class CompetitionParticipantResponse(BaseModel):
 
 
 class RankingResponse(BaseModel):
-    """Respuesta del ranking de una competencia."""
     competition_id: int
     participants: list[CompetitionParticipantResponse]

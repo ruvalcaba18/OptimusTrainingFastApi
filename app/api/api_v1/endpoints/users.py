@@ -16,9 +16,6 @@ def read_users(
     limit: int = 100,
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:
-    """
-    Retrieve users.
-    """
     users = user_service.get_multi(db, skip=skip, limit=limit)
     return users
 
@@ -27,9 +24,6 @@ def create_user(
     user_in: UserCreate,
     db: Session = Depends(get_db)
 ) -> Any:
-    """
-    Create new user.
-    """
     user = user_service.get_by_email(db, email=user_in.email)
     if user:
         raise HTTPException(
@@ -42,9 +36,6 @@ def create_user(
 def read_user_me(
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:
-    """
-    Get current user.
-    """
     return current_user
 
 @router.get("/{user_id}", response_model=UserResponse)
@@ -53,9 +44,6 @@ def read_user_by_id(
     db: Session = Depends(get_db),
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:
-    """
-    Get a specific user by id.
-    """
     user = user_service.get_by_id(db, user_id=user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -68,9 +56,6 @@ def update_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:
-    """
-    Update a user.
-    """
     user = user_service.get_by_id(db, user_id=user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -83,9 +68,6 @@ def delete_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:
-    """
-    Delete a user.
-    """
     user = user_service.delete(db, user_id=user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

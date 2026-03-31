@@ -1,6 +1,3 @@
-"""
-Pytest configuration and shared fixtures.
-"""
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -11,8 +8,7 @@ from app.database import Base, get_db
 from app.core.security import get_password_hash
 from app.models.user import User
 
-# ─── In-memory SQLite for tests (no PostgreSQL needed) ──────────────────────
-TEST_DATABASE_URL = "sqlite:///:memory:"  # Pura memoria — no crea archivos en disco
+TEST_DATABASE_URL = "sqlite:///:memory:"
 
 engine = create_engine(TEST_DATABASE_URL, connect_args={"check_same_thread": False})
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -20,7 +16,6 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 
 @pytest.fixture(scope="session", autouse=True)
 def create_tables():
-    """Create all tables once per test session."""
     Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)
@@ -28,7 +23,6 @@ def create_tables():
 
 @pytest.fixture()
 def db():
-    """Provide a clean DB session per test and rollback after."""
     connection = engine.connect()
     transaction = connection.begin()
     session = TestingSessionLocal(bind=connection)
@@ -40,7 +34,6 @@ def db():
 
 @pytest.fixture()
 def client(db):
-    """Test client with overridden DB dependency."""
     def override_get_db():
         yield db
 
@@ -52,7 +45,6 @@ def client(db):
 
 @pytest.fixture()
 def test_user(db) -> User:
-    """A pre-created user for tests that require an existing user."""
     user = User(
         email="testuser@optimus.com",
         hashed_password=get_password_hash("Passw0rd!"),
@@ -74,7 +66,6 @@ def test_user(db) -> User:
 
 @pytest.fixture()
 def auth_headers(client, test_user) -> dict:
-    """Returns Authorization headers for the test user."""
     resp = client.post(
         "/api/v1/auth/login",
         json={"email": "testuser@optimus.com", "password": "Passw0rd!"},

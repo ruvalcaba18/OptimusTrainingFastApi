@@ -1,15 +1,9 @@
-"""
-Schemas para Event y EventParticipant.
-"""
 from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel, Field
 
 from .event_enums import EventType, EventStatus
-
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━  Event  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
 class EventBase(BaseModel):
@@ -56,16 +50,11 @@ class EventResponse(EventBase):
     model_config = {"from_attributes": True}
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━  Participant  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-
 class JoinEventRequest(BaseModel):
-    """Payload para unirse a un evento — idempotente."""
     event_id: int = Field(..., description="ID del evento")
 
 
 class LeaveEventRequest(BaseModel):
-    """Payload para salir de un evento."""
     event_id: int = Field(..., description="ID del evento")
 
 

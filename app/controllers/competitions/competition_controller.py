@@ -1,12 +1,3 @@
-"""
-Competition controller — handles HTTP-level logic with ACID guarantees.
-
-ACID:
-  - Atomicity: try/except con db.commit() / db.rollback().
-  - Consistency: valida capacidad y estado antes de mutar.
-  - Isolation: with_for_update() al inscribirse y al actualizar score.
-  - Idempotency: score update (PUT) es idempotente, join retorna 409 si ya inscrito.
-"""
 from typing import Optional
 
 from fastapi import HTTPException, status
@@ -27,8 +18,7 @@ from app.schemas.competitions import (
 
 class CompetitionController:
 
-    # ━━━━━━━━━━━━━━━━━━━━━  Competition CRUD  ━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def create_competition(
         db: Session, comp_in: CompetitionCreate, current_user: User
@@ -111,21 +101,12 @@ class CompetitionController:
                 detail=f"Error al actualizar competencia: {str(e)}",
             )
 
-    # ━━━━━━━━━━━━━━━  Participants (ACID + Idempotent)  ━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def join_competition(
         db: Session, join_in: JoinCompetitionRequest, current_user: User
     ) -> CompetitionParticipantResponse:
-        """
-        ACID join:
-        1. Lock the competition row (with_for_update).
-        2. Idempotency check (409 if already joined).
-        3. Validate capacity.
-        4. Add participant.
-        5. Commit or rollback.
-        """
-        # 1. Row-level lock
+                           
         comp = competition_service.get_by_id_for_update(db, join_in.competition_id)
         if not comp:
             raise HTTPException(
@@ -143,7 +124,7 @@ class CompetitionController:
                 detail="Esta competencia ya finalizó",
             )
 
-        # 2. Idempotency check
+                              
         existing = competition_service.get_participant(
             db, comp_id=join_in.competition_id, user_id=current_user.id
         )
@@ -153,7 +134,7 @@ class CompetitionController:
                 detail="Ya estás inscrito en esta competencia",
             )
 
-        # 3. Capacity validation
+                                
         if comp.max_participants is not None:
             current_count = competition_service.count_participants(db, comp.id)
             if current_count >= comp.max_participants:
@@ -162,7 +143,7 @@ class CompetitionController:
                     detail="La competencia ha alcanzado el máximo de participantes",
                 )
 
-        # 4. Add
+                
         try:
             participant = competition_service.add_participant(
                 db, comp_id=join_in.competition_id, user_id=current_user.id
@@ -176,20 +157,11 @@ class CompetitionController:
                 detail=f"Error al inscribirse: {str(e)}",
             )
 
-    # ━━━━━━━━━━━━━━━━━━  Score (ACID + Idempotent)  ━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def update_score(
         db: Session, score_in: ScoreUpdateRequest, current_user: User
     ) -> CompetitionParticipantResponse:
-        """
-        ACID score update:
-        1. Validate competition exists and user is creator.
-        2. Lock participant row (with_for_update).
-        3. Update score (idempotent — PUT semantics).
-        4. Recalculate positions.
-        5. Commit or rollback.
-        """
         comp = competition_service.get_by_id(db, score_in.competition_id)
         if not comp:
             raise HTTPException(
@@ -202,7 +174,7 @@ class CompetitionController:
                 detail="Solo el creador puede actualizar scores",
             )
 
-        # 2. Lock participant row
+                                 
         participant = competition_service.get_participant_for_update(
             db, comp_id=score_in.competition_id, user_id=score_in.user_id
         )
@@ -213,14 +185,14 @@ class CompetitionController:
             )
 
         try:
-            # 3. Idempotent update
+                                  
             updated = competition_service.update_score(
                 db, participant=participant, score=score_in.score
             )
-            # 4. Recalculate positions
+                                      
             competition_service.recalculate_positions(db, comp_id=score_in.competition_id)
             db.commit()
-            # Re-read to get updated position
+                                             
             db.refresh(updated)
             return updated
         except Exception as e:
@@ -230,8 +202,7 @@ class CompetitionController:
                 detail=f"Error al actualizar score: {str(e)}",
             )
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━  Ranking  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def get_ranking(
         db: Session, competition_id: int

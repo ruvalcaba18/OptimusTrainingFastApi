@@ -1,12 +1,3 @@
-"""
-Event service — data-access layer con ACID.
-
-ACID guarantees:
-  - Atomicity: flush() sin commit (commit en controller).
-  - Consistency: UniqueConstraint + validación de capacidad pre-insert.
-  - Isolation: with_for_update() en join/leave para evitar race conditions.
-  - Idempotency: verificación de estado antes de cada mutación.
-"""
 from typing import List, Optional
 
 from sqlalchemy import func as sa_func
@@ -18,8 +9,7 @@ from app.schemas.events import EventCreate, EventUpdate
 
 class EventService:
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━  Event CRUD  ━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def create(db: Session, creator_id: int, event_in: EventCreate) -> Event:
         db_event = Event(
@@ -48,7 +38,6 @@ class EventService:
 
     @staticmethod
     def get_by_id_for_update(db: Session, event_id: int) -> Optional[Event]:
-        """Row-level lock — bloquea el evento durante la transacción."""
         return (
             db.query(Event)
             .filter(Event.id == event_id)
@@ -102,8 +91,7 @@ class EventService:
         db.refresh(db_obj)
         return db_obj
 
-    # ━━━━━━━━━━━━━━━━━━━━━  Participants (ACID)  ━━━━━━━━━━━━━━━━━━━━━
-
+                                                                       
     @staticmethod
     def get_participant(
         db: Session, event_id: int, user_id: int
