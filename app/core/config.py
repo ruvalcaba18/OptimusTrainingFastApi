@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     SMTP_USER: str = ""
     SMTP_PASSWORD: str = ""
 
+    FRONTEND_URL: str = "http://localhost:8000"
+
     SQLALCHEMY_DATABASE_URI: str
 
     MAX_UPLOAD_SIZE_MB: int = 5
@@ -31,6 +33,7 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str = ""
     FACEBOOK_APP_ID: str = ""
     FACEBOOK_APP_SECRET: str = ""
+    OPENAI_API_KEY: str = ""
 
     REDIS_URL: str = "redis://localhost:6379/0"
     RATE_LIMIT_ENABLED: bool = True

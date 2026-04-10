@@ -6,10 +6,8 @@ from sqlalchemy.orm import Session
 from app.models.competition import Competition, CompetitionParticipant
 from app.schemas.competitions import CompetitionCreate, CompetitionUpdate
 
-
 class CompetitionService:
-
-                                                                       
+                                                                
     @staticmethod
     def create(
         db: Session, creator_id: int, comp_in: CompetitionCreate

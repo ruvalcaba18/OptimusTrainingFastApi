@@ -7,10 +7,8 @@ from app.models.coach import CoachProfile
 from app.models.coach_booking import CoachBooking
 from app.schemas.coaches import CoachCreate, CoachUpdate, BookingCreate
 
-
 class CoachService:
-
-                                                                        
+                                                          
     @staticmethod
     def get_by_user_id(db: Session, user_id: int) -> Optional[CoachProfile]:
         return (

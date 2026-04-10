@@ -4,9 +4,8 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from slowapi.util import get_remote_address
 from starlette.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
@@ -19,7 +18,7 @@ from app.core.redis_client import close_redis, get_redis
 setup_logging()
 logger = logging.getLogger("optimus")
 
-limiter = Limiter(key_func=get_remote_address, default_limits=["200/minute"])
+from app.core.rate_limiter import limiter
 
 
 @asynccontextmanager
