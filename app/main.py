@@ -20,7 +20,6 @@ logger = logging.getLogger("optimus")
 
 from app.core.rate_limiter import limiter
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
