@@ -9,7 +9,7 @@ class EmailService:
     def send_password_reset_email(email_to: str, token: str) -> None:
         project_name = settings.PROJECT_NAME
                                                                          
-        reset_link = f"{settings.FRONTEND_URL}/reset-password?token={token}"
+        reset_link = f"http://localhost:8000/reset-password?token={token}"
         
         message_content = f"""
         Hola,
@@ -18,8 +18,7 @@ class EmailService:
         
         Si no solicitaste esto, simplemente ignora este correo.
         """
-        
-                                  
+                         
         logger.info(f"ENVIANDO CORREO DE RECUPERACIÓN A: {email_to}")
         logger.info(f"CONTENIDO:\n{message_content}")
         

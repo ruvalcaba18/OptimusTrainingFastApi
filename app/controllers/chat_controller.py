@@ -1,13 +1,15 @@
+from datetime import timedelta
 from fastapi import HTTPException, status
 from typing import Any, Dict
 from app.services.chat_service import chat_service
 from app.schemas.chat import ChatRequest
 from app.models.user import User
+from app.core import security
+from app.core.config import settings
 
 class ChatController:
     @staticmethod
     async def chat_with_openai(chat_in: ChatRequest, current_user: User) -> Dict[str, Any]:
-        # 1. Verificar límite
         current_count = await chat_service.get_global_count()
         if current_count >= chat_service.CHAT_MAX_TOTAL:
             raise HTTPException(
@@ -16,17 +18,24 @@ class ChatController:
             )
 
         try:
-            # 2. Llamada al servicio
             result = await chat_service.call_openai_proxy(chat_in)
-            
-            # 3. Incrementar si fue exitoso
             await chat_service.increment_global_count()
+            
+            # Inyectar token para que el frontend pueda persistir la sesión
+            access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+            result["token"] = {
+                "access_token": security.create_access_token(
+                    current_user.email, 
+                    expires_delta=access_token_expires
+                ),
+                "refresh_token": security.create_refresh_token(current_user.email),
+                "token_type": "bearer"
+            }
             
             return result
         except ValueError as e:
             raise HTTPException(status_code=500, detail=str(e))
         except Exception as e:
-            # Podrías diferenciar errores de OpenAI (400, 401, etc) aquí
             raise HTTPException(status_code=500, detail=f"Error en el proxy de Chat: {str(e)}")
 
 chat_controller = ChatController()
