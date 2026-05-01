@@ -18,6 +18,7 @@ def login_access_token(
     form_data: OAuth2PasswordRequestForm = Depends()
 ) -> Any:
     user = user_service.get_by_email(db, email=form_data.username)
+    
     if not user or not security.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
