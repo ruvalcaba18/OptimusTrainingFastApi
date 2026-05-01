@@ -21,7 +21,6 @@ class ChatController:
             result = await chat_service.call_openai_proxy(chat_in)
             await chat_service.increment_global_count()
             
-            # Inyectar token para que el frontend pueda persistir la sesión
             access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
             result["token"] = {
                 "access_token": security.create_access_token(
