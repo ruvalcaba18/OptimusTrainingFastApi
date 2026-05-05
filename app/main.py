@@ -13,7 +13,7 @@ from app.core.config import settings
 from app.core.error_handlers import register_exception_handlers
 from app.core.logging_config import setup_logging
 from app.core.middleware import SecurityMiddleware
-from app.core.redis_client import close_redis, get_redis
+from app.core.cache import cache_service
 
 setup_logging()
 logger = logging.getLogger("optimus")
@@ -23,15 +23,14 @@ from app.core.rate_limiter import limiter
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
-        redis = await get_redis()
-        await redis.ping()
-        logger.info("Redis connected: %s", settings.REDIS_URL)
+        if await cache_service.health_check():
+            logger.info("Redis connected: %s", settings.REDIS_URL)
     except Exception as exc:
-        logger.warning("Redis not available — token blacklisting disabled: %s", exc)
+        logger.warning("Redis not available — caching/blacklisting disabled: %s", exc)
 
     yield
 
-    await close_redis()
+    await cache_service.close()
     logger.info("App shutdown complete.")
 
 
@@ -70,8 +69,7 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 
 @app.get("/", tags=["Health"], summary="Health check")
 async def root():
-    from app.core.redis_client import redis_health
-    redis_ok = await redis_health()
+    redis_ok = await cache_service.health_check()
     return {
         "status": "ok",
         "project": settings.PROJECT_NAME,
