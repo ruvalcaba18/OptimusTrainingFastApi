@@ -35,6 +35,7 @@ class UserService:
             height=user_in.height,
             exercise_frequency=user_in.exercise_frequency,
             training_type=user_in.training_type.value,
+            gender=user_in.gender.value if user_in.gender else None,
             is_active=True,
         )
         db.add(db_user)
@@ -51,6 +52,9 @@ class UserService:
 
         if "training_type" in update_data and update_data["training_type"] is not None:
             update_data["training_type"] = update_data["training_type"].value
+
+        if "gender" in update_data and update_data["gender"] is not None:
+            update_data["gender"] = update_data["gender"].value
 
         for field, value in update_data.items():
             if hasattr(db_obj, field):

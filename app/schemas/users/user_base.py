@@ -1,6 +1,8 @@
 from pydantic import BaseModel, EmailStr, Field, field_validator
 import re
 from .training_type import TrainingType
+from .gender import UserGender
+from typing import Optional
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -12,6 +14,7 @@ class UserBase(BaseModel):
     height: float = Field(..., gt=0)
     exercise_frequency: str
     training_type: TrainingType
+    gender: Optional[UserGender] = None
 
     @field_validator("phone")
     @classmethod

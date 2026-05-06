@@ -20,17 +20,6 @@ class ChatController:
         try:
             result = await chat_service.call_openai_proxy(chat_in)
             await chat_service.increment_global_count()
-            
-            access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-            result["token"] = {
-                "access_token": security.create_access_token(
-                    current_user.email, 
-                    expires_delta=access_token_expires
-                ),
-                "refresh_token": security.create_refresh_token(current_user.email),
-                "token_type": "bearer"
-            }
-            
             return result
         except ValueError as e:
             raise HTTPException(status_code=500, detail=str(e))

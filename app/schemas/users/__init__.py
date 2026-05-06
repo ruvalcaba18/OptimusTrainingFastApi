@@ -1,4 +1,5 @@
 from .training_type import TrainingType
+from .gender import UserGender
 from .user_base import UserBase
 from .user_create import UserCreate
 from .user_update import UserUpdate
