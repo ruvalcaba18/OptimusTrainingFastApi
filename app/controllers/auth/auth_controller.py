@@ -6,6 +6,7 @@ from app.services.user_service import user_service
 from app.core import security
 from app.core.config import settings
 from app.schemas.users import Token, UserLogin
+from app.models.user import User
 
 
 class AuthController:
@@ -29,46 +30,22 @@ class AuthController:
             access_token=security.create_access_token(
                 user.email, expires_delta=access_token_expires
             ),
-            refresh_token=security.create_refresh_token(user.email),
             token_type="bearer",
         )
 
     @staticmethod
-    def refresh_token(db: Session, refresh_token: str) -> Token:
-        from jose import jwt, JWTError
-        try:
-            payload = jwt.decode(
-                refresh_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
-            )
-            if payload.get("type") != "refresh":
-                raise JWTError("Invalid token type")
-            email = payload.get("sub")
-            if not email:
-                raise JWTError("Missing subject")
-        except (JWTError):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Refresh token inválido o expirado",
-            )
-        
-        user = user_service.get_by_email(db, email=email)
-        if not user or not user.is_active:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Usuario no encontrado o inactivo",
-            )
-            
+    def refresh_access_token(db: Session, user: User) -> Token:
+        """
+        Genera un nuevo access token para un usuario que ya tiene un token válido.
+        Esto permite la rotación de tokens sin un refresh_token por separado.
+        """
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-        token = Token(
+        return Token(
             access_token=security.create_access_token(
                 user.email, expires_delta=access_token_expires
             ),
-            refresh_token=refresh_token,                                                     
             token_type="bearer",
         )
-                                                                                                 
-        db.commit()
-        return token
 
     @staticmethod
     def recover_password(db: Session, email: str) -> dict:
@@ -78,7 +55,6 @@ class AuthController:
             token = security.create_password_reset_token(email)
             email_service.send_password_reset_email(email, token)
         
-                                                                           
         return {"message": "Si el correo está registrado, se ha enviado un enlace de recuperación."}
 
     @staticmethod

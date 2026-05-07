@@ -26,7 +26,14 @@ def create_user(
     user_in: UserCreate,
     db: Session = Depends(get_db),
 ) -> Any:
-    return user_controller.create_user(db, user_in=user_in)
+    logger.info(f"Attempting to register user: {user_in.email}")
+    try:
+        result = user_controller.create_user(db, user_in=user_in)
+        logger.info(f"User registered successfully: {user_in.email}")
+        return result
+    except Exception as e:
+        logger.error(f"Error registering user {user_in.email}: {str(e)}")
+        raise e
 
 
 @router.get("/me", response_model=UserResponse, summary="Mi perfil")

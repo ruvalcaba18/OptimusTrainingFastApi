@@ -50,7 +50,6 @@ class UserController:
                 access_token=security.create_access_token(
                     user.email, expires_delta=access_token_expires
                 ),
-                refresh_token=security.create_refresh_token(user.email),
                 token_type="bearer",
             )
             db.commit()
