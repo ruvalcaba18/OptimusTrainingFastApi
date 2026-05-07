@@ -14,25 +14,43 @@ from app.core.error_handlers import register_exception_handlers
 from app.core.logging_config import setup_logging
 from app.core.middleware import SecurityMiddleware
 from app.core.cache import cache_service
+from app.database.session.session import engine, Base
+import app.models 
 
 setup_logging()
 logger = logging.getLogger("optimus")
 
 from app.core.rate_limiter import limiter
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
+
+async def startup_db_init():
+    try:
+        Base.metadata.create_all(bind=engine)
+        logger.info("Database tables verified/created successfully.")
+    except Exception as e:
+        logger.error("Error creating database tables: %s", e)
+
+async def startup_redis_check():
     try:
         if await cache_service.health_check():
             logger.info("Redis connected: %s", settings.REDIS_URL)
     except Exception as exc:
         logger.warning("Redis not available — caching/blacklisting disabled: %s", exc)
 
+# MARK: - Lifespan
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await startup_db_init()
+    await startup_redis_check()
+
     yield
 
     await cache_service.close()
     logger.info("App shutdown complete.")
 
+
+# MARK: - App Initialization
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
