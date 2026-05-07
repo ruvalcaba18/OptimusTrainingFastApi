@@ -38,7 +38,6 @@ class GoogleProvider:
             "provider_id": payload.get("sub"),
         }
 
-    # ── Private
 
     @staticmethod
     async def _call_tokeninfo(token: str) -> dict:

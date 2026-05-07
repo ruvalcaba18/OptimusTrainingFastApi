@@ -13,7 +13,6 @@ class FacebookProvider:
         await FacebookProvider._debug_token(token)
         return await FacebookProvider._fetch_user_info(token)
 
-    # ── Private
 
     @staticmethod
     async def _debug_token(token: str) -> None:

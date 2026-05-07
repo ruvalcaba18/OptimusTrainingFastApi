@@ -10,14 +10,14 @@ logger = logging.getLogger("optimus")
 from enum import IntEnum
 
 class CacheTTL(IntEnum):
-    """TTL values in seconds."""
+    
     MINUTE = 60
-    SHORT = 300      # 5 minutes
-    MEDIUM = 1800    # 30 minutes
-    LONG = 3600      # 1 hour
+    SHORT = 300
+    MEDIUM = 1800
+    LONG = 3600
     HOUR = 3600
-    DAY = 86400      # 24 hours
-    WEEK = 604800    # 7 days
+    DAY = 86400
+    WEEK = 604800
 
 class RedisCacheService:
     def __init__(self):

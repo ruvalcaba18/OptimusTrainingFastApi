@@ -59,7 +59,6 @@ class AppleProvider:
             "provider_id": payload.get("sub"),
         }
 
-    # ── Private
 
     @staticmethod
     async def _fetch_apple_public_keys() -> list:

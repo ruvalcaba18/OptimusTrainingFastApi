@@ -41,7 +41,6 @@ class SocialAuthController:
             verify_fn=FacebookProvider.verify_token,
         )
 
-    # ── Private
 
     @staticmethod
     async def _handle(

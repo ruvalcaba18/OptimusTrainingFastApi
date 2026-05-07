@@ -13,8 +13,5 @@ async def chat_with_openai(
     chat_request: ChatRequest,
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
-    """
-    Proxy seguro para OpenAI siguiendo el patrón Route -> Controller -> Service.
-    Límite global: 100 peticiones en total.
-    """
+    
     return await chat_controller.chat_with_openai(chat_request, current_user)
