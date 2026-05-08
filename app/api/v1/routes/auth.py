@@ -2,11 +2,15 @@ from typing import Any
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+import logging
 
 from app.database import get_db
 from app.controllers.auth.auth_controller import auth_controller
-from app.schemas.users import Token, UserLogin, PasswordRecoveryRequest, PasswordReset
+from app.schemas.users import Token, UserLogin, PasswordReset
+from app.api.deps import get_current_user
+from app.models.user import User
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
@@ -15,6 +19,7 @@ def login(
     user_in: UserLogin,
     db: Session = Depends(get_db),
 ) -> Any:
+    logger.info(f"Login attempt for user: {user_in.email}")
     return auth_controller.login(db, user_in=user_in)
 
 
@@ -27,12 +32,16 @@ def login_access_token(
     return auth_controller.login(db, user_in=user_in)
 
 
-@router.post("/refresh-token", response_model=Token, summary="Refrescar Access Token")
+@router.post("/refresh-token", response_model=Token, summary="Renovar Access Token")
 def refresh_token(
-    refresh_token: str,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ) -> Any:
-    return auth_controller.refresh_token(db, refresh_token=refresh_token)
+    """
+    Usa el access token actual para obtener uno nuevo.
+    """
+    logger.info(f"Refreshing token for user: {current_user.email}")
+    return auth_controller.refresh_access_token(db, user=current_user)
 
 
 @router.post("/password-recovery/{email}", summary="Recuperar contraseña")

@@ -1,6 +1,9 @@
 from typing import Any
 from fastapi import APIRouter, Depends, UploadFile, File, status
 from sqlalchemy.orm import Session
+import logging
+
+logger = logging.getLogger(__name__)
 
 from app.database import get_db
 from app.controllers.users.user_controller import user_controller
