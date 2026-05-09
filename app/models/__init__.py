@@ -5,6 +5,7 @@ from app.models.coach import CoachProfile
 from app.models.coach_booking import CoachBooking
 from app.models.event import Event, EventParticipant
 from app.models.competition import Competition, CompetitionParticipant
+from app.models.prompt_log import PromptLog
 
 __all__ = [
     "User",
@@ -23,5 +24,6 @@ __all__ = [
     "TrainingPlan",
     "DailyWorkout",
     "ExerciseDetail",
+    "PromptLog",
 ]
 from app.models.training import CoachAthlete, TrainingPlan, DailyWorkout, ExerciseDetail

@@ -2,8 +2,9 @@ from pydantic import BaseModel, EmailStr, Field, field_validator
 from .training_type import TrainingType
 from .gender import UserGender
 from .phone_validator import PhoneValidator
-from typing import Optional
+from typing import Optional, final
 
+@final
 class UserBase(BaseModel):
     email: EmailStr
     first_name: str = Field(..., min_length=1)
