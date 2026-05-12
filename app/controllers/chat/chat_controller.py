@@ -33,7 +33,7 @@ class ChatController:
             
             ChatController.save_prompt_log(
                 db = db, 
-                new_log = new_log
+                prompt_log = new_log
             )
             
             
