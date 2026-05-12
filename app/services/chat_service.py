@@ -2,7 +2,7 @@ import httpx
 from typing import Any, Dict
 from app.core.config import settings
 from app.core.cache import cache_service
-from OptimusTrainingFastApi.app.schemas.chat.chat import ChatRequest
+from app.schemas.chat.chat import ChatRequest
 
 class ChatService:
     CHAT_COUNTER_KEY = "global_chat_calls_lifetime_count"
