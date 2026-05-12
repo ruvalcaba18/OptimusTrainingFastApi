@@ -7,5 +7,5 @@ class PromptLogResponse(BaseModel):
     id: int
     user_id: int
     created_at: datetime
-    
-    model_config = {"from_attributes": True}
+    system_prompt: str
+    model_config = { "from_attributes": True }
