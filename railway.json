@@ -9,9 +9,9 @@
     "numReplicas": 1,
     "overlapSeconds": 0,
     "drainingSeconds": 0,
-    "sleepApplication": false,
+    "sleepApplication": true,
     "useLegacyStacker": false,
-    "ipv6EgressEnabled": false,
+    "ipv6EgressEnabled": true,
     "multiRegionConfig": {
       "us-east4-eqdc4a": {
         "numReplicas": 1

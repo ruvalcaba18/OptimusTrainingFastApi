@@ -10,11 +10,9 @@ from app.database import Base
 
 class ActiveBreakSession(Base):
     __tablename__ = "active_break_sessions"
-
                                                                             
     id = Column(Integer, primary_key=True, index=True)
-
-                                                                            
+                                                            
     title = Column(String(200), nullable=False)
     description = Column(Text, nullable=True)
     category = Column(String(50), nullable=False)                                   

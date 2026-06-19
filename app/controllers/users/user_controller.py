@@ -17,13 +17,11 @@ from app.core.config import settings
 
 
 class UserController:
-
-                                                                            
+                                                     
     @staticmethod
     def list_users(db: Session, skip: int = 0, limit: int = 100) -> list[UserResponse]:
         return user_service.get_multi(db, skip=skip, limit=limit)
-
-                                                                            
+                                                                    
     @staticmethod
     def get_user(db: Session, user_id: int) -> UserResponse:
         user = user_service.get_by_id(db, user_id=user_id)
@@ -50,6 +48,7 @@ class UserController:
                 access_token=security.create_access_token(
                     user.email, expires_delta=access_token_expires
                 ),
+                refresh_token=security.create_refresh_token(user.email),
                 token_type="bearer",
             )
             db.commit()
