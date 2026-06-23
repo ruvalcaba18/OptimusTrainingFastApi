@@ -14,9 +14,7 @@ from app.schemas.training import (
     CoachAthleteResponse
 )
 
-
 class TrainingController:
-
                                                                               
     @staticmethod
     def assign_athlete_to_coach(

@@ -1,0 +1,214 @@
+PIE001	Pierna	Sentadilla Trasera	Dominante Rodilla	Barra	Smith	Gimnasio	Media-Alta	Intermedio	Alta	PG, GMM, RD	Principal	ENF002, ENF003, ENF009	PAT001, PAT006, PAT007, PAT008, PAT009, PAT010, ENF001, ENF007, ENF008	PAT002
+PIE002	Pierna	Sentadilla Frontal	Dominante Rodilla	Barra	Mancuernas	Gimnasio	Media-Alta	Avanzado	Alta	GMM, RD	Principal	ENF002, ENF003	PAT001, PAT006, PAT007, PAT008, PAT009, ENF001, ENF007, ENF008	PAT002
+PIE003	Pierna	Peso Muerto Sumo	Dominante Cadera	Barra	Mancuernas	Gimnasio	Media-Alta	Avanzado	Alta	GMM, RD	Principal	ENF002, ENF003	PAT001, PAT009, PAT010, ENF001, ENF008	PAT002
+PIE004	Pierna	Hip Thrust	Dominante Cadera	Barra	Máquina	Gimnasio/Casa	Media-Alta	Intermedio	Media-Alta	PG, GMM, RD	Principal	ENF001, ENF002, ENF003, ENF004	PAT001, PAT009, ENF010	PAT002
+PIE005	Pierna	Buenos Días	Dominante Cadera	Barra	Smith	Gimnasio	Media-Alta	Avanzado	Alta	GMM, RD	Complementario	ENF002, ENF003	PAT001, PAT010	PAT002, ENF007
+PIE006	Pierna	Sentadilla Goblet	Dominante Rodilla	Mancuerna	Kettlebell	Gimnasio/Casa	Media	Básico	Media	PG, GMM, SB	Complementario	ENF002, ENF003, ENF009	PAT001, PAT006, PAT007, PAT008	PAT002
+PIE007	Pierna	Bulgarian Split Squat	Unilateral	Mancuernas	Propio Peso	Gimnasio/Casa	Media	Intermedio	Media-Alta	PG, GMM, RD	Complementario	ENF002, ENF003	PAT007, PAT008, PAT009, ENF008	PAT006
+PIE008	Pierna	Desplante Caminando	Unilateral	Mancuernas	Propio Peso	Gimnasio/Aire Libre	Media	Intermedio	Media	PG, GMM, RD	Metabólico	ENF002, ENF003	PAT007, PAT008, PAT009, ENF001, ENF008	PAT006
+PIE009	Pierna	Step Up	Unilateral	Mancuernas	Propio Peso	Gimnasio/Casa	Media	Básico	Media	PG, GMM, SB	Estabilidad	ENF001, ENF002, ENF003, ENF009	PAT007, PAT008, PAT009	Ninguna
+PIE010	Pierna	Peso Muerto Unilateral	Dominante Cadera Unilateral	Mancuernas	Kettlebell	Gimnasio/Casa	Media	Intermedio	Media-Alta	GMM, RD	Estabilidad	ENF002, ENF003	PAT001, PAT008, PAT009	PAT002
+PIE011	Pierna	Lunge Mancuerna	Unilateral	Mancuernas	Propio Peso	Gimnasio/Casa	Media	Básico	Media	PG, GMM, SB	Metabólico	ENF002, ENF003	PAT007, PAT008, PAT009	PAT006
+PIE012	Pierna	Prensa de Pierna	Dominante Rodilla	Máquina	Ninguna	Gimnasio	Baja	Básico	Media	PG, GMM	Complementario	ENF001, ENF002, ENF003, ENF009	PAT007, PAT009	PAT002
+PIE013	Pierna	Curl Femoral	Flexión Rodilla	Máquina	Polea	Gimnasio	Baja	Básico	Baja	PG, GMM	Aislado	ENF001, ENF002, ENF003, ENF008, ENF009	PAT005	Ninguna
+PIE014	Pierna	Extensión de Cuádriceps	Extensión Rodilla	Máquina	Polea	Gimnasio	Baja	Básico	Baja	PG, GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT005, PAT007	Ninguna
+PIE015	Pierna	Hack Squat	Dominante Rodilla	Máquina	Ninguna	Gimnasio	Baja	Básico	Media-Alta	GMM	Complementario	ENF002, ENF003	PAT007, PAT008, PAT009, ENF001	PAT002
+PIE016	Pierna	Pantorrilla Sentado	Flexión Plantar	Máquina	Mancuernas	Gimnasio/Casa	Baja	Básico	Baja	PG, GMM, SB	Aislado	ENF001, ENF002, ENF003, ENF008, ENF009	PAT008	Ninguna
+PIE017	Pierna	Smith Squat	Dominante Rodilla	Smith	Barra	Gimnasio	Baja	Básico	Media	PG, GMM	Complementario	ENF002, ENF003, ENF009	PAT001, PAT007, PAT008, PAT009	PAT002
+PIE018	Pierna	Pull Through	Dominante Cadera	Polea	Banda	Gimnasio/Casa	Baja	Básico	Baja-Media	PG, GMM, SB	Correctivo	ENF001, ENF002, ENF003	PAT001, PAT009	PAT002
+PIE019	Pierna	Kickback Glúteo	Extensión Cadera	Polea	Banda	Gimnasio/Casa	Baja	Básico	Baja	PG, GMM	Aislado	ENF001, ENF002, ENF003, ENF008	PAT009	Ninguna
+PIE020	Pierna	Abducción de Cadera	Abducción	Polea	Banda	Gimnasio/Casa	Baja	Básico	Baja	PG, GMM, SB	Aislado	ENF001, ENF002, ENF003, ENF008	PAT009	Ninguna
+PIE021	Pierna	Aducción de Cadera	Aducción	Polea	Banda	Gimnasio/Casa	Baja	Básico	Baja	PG, GMM, SB	Aislado	ENF001, ENF002, ENF003, ENF008	PAT009	Ninguna
+PIE022	Pierna	Sentadilla Polea	Dominante Rodilla	Polea	Banda	Gimnasio	Baja	Básico	Media	PG, GMM, SB	Complementario	ENF001, ENF002, ENF003, ENF009	PAT001, PAT007, PAT008	PAT002
+PIE023	Pierna	Cable Lunge	Unilateral	Polea	Mancuernas	Gimnasio	Baja	Intermedio	Media	PG, GMM, RD	Complementario	ENF002, ENF003	PAT007, PAT008, PAT009	PAT006
+PIE024	Pierna	Zancadas	Unilateral	Propio Peso	Mancuernas	Casa/Aire Libre	Baja-Media	Básico	Media	PG, GMM, SB	Metabólico	ENF002, ENF003, ENF009	PAT007, PAT008, PAT009	PAT006
+PIE025	Pierna	Puente de Glúteo	Dominante Cadera	Propio Peso	Barra	Casa/Gimnasio	Baja-Media	Básico	Baja-Media	PG, GMM, SB	Correctivo	ENF001, ENF002, ENF003, ENF008, ENF009	PAT001	Ninguna
+PIE026	Pierna	Air Squat	Dominante Rodilla	Propio Peso	Mancuernas	Casa/Aire Libre	Baja-Media	Básico	Baja-Media	PG, SB	Metabólico	ENF001, ENF002, ENF003, ENF009	PAT007, PAT008	Ninguna
+PIE027	Pierna	Wall Sit	Isométrico	Propio Peso	Ninguna	Casa/Aire Libre	Baja-Media	Básico	Media	PG, SB	Estabilidad	ENF001, ENF002, ENF003, ENF009	PAT007	PAT006 severa
+PIE028	Pierna	Jump Squat	Pliometría	Propio Peso	Mancuernas	Aire Libre/Gimnasio	Media-Alta	Intermedio	Alta	PG, RD	Potencia	Ninguna	ENF002	ENF001, PAT006, PAT007, PAT008, ENF008, ENF010
+PIE029	Pierna	Pistol Squat	Unilateral	Propio Peso	Ninguna	Casa/Aire Libre	Alta	Avanzado	Alta	RD	Potencia	Ninguna	PAT008, PAT009	PAT006, PAT007, ENF001, ENF008
+PIE030	Pierna	Sentadilla Zercher	Dominante Rodilla	Barra	Sandbag	Gimnasio	Alta	Avanzado	Alta	GMM, RD	Principal	ENF002, ENF003	PAT001, PAT007, PAT009, PAT010	PAT002
+PEC001	Pecho	Press de Banca Plano	Empuje Horizontal	Barra	Smith	Gimnasio	Media-Alta	Intermedio	Alta	PG, GMM, RD	Principal	ENF002, ENF003, ENF009	PAT004, PAT005, PAT003, ENF004	PAT002
+PEC002	Pecho	Press de Banca Inclinado	Empuje Inclinado	Barra	Smith	Gimnasio	Media-Alta	Intermedio	Alta	GMM, RD	Principal	ENF002, ENF003	PAT004, PAT005, PAT003, ENF004	PAT002
+PEC003	Pecho	Press de Banca Declinado	Empuje Declinado	Barra	Smith	Gimnasio	Media	Intermedio	Alta	GMM, RD	Principal	ENF002, ENF003	PAT004, PAT005, ENF004	PAT002
+PEC004	Pecho	Press Spoto	Empuje Horizontal	Barra	Smith	Gimnasio	Alta	Avanzado	Alta	GMM, RD	Principal	ENF002, ENF003	PAT004, PAT005, PAT003	PAT002
+PEC005	Pecho	Floor Press	Empuje Horizontal	Barra	Mancuernas	Gimnasio, Casa	Media	Intermedio	Media-Alta	GMM, SB	Complementario	ENF001, ENF002, ENF003	PAT004, PAT005	Ninguna
+PEC006	Pecho	Press con Agarre Cerrado	Empuje Horizontal	Barra	Smith	Gimnasio	Media-Alta	Intermedio	Alta	GMM, RD	Complementario	ENF002, ENF003	PAT004, PAT005, COD, MUN	PAT002
+PEC007	Pecho	Press Plano con Mancuernas	Empuje Horizontal	Mancuernas	Barra	Gimnasio, Casa	Media	Básico	Media-Alta	PG, GMM, SB	Principal	ENF001, ENF002, ENF003	PAT004, PAT005	Ninguna
+PEC008	Pecho	Press Inclinado con Mancuernas	Empuje Inclinado	Mancuernas	Barra	Gimnasio, Casa	Media	Intermedio	Media-Alta	GMM, RD	Principal	ENF001, ENF002, ENF003	PAT004, PAT005	Ninguna
+PEC009	Pecho	Press Declinado con Mancuernas	Empuje Declinado	Mancuernas	Barra	Gimnasio	Media	Intermedio	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT004, PAT005	Ninguna
+PEC010	Pecho	Aperturas Planas	Aducción Horizontal	Mancuernas	Polea	Gimnasio, Casa	Media	Básico	Baja	GMM, SB	Aislado	ENF001, ENF002, ENF003, ENF009	PAT004, PAT005	Ninguna
+PEC011	Pecho	Aperturas Inclinadas	Aducción Horizontal	Mancuernas	Polea	Gimnasio	Media	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT004, PAT005	Ninguna
+PEC012	Pecho	Pullover con Mancuerna	Extensión de Hombro	Mancuernas	Polea	Gimnasio, Casa	Media	Intermedio	Media	GMM, SB	Complementario	ENF002, ENF003	PAT001, PAT004, PAT005	PAT002
+PEC013	Pecho	Chest Press Machine	Empuje Horizontal	Máquina	Barra	Gimnasio	Baja	Básico	Media	PG, GMM	Complementario	ENF001, ENF002, ENF003, ENF009	PAT004, PAT005	Ninguna
+PEC014	Pecho	Press Inclinado en Máquina	Empuje Inclinado	Máquina	Mancuernas	Gimnasio	Baja	Básico	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT004, PAT005	Ninguna
+PEC015	Pecho	Press Declinado en Máquina	Empuje Declinado	Máquina	Mancuernas	Gimnasio	Baja	Básico	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT004, PAT005	Ninguna
+PEC016	Pecho	Pec Deck	Aducción Horizontal	Máquina	Polea	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT004, PAT005	Ninguna
+PEC017	Pecho	Máquina Convergente de Pecho	Empuje Horizontal	Máquina	Barra	Gimnasio	Baja	Básico	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT004, PAT005	Ninguna
+PEC018	Pecho	Hammer Strength Chest Press	Empuje Horizontal	Máquina	Barra	Gimnasio	Baja	Básico	Media-Alta	GMM, RD	Complementario	ENF001, ENF002, ENF003	PAT004, PAT005	Ninguna
+PEC019	Pecho	Crossover Alto-Bajo	Aducción Horizontal	Polea	Banda	Gimnasio	Baja	Básico	Baja	PG, GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT004, PAT005	Ninguna
+PEC020	Pecho	Crossover Medio	Aducción Horizontal	Polea	Banda	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT004, PAT005	Ninguna
+PEC021	Pecho	Crossover Bajo-Alto	Aducción Horizontal	Polea	Banda	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT004, PAT005	Ninguna
+PEC022	Pecho	Press de Pecho en Polea	Empuje Horizontal	Polea	Banda	Gimnasio, Casa	Media	Intermedio	Media	GMM, SB	Complementario	ENF001, ENF002, ENF003	PAT004, PAT005	Ninguna
+PEC023	Pecho	Apertura Unilateral en Polea	Empuje Unilateral	Polea	Banda	Gimnasio	Media	Intermedio	Baja	GMM	Estabilidad	ENF001, ENF002, ENF003	PAT004, PAT005	Ninguna
+PEC024	Pecho	Press Unilateral en Polea	Empuje Unilateral	Polea	Banda	Gimnasio	Media	Intermedio	Media	GMM, RD	Estabilidad	ENF001, ENF002, ENF003	PAT004, PAT005	Ninguna
+PEC025	Pecho	Flexiones Tradicionales	Empuje Horizontal	Propio Peso	Banda	Casa, Aire Libre, Gimnasio	Baja-Media	Básico	Media	PG, SB, GMM	Metabólico	ENF002, ENF003, ENF009	PAT004, MUN, PAT005	ENF010 avanzada
+PEC026	Pecho	Flexiones Inclinadas	Empuje Horizontal	Propio Peso	Banco	Casa, Aire Libre	Baja	Básico	Baja-Media	PG, SB	Correctivo	ENF001, ENF002, ENF003, ENF009	PAT004, MUN	Ninguna
+PEC027	Pecho	Flexiones Declinadas	Empuje Declinado	Propio Peso	Banco	Casa, Aire Libre	Media	Intermedio	Media	PG, RD	Metabólico	ENF002, ENF003	PAT004, PAT003, MUN	ENF010
+PEC028	Pecho	Flexiones Diamante	Empuje Horizontal	Propio Peso	Ninguna	Casa, Aire Libre	Media	Intermedio	Media	PG, GMM	Complementario	ENF002, ENF003	PAT004, PAT005, COD, MUN	Ninguna
+PEC029	Pecho	Archer Push Up	Empuje Unilateral	Propio Peso	Ninguna	Casa, Aire Libre	Alta	Avanzado	Alta	RD	Potencia	ENF002	PAT004, PAT005, MUN	ENF001, ENF008
+PEC030	Pecho	Explosive Push Up	Pliometría	Propio Peso	Ninguna	Casa, Aire Libre, Gimnasio	Alta	Avanzado	Alta	PG, RD	Potencia	Ninguna	ENF002	ENF001, PAT004, PAT005, MUN, ENF008, ENF010
+ESP001	Espalda	Remo con Barra	Tracción Horizontal	Barra	T-Bar	Gimnasio	Media-Alta	Intermedio	Alta	PG, GMM, RD	Principal	ENF002, ENF003	PAT001, PAT004, PAT010	PAT002
+ESP002	Espalda	Peso Muerto Convencional	Dominante Cadera	Barra	Trap Bar	Gimnasio	Media-Alta	Avanzado	Alta	GMM, RD	Principal	ENF002, ENF003	PAT001, PAT009, PAT010, ENF007	PAT002
+ESP003	Espalda	Peso Muerto Rumano	Dominante Cadera	Barra	Mancuernas	Gimnasio	Media-Alta	Intermedio	Alta	GMM, RD	Principal	ENF002, ENF003	PAT001, PAT009, PAT010	PAT002
+ESP004	Espalda	Rack Pull	Tracción Parcial	Barra	Smith	Gimnasio	Media-Alta	Avanzado	Alta	GMM, RD	Principal	ENF002, ENF003	PAT001, PAT009	PAT002
+ESP005	Espalda	Remo T-Bar	Tracción Horizontal	Barra	Máquina	Gimnasio	Media-Alta	Intermedio	Alta	GMM, RD	Principal	ENF002, ENF003	PAT001, PAT004, PAT010	PAT002
+ESP006	Espalda	Pendlay Row	Tracción Horizontal	Barra	Remo Barra	Gimnasio	Alta	Avanzado	Alta	GMM, RD	Principal	ENF002, ENF003	PAT001, PAT004, PAT010	PAT002
+ESP007	Espalda	Remo Unilateral	Tracción Horizontal Unilateral	Mancuernas	Polea	Gimnasio, Casa	Media	Básico	Media	PG, GMM, SB	Complementario	ENF001, ENF002, ENF003	PAT004, PAT011	Ninguna
+ESP008	Espalda	Pullover con Mancuerna	Extensión Hombro	Mancuernas	Polea	Gimnasio, Casa	Media	Básico	Media	GMM, SB	Complementario	ENF001, ENF002, ENF003	PAT004, PAT014	PAT002
+ESP009	Espalda	Encogimientos	Elevación Escapular	Mancuernas	Barra	Gimnasio, Casa	Media	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003	PAT003	Ninguna
+ESP010	Espalda	Renegade Row	Tracción Horizontal Unilateral	Mancuernas	Propio Peso	Gimnasio, Casa	Media	Intermedio	Media-Alta	PG, RD	Estabilidad	ENF002, ENF003	PAT001, PAT004, PAT011	PAT002
+ESP011	Espalda	Remo Inclinado	Tracción Horizontal	Mancuernas	Barra	Gimnasio, Casa	Media	Intermedio	Media	PG, GMM	Complementario	ENF002, ENF003	PAT001, PAT004	PAT002
+ESP012	Espalda	Farmer Carry	Transporte de Carga	Mancuernas	Trap Bar	Gimnasio, Aire Libre	Media	Intermedio	Media-Alta	PG, RD, SB	Estabilidad	ENF001, ENF002, ENF003	PAT001, PAT011, PAT012	PAT002
+ESP013	Espalda	Remo Hammer	Tracción Horizontal	Máquina	Polea	Gimnasio	Baja	Básico	Media	PG, GMM	Complementario	ENF001, ENF002, ENF003, ENF009	PAT004	Ninguna
+ESP014	Espalda	Jalón Convergente	Tracción Vertical	Máquina	Polea	Gimnasio	Baja	Básico	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT004, PAT014	Ninguna
+ESP015	Espalda	Remo Iso Lateral	Tracción Horizontal	Máquina	Mancuernas	Gimnasio	Baja	Básico	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT004	Ninguna
+ESP016	Espalda	Pull Down Machine	Tracción Vertical	Máquina	Polea	Gimnasio	Baja	Básico	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT004, PAT014	Ninguna
+ESP017	Espalda	Máquina Dorsal	Tracción Vertical	Máquina	Polea	Gimnasio	Baja	Básico	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT004	Ninguna
+ESP018	Espalda	Máquina Low Row	Tracción Horizontal	Máquina	Polea	Gimnasio	Baja	Básico	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT004	Ninguna
+ESP019	Espalda	Jalón al Pecho	Tracción Vertical	Polea	Banda	Gimnasio	Baja	Básico	Media	PG, GMM	Principal	ENF001, ENF002, ENF003	PAT004, PAT014	Ninguna
+ESP020	Espalda	Remo Sentado	Tracción Horizontal	Polea	Banda	Gimnasio	Baja	Básico	Media	PG, GMM	Principal	ENF001, ENF002, ENF003, ENF009	PAT004	Ninguna
+ESP021	Espalda	Face Pull	Retracción Escapular	Polea	Banda	Gimnasio, Casa	Baja	Básico	Baja	GMM, SB	Correctivo	ENF001, ENF002, ENF003	PAT004, PAT014	Ninguna
+ESP022	Espalda	Pullover Polea	Extensión Hombro	Polea	Banda	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003	PAT004, PAT014	Ninguna
+ESP023	Espalda	Jalón Neutro	Tracción Vertical	Polea	Banda	Gimnasio	Baja	Básico	Media	GMM	Principal	ENF001, ENF002, ENF003	PAT004	Ninguna
+ESP024	Espalda	Remo Unilateral Polea	Tracción Horizontal Unilateral	Polea	Mancuerna	Gimnasio	Baja	Básico	Media	GMM	Estabilidad	ENF001, ENF002, ENF003	PAT004	Ninguna
+ESP025	Espalda	Dominadas Pronadas	Tracción Vertical	Propio Peso	Banda	Gimnasio, Aire Libre	Media	Intermedio	Alta	PG, GMM, RD	Principal	ENF002	PAT004, PAT011, PAT012, PAT014	ENF001, ENF008
+ESP026	Espalda	Dominadas Supinas	Tracción Vertical	Propio Peso	Banda	Gimnasio, Aire Libre	Media	Intermedio	Alta	PG, GMM, RD	Principal	ENF002	PAT004, PAT011, PAT012, PAT014	ENF001, ENF008
+ESP027	Espalda	Remo Invertido	Tracción Horizontal	Propio Peso	TRX	Gimnasio, Casa, Aire Libre	Baja-Media	Básico	Media	PG, GMM, SB	Complementario	ENF001, ENF002, ENF003	PAT004, PAT011	Ninguna
+ESP028	Espalda	Australian Pull Up	Tracción Horizontal	Propio Peso	TRX	Gimnasio, Casa, Aire Libre	Baja-Media	Básico	Media	PG, GMM, SB	Complementario	ENF001, ENF002, ENF003, ENF009	PAT004	Ninguna
+ESP029	Espalda	Superman Hold	Extensión Espinal	Propio Peso	Colchoneta	Casa	Baja-Media	Básico	Baja	SB	Correctivo	ENF001, ENF002, ENF003, ENF009	PAT001	PAT002
+ESP030	Espalda	Scapular Pull Up	Control Escapular	Propio Peso	Barra Dominadas	Gimnasio, Aire Libre	Baja-Media	Básico	Baja	SB, RD	Correctivo	ENF001, ENF002, ENF003	PAT004, PAT014	Ninguna
+HOM001	Hombro	Press Militar	Empuje Vertical	Barra	Smith	Gimnasio	Media-Alta	Intermedio	Alta	PG, GMM, RD	Principal	ENF002, ENF003	PAT003, PAT004, PAT005, PAT014, ENF004	PAT002
+HOM002	Hombro	Push Press	Empuje Vertical Explosivo	Barra	Smith	Gimnasio	Alta	Avanzado	Alta	RD, GMM	Potencia	ENF002	PAT003, PAT004, PAT005, PAT014	ENF001, ENF008, PAT002
+HOM003	Hombro	Remo al Mentón	Tracción Vertical	Barra	Polea	Gimnasio	Media-Alta	Intermedio	Media-Alta	GMM	Complementario	ENF001, ENF002, ENF003	PAT004, PAT005, PAT014	Ninguna
+HOM004	Hombro	Cuban Press	Rotación Externa + Empuje	Barra	Mancuernas	Gimnasio	Media-Alta	Avanzado	Media	SB, RD	Correctivo	ENF001, ENF002, ENF003	PAT004, PAT005, PAT014	Ninguna
+HOM005	Hombro	Landmine Press	Empuje Diagonal	Barra	Landmine	Gimnasio	Media	Intermedio	Media-Alta	GMM, RD	Principal	ENF001, ENF002, ENF003, ENF009	PAT004, PAT005	Ninguna
+HOM006	Hombro	Behind Neck Press	Empuje Vertical	Barra	Smith	Gimnasio	Alta	Avanzado	Alta	GMM	Principal	Ninguna	PAT003	PAT004, PAT005, PAT014
+HOM007	Hombro	Arnold Press	Empuje Vertical	Mancuernas	Máquina	Gimnasio, Casa	Media	Intermedio	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT004, PAT005, PAT014	Ninguna
+HOM008	Hombro	Elevaciones Laterales	Abducción Hombro	Mancuernas	Polea	Gimnasio, Casa	Media	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT004, PAT005	Ninguna
+HOM009	Hombro	Elevaciones Frontales	Flexión Hombro	Mancuernas	Polea	Gimnasio, Casa	Media	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT004, PAT005	Ninguna
+HOM010	Hombro	Pájaros	Abducción Horizontal	Mancuernas	Pec Deck Posterior	Gimnasio, Casa	Media	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT004	Ninguna
+HOM011	Hombro	Shrugs	Elevación Escapular	Mancuernas	Barra	Gimnasio, Casa	Media	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003	PAT003	Ninguna
+HOM012	Hombro	Press Hombro Mancuerna	Empuje Vertical	Mancuernas	Máquina	Gimnasio, Casa	Media	Básico	Media	PG, GMM	Principal	ENF001, ENF002, ENF003	PAT004, PAT005, PAT014	Ninguna
+HOM013	Hombro	Shoulder Press Machine	Empuje Vertical	Máquina	Mancuernas	Gimnasio	Baja	Básico	Media	PG, GMM	Complementario	ENF001, ENF002, ENF003, ENF009	PAT004, PAT005	Ninguna
+HOM014	Hombro	Pec Deck Posterior	Abducción Horizontal	Máquina	Polea	Gimnasio	Baja	Básico	Baja	GMM, SB	Aislado	ENF001, ENF002, ENF003, ENF009	PAT004	Ninguna
+HOM015	Hombro	Lateral Raise Machine	Abducción Hombro	Máquina	Mancuernas	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT004	Ninguna
+HOM016	Hombro	Smith Shoulder Press	Empuje Vertical	Máquina Smith	Barra	Gimnasio	Baja	Básico	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT004, PAT005, PAT014	Ninguna
+HOM017	Hombro	Máquina Convergente Hombro	Empuje Vertical	Máquina	Mancuernas	Gimnasio	Baja	Básico	Media	GMM	Complementario	ENF001, ENF002, ENF003, ENF009	PAT004, PAT005	Ninguna
+HOM018	Hombro	Deltoid Machine	Abducción Hombro	Máquina	Mancuernas	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT004	Ninguna
+HOM019	Hombro	Face Pull	Retracción Escapular	Polea	Banda	Gimnasio, Casa	Baja	Básico	Baja	SB, GMM	Correctivo	ENF001, ENF002, ENF003, ENF009	PAT004, PAT014	Ninguna
+HOM020	Hombro	Elevaciones Laterales Polea	Abducción Hombro	Polea	Mancuernas	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003	PAT004	Ninguna
+HOM021	Hombro	Elevaciones Frontales Polea	Flexión Hombro	Polea	Mancuernas	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003	PAT004	Ninguna
+HOM022	Hombro	Rear Delt Cable Fly	Abducción Horizontal	Polea	Pec Deck Posterior	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003	PAT004	Ninguna
+HOM023	Hombro	Upright Row Polea	Tracción Vertical	Polea	Barra	Gimnasio	Baja	Básico	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT004, PAT005, PAT014	Ninguna
+HOM024	Hombro	Cable Y Raise	Elevación Escapular	Polea	Banda	Gimnasio, Casa	Baja	Básico	Baja	SB, RD	Correctivo	ENF001, ENF002, ENF003, ENF009	PAT004, PAT014	Ninguna
+HOM025	Hombro	Handstand Push Up	Empuje Vertical	Propio Peso	Pared	Casa, Gimnasio	Alta	Avanzado	Alta	RD	Potencia	Ninguna	PAT003, PAT004, PAT011	ENF001, ENF008, ENF010, PAT014
+HOM026	Hombro	Pike Push Up	Empuje Vertical	Propio Peso	Banco	Casa, Aire Libre	Media	Intermedio	Media-Alta	PG, RD	Potencia	ENF002	PAT003, PAT004, PAT011	ENF001, ENF008
+HOM027	Hombro	Wall Walk	Estabilidad Escapular	Propio Peso	Pared	Casa, Gimnasio	Alta	Avanzado	Alta	RD	Estabilidad	ENF002	PAT004, PAT011, PAT014	ENF001, ENF008, ENF010
+HOM028	Hombro	Bear Crawl	Locomoción	Propio Peso	Ninguna	Casa, Aire Libre	Media	Intermedio	Media	PG, SB, RD	Metabólico	ENF001, ENF002, ENF003	PAT004, PAT011	Ninguna
+HOM029	Hombro	Plank Shoulder Taps	Anti-Rotación	Propio Peso	Colchoneta	Casa, Gimnasio	Baja-Media	Básico	Baja-Media	SB, PG	Estabilidad	ENF001, ENF002, ENF003, ENF009	PAT004, PAT011	Ninguna
+HOM030	Hombro	Dive Bomber Push Up	Empuje Dinámico	Propio Peso	Ninguna	Casa, Aire Libre	Alta	Avanzado	Alta	RD, PG	Potencia	ENF002	PAT004, PAT011, PAT014	ENF001, ENF008
+BRA001	Brazo General	Curl Barra	Flexión de Codo	Barra	Barra EZ	Gimnasio	Media-Alta	Intermedio	Media	GMM, RD	Principal	ENF001, ENF002, ENF003, ENF009	PAT011, PAT012, PAT005	Ninguna
+BRA002	Brazo General	Press Francés	Extensión de Codo	Barra	Barra EZ	Gimnasio	Media-Alta	Intermedio	Media	GMM	Principal	ENF001, ENF002, ENF003	PAT004, PAT012, PAT005	Ninguna
+BRA003	Brazo General	Press Cerrado	Empuje Horizontal	Barra	Smith	Gimnasio	Media-Alta	Intermedio	Alta	GMM, RD	Principal	ENF002, ENF003	PAT004, PAT011, PAT012, PAT005	PAT002
+BRA004	Brazo General	Rompecráneos	Extensión de Codo	Barra	Barra EZ	Gimnasio	Media-Alta	Intermedio	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT012, PAT004, PAT005	Ninguna
+BRA005	Brazo General	Curl Reverso	Flexión de Codo	Barra	Barra EZ	Gimnasio	Media-Alta	Intermedio	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT011, PAT012	Ninguna
+BRA006	Brazo General	Curl EZ	Flexión de Codo	Barra EZ	Barra	Gimnasio	Media-Alta	Intermedio	Media	GMM	Principal	ENF001, ENF002, ENF003, ENF009	PAT011, PAT012, PAT005	Ninguna
+BRA007	Brazo General	Curl Martillo	Flexión de Codo Neutra	Mancuernas	Polea	Gimnasio, Casa	Media	Básico	Baja-Media	GMM, SB	Complementario	ENF001, ENF002, ENF003, ENF009	PAT011, PAT012	Ninguna
+BRA008	Brazo General	Curl Inclinado	Flexión de Codo	Mancuernas	Banco Inclinado	Gimnasio	Media	Intermedio	Baja-Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT004, PAT012	Ninguna
+BRA009	Brazo General	Curl Concentrado	Flexión de Codo Unilateral	Mancuernas	Polea	Gimnasio, Casa	Media	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT012	Ninguna
+BRA010	Brazo General	Kickback	Extensión de Codo	Mancuernas	Polea	Gimnasio, Casa	Media	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003	PAT004, PAT012	Ninguna
+BRA011	Brazo General	Farmer Walk	Transporte de Carga	Mancuernas	Trap Bar	Gimnasio, Aire Libre	Media	Intermedio	Media-Alta	PG, RD, SB	Estabilidad	ENF001, ENF002, ENF003	PAT001, PAT011, PAT012	PAT002
+BRA012	Brazo General	Curl Alternado	Flexión de Codo Unilateral	Mancuernas	Polea	Gimnasio, Casa	Media	Básico	Baja-Media	GMM	Complementario	ENF001, ENF002, ENF003, ENF009	PAT011, PAT012	Ninguna
+BRA013	Brazo General	Curl Predicador	Flexión de Codo	Máquina	Barra EZ	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT012, PAT005	Ninguna
+BRA014	Brazo General	Curl Machine	Flexión de Codo	Máquina	Polea	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF008, ENF009	PAT012	Ninguna
+BRA015	Brazo General	Dip Machine	Extensión de Codo	Máquina	Fondos Asistidos	Gimnasio	Baja	Básico	Media	GMM	Complementario	ENF001, ENF002, ENF003	PAT004, PAT012, PAT005	Ninguna
+BRA016	Brazo General	Tricep Extension Machine	Extensión de Codo	Máquina	Polea	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT012	Ninguna
+BRA017	Brazo General	Spider Curl Machine	Flexión de Codo	Máquina	Mancuernas	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT012	Ninguna
+BRA018	Brazo General	Bicep Curl Machine	Flexión de Codo	Máquina	Polea	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF008, ENF009	PAT012	Ninguna
+BRA019	Brazo General	Curl Polea	Flexión de Codo	Polea	Banda	Gimnasio, Casa	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT011, PAT012	Ninguna
+BRA020	Brazo General	Extensión Tríceps Polea	Extensión de Codo	Polea	Banda	Gimnasio, Casa	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003	PAT012	Ninguna
+BRA021	Brazo General	Pushdown Cuerda	Extensión de Codo	Polea	Banda	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003, ENF009	PAT012	Ninguna
+BRA022	Brazo General	Curl Alto Polea	Flexión de Codo	Polea	Banda	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003	PAT004, PAT012	Ninguna
+BRA023	Brazo General	Curl Unilateral Polea	Flexión de Codo Unilateral	Polea	Banda	Gimnasio	Baja	Básico	Baja	GMM	Estabilidad	ENF001, ENF002, ENF003, ENF009	PAT012	Ninguna
+BRA024	Brazo General	Overhead Rope Extension	Extensión de Codo	Polea	Banda	Gimnasio	Baja	Básico	Baja	GMM	Aislado	ENF001, ENF002, ENF003	PAT004, PAT012, PAT014	Ninguna
+BRA025	Brazo General	Fondos Tríceps	Empuje Vertical	Propio Peso	Banco	Casa, Gimnasio	Baja-Media	Intermedio	Media	PG, GMM	Complementario	ENF002, ENF003	PAT004, PAT011, PAT012, PAT014	ENF001, ENF008
+BRA026	Brazo General	Chin Ups Cerradas	Tracción Vertical	Propio Peso	Banda	Gimnasio, Aire Libre	Media	Intermedio	Alta	PG, GMM, RD	Principal	ENF002	PAT004, PAT011, PAT012, PAT014	ENF001, ENF008
+BRA027	Brazo General	Diamond Push Up	Empuje Horizontal	Propio Peso	Banda	Casa, Aire Libre	Media	Intermedio	Media	PG, GMM	Complementario	ENF002, ENF003	PAT011, PAT012, PAT004	ENF001, ENF008
+BRA028	Brazo General	Bench Dips	Extensión de Codo	Propio Peso	Banco	Casa, Gimnasio	Media	Intermedio	Media	GMM	Complementario	ENF002, ENF003	PAT004, PAT012, PAT014	ENF001, ENF008
+BRA029	Brazo General	Isométrico Bíceps	Isométrico	Propio Peso	Banda	Casa, Gimnasio	Baja-Media	Básico	Baja	SB, GMM	Estabilidad	ENF001, ENF002, ENF003, ENF008, ENF009	PAT012	Ninguna
+BRA030	Brazo General	Bodyweight Curl	Flexión de Codo	Propio Peso	TRX	Casa, Gimnasio	Media	Intermedio	Media	GMM, RD	Estabilidad	ENF001, ENF002, ENF003	PAT011, PAT012	Ninguna
+ABD001	Abdomen	Dragon Flag	Core Avanzado	Propio Peso	Mayor Peso/Tension	Casa-Gimnasio	Media-Alta	Avanzado	Alta	RF	Complementario	ENF002	PAT001, PAT003, PAT010	PAT002, ENF007, ENF008
+ABD002	Abdomen	L-Sit	Core Avanzado	Propio Peso	Mayor Peso/Tension	Casa-Gimnasio	Media-Alta	Avanzado	Alta	RF	Complementario	ENF002	PAT001, PAT009	PAT002
+ABD003	Abdomen	Reverse Plank	Core Posterior	Propio Peso	Mayor Peso/Tension	Casa	Media-Alta	Intermedio	Media	SB-RF	Complementario	ENF001, ENF002, ENF003	PAT009	Ninguna
+ABD004	Abdomen	V-Ups	Core Anterior	Propio Peso	Mayor Peso/Tension	Casa	Media-Alta	Intermedio	Media	PG-RF	Complementario	ENF002, ENF003	PAT001	PAT002, ENF010
+ABD005	Abdomen	Inchworm	Core Avanzado	Propio Peso	Mayor Peso/Tension	Casa-Aire Libre	Media-Alta	Intermedio	Media-Alta	PG-RF	Complementario	ENF002, ENF003	PAT001, PAT004, PAT011	PAT002
+ABD006	Abdomen	Hollow Body Rock	Estabilización	Propio Peso	Mayor Peso/Tension	Casa	Media-Alta	Avanzado	Media-Alta	RF	Estabilización	ENF002	PAT001	PAT002, ENF010
+ABD007	Abdomen	Plancha lateral con rotación	Core Lateral	Propio Peso	Mayor Peso/Tension	Casa	Media	Intermedio	Media	PG-SB-RF	Complementario	ENF001, ENF002, ENF003	PAT001, PAT010	PAT002
+ABD008	Abdomen	Bear Crawl	Antirotacional	Propio Peso	Mayor Peso/Tension	Casa-Aire Libre	Media	Intermedio	Media	PG-SB-RF	Complementario	ENF001, ENF002, ENF003	PAT004, PAT011, PAT007	Ninguna
+ABD009	Abdomen	Dead Bug Avanzado	Antirotacional	Propio Peso	Mayor Peso/Tension	Casa	Media	Intermedio	Baja-Media	SB-RF	Complementario	ENF001, ENF002, ENF003, ENF009	PAT001	Ninguna
+ABD010	Abdomen	Plancha tres apoyos	Estabilización	Propio Peso	Mayor Peso/Tension	Casa	Media	Intermedio	Media	SB-RF	Estabilización	ENF001, ENF002, ENF003	PAT001, PAT011	Ninguna
+ABD011	Abdomen	Bird Dog Dinámico	Antirotacional	Propio Peso	Mayor Peso/Tension	Casa	Media	Intermedio	Baja-Media	SB-RF	Complementario	ENF001, ENF002, ENF003, ENF009	PAT001	Ninguna
+ABD012	Abdomen	Leg Raises	Core Anterior	Propio Peso	Mayor Peso/Tension	Casa	Media	Intermedio	Media	PG-GM	Complementario	ENF002, ENF003	PAT001	PAT002
+ABD013	Abdomen	Plancha Frontal	Estabilización	Propio Peso	Mayor Peso/Tension	Casa	Baja	Básico	Baja	SB	Estabilización	ENF001, ENF002, ENF003, ENF008, ENF009	PAT001	Ninguna
+ABD014	Abdomen	Plancha Lateral	Core Lateral	Propio Peso	Mayor Peso/Tension	Casa	Baja	Básico	Baja	SB	Complementario	ENF001, ENF002, ENF003, ENF008, ENF009	PAT001	Ninguna
+ABD015	Abdomen	Crunch Clásico	Core Anterior	Propio Peso	Mayor Peso/Tension	Casa	Baja	Básico	Baja	PG	Complementario	ENF001, ENF002, ENF003	PAT001	PAT002
+ABD016	Abdomen	Glute Bridge	Core Posterior	Propio Peso	Mayor Peso/Tension	Casa	Baja	Básico	Baja	PG-SB	Complementario	ENF001, ENF002, ENF003, ENF008, ENF009	PAT009	Ninguna
+ABD017	Abdomen	Dead Bug Básico	Antirotacional	Propio Peso	Mayor Peso/Tension	Casa	Baja	Básico	Baja	SB	Complementario	ENF001, ENF002, ENF003, ENF008, ENF009	Ninguna	Ninguna
+ABD018	Abdomen	Bird Dog Clásico	Antirotacional	Propio Peso	Mayor Peso/Tension	Casa	Baja	Básico	Baja	SB	Complementario	ENF001, ENF002, ENF003, ENF008, ENF009	Ninguna	Ninguna
+ABD019	Abdomen	Cat-Cow	Movilidad Core	Propio Peso	Mayor Peso/Tension	Casa	Baja	Básico	Muy Baja	SB	Complementario	ENF001, ENF002, ENF003, ENF008, ENF009	Ninguna	Ninguna
+ABD020	Abdomen	Crunch Inverso	Core Anterior	Propio Peso	Mayor Peso/Tension	Casa	Baja	Básico	Baja	PG	Complementario	ENF001, ENF002, ENF003	PAT001	PAT002
+ABD021	Abdomen	Plancha Rodillas	Estabilización	Propio Peso	Mayor Peso/Tension	Casa	Baja	Básico	Muy Baja	SB	Estabilización	ENF001, ENF002, ENF003, ENF008, ENF009	Ninguna	Ninguna
+ABD022	Abdomen	Superman Estático	Core Posterior	Propio Peso	Mayor Peso/Tension	Casa	Baja	Básico	Baja	SB	Complementario	ENF001, ENF002, ENF003	PAT001	PAT002
+ABD023	Abdomen	Bicycle Crunch	Core Anterior	Propio Peso	Mayor Peso/Tension	Casa	Baja	Básico	Baja	PG	Complementario	ENF001, ENF002, ENF003	PAT001	PAT002
+ABD024	Abdomen	Boat Pose	Estabilización	Propio Peso	Mayor Peso/Tension	Casa	Baja	Básico	Baja	SB	Estabilización	ENF001, ENF002, ENF003	PAT001	PAT002
+ABD025	Abdomen	Shoulder Taps	Antirotacional	Propio Peso	Mayor Peso/Tension	Casa-Aire Libre	Baja-Media	Básico	Baja-Media	SB-RF	Complementario	ENF001, ENF002, ENF003	PAT004, PAT011	Ninguna
+ABD026	Abdomen	Mountain Climbers	Antirotacional / Metabólico	Propio Peso	Mayor Peso/Tension	Casa-Aire Libre	Baja-Media	Intermedio	Media	PG-RF	Complementario	ENF002, ENF003	PAT007, PAT011, PAT001	ENF010
+ABD027	Abdomen	Flutter Kicks	Core Anterior	Propio Peso	Mayor Peso/Tension	Casa	Baja-Media	Básico	Baja-Media	PG	Complementario	ENF001, ENF002, ENF003	PAT001	PAT002
+ABD028	Abdomen	Russian Twists	Rotacional	Propio Peso	Mayor Peso/Tension	Casa	Baja-Media	Intermedio	Baja-Media	PG-RF	Complementario	ENF001, ENF002, ENF003	PAT001, PAT010	PAT002
+ABD029	Abdomen	Hollow Body Hold	Estabilización	Propio Peso	Mayor Peso/Tension	Casa	Baja-Media	Intermedio	Media	RF	Estabilización	ENF001, ENF002, ENF003	PAT001	PAT002
+ABD030	Abdomen	Superman Dinámico	Core Posterior	Propio Peso	Mayor Peso/Tension	Casa	Baja-Media	Intermedio	Baja-Media	SB-RF	Complementario	ENF001, ENF002, ENF003	PAT001	PAT002
+RES001	Resistencia	Caminar	Aeróbico	Ninguna	Caminadora	Aire Libre	Baja	Básico	Baja	PG, SB	Principal	Todas	ENF005	Ninguna
+RES002	Resistencia	Trotar	Aeróbico	Ninguna	Caminadora	Aire Libre	Baja	Básico	Media	PG, SB, RD	Principal	ENF001, ENF002, ENF004, ENF006	PAT007, PAT008, ENF008	ENF005
+RES003	Resistencia	Correr	Aeróbico	Ninguna	Caminadora	Aire Libre	Media	Intermedio	Media-Alta	PG, RD	Principal	ENF001, ENF002, ENF004	PAT007, PAT008, PAT009	ENF005, ENF007
+RES004	Resistencia	Sprint	Anaeróbico	Ninguna	Caminadora	Aire Libre	Media	Avanzado	Alta	RD	Principal	ENF001, ENF002	PAT007, PAT008, PAT009	ENF005, ENF007, ENF008
+RES005	Resistencia	Burpees	Mixto	Propio Peso	Ninguna	Casa	Media	Intermedio	Alta	PG, RD	Metabólico	ENF001, ENF002	PAT004, PAT007, PAT008	PAT002, ENF005, ENF007
+RES006	Resistencia	Sprawls	Mixto	Propio Peso	Ninguna	Casa	Media	Intermedio	Media-Alta	PG, RD	Metabólico	ENF001, ENF002	PAT004, PAT007	PAT002, ENF005
+RES007	Resistencia	Jump Squats	Pliométrico	Propio Peso	Ninguna	Casa	Media	Intermedio	Alta	PG, RD	Potencia	ENF001, ENF002	PAT007, PAT008	ENF007, ENF008
+RES008	Resistencia	Plyo Lunges	Pliométrico	Propio Peso	Ninguna	Casa	Media	Avanzado	Alta	RD	Potencia	ENF001, ENF002	PAT007, PAT008, PAT009	ENF007, ENF008
+RES009	Resistencia	Star Jumps	Pliométrico	Propio Peso	Ninguna	Casa	Baja	Básico	Media-Alta	PG	Metabólico	ENF001, ENF002, ENF009	PAT007, PAT008	ENF007
+RES010	Resistencia	Hand Release Push Ups	Mixto	Propio Peso	Ninguna	Casa	Media	Intermedio	Media	PG, GMM	Complementario	ENF001, ENF002, ENF009	PAT004, PAT006	PAT005
+RES011	Resistencia	Jumping Jacks	Aeróbico	Propio Peso	Ninguna	Casa	Baja	Básico	Media	PG, SB	Principal	ENF001, ENF002, ENF003, ENF009	PAT007, PAT008	ENF007
+RES012	Resistencia	High Knees	Anaeróbico	Propio Peso	Ninguna	Casa	Baja	Básico	Alta	PG, RD	Metabólico	ENF001, ENF002	PAT007, PAT008	ENF007, ENF008
+RES013	Resistencia	Butt Kicks	Aeróbico	Propio Peso	Ninguna	Casa	Baja	Básico	Media	PG, SB	Principal	ENF001, ENF002, ENF009	PAT007	ENF007
+RES014	Resistencia	Fast Feet	Agilidad	Propio Peso	Conos	Casa	Media	Intermedio	Alta	RD	Agilidad	ENF001, ENF002	PAT007, PAT008	ENF007
+RES015	Resistencia	Scissors Jumps	Pliométrico	Propio Peso	Ninguna	Casa	Media	Intermedio	Alta	PG, RD	Potencia	ENF001, ENF002	PAT007, PAT008	ENF007
+RES016	Resistencia	Lateral Shuffles	Agilidad	Propio Peso	Conos	Aire Libre	Media	Intermedio	Media-Alta	RD	Agilidad	ENF001, ENF002	PAT007, PAT008	ENF007
+RES017	Resistencia	Mountain Climbers	Mixto	Propio Peso	Ninguna	Casa	Baja	Básico	Alta	PG	Metabólico	ENF001, ENF002, ENF003	PAT004, PAT006	PAT002
+RES018	Resistencia	Cross Body Climbers	Mixto	Propio Peso	Ninguna	Casa	Media	Intermedio	Alta	PG	Metabólico	ENF001, ENF002	PAT004, PAT006	PAT002
+RES019	Resistencia	Plank Jacks	Mixto	Propio Peso	Ninguna	Casa	Media	Intermedio	Media-Alta	PG	Metabólico	ENF001, ENF002	PAT004, PAT006	PAT002
+RES020	Resistencia	Sprinter Sit Ups	Core Metabólico	Propio Peso	Ninguna	Casa	Media	Intermedio	Alta	PG	Complementario	ENF001, ENF002	PAT001	PAT002
+RES021	Resistencia	Flutter Kicks	Core Metabólico	Propio Peso	Ninguna	Casa	Baja	Básico	Media	PG	Complementario	ENF001, ENF002	PAT001	PAT002
+RES022	Resistencia	Russian Twists	Rotacional	Propio Peso	Ninguna	Casa	Baja	Básico	Media	PG	Complementario	ENF001, ENF002	PAT001, PAT010	PAT002
+RES023	Resistencia	Bear Crawls	Locomoción	Propio Peso	Ninguna	Casa	Media	Intermedio	Media-Alta	PG, RD	Locomoción	ENF001, ENF002	PAT004, PAT007	PAT002
+RES024	Resistencia	Crab Walks	Locomoción	Propio Peso	Ninguna	Casa	Media	Intermedio	Media	PG	Locomoción	ENF001, ENF002	PAT004, PAT006	PAT002
+RES025	Resistencia	Inchworms	Locomoción	Propio Peso	Ninguna	Casa	Media	Intermedio	Media	PG, SB	Locomoción	ENF001, ENF002	PAT004, PAT006	PAT002
+RES026	Resistencia	Frog Jumps	Pliométrico	Propio Peso	Ninguna	Casa	Media	Avanzado	Alta	RD	Potencia	ENF001, ENF002	PAT007, PAT008, PAT009	ENF007, ENF008
+RES027	Resistencia	Kick Throughs	Locomoción	Propio Peso	Ninguna	Casa	Media	Intermedio	Media-Alta	PG	Locomoción	ENF001, ENF002	PAT004, PAT006	PAT002
+RES028	Resistencia	Skater Jumps	Agilidad	Propio Peso	Ninguna	Casa	Media	Intermedio	Alta	RD	Agilidad	ENF001, ENF002	PAT007, PAT008	ENF007
+RES029	Resistencia	Squat to Reverse Lunge Combo	Mixto	Propio Peso	Ninguna	Casa	Media	Intermedio	Media-Alta	PG	Metabólico	ENF001, ENF002	PAT007, PAT009	ENF007
+RES030	Resistencia	Push Up + Mountain Climber	Mixto	Propio Peso	Ninguna	Casa	Media	Intermedio	Alta	PG	Metabólico	ENF001, ENF002	PAT004, PAT006	PAT002
+RES031	Resistencia	Isometric Squat Punches	Mixto	Propio Peso	Ninguna	Casa	Baja	Básico	Media	PG	Complementario	ENF001, ENF002, ENF009	PAT007	Ninguna
+RES032	Resistencia	Square Jumps	Agilidad	Propio Peso	Conos	Casa	Media	Intermedio	Alta	RD	Agilidad	ENF001, ENF002	PAT007, PAT008	ENF007
+RES033	Resistencia	Sprawl + Tuck Jump	Mixto	Propio Peso	Ninguna	Casa	Avanzada	Avanzado	Alta	RD	Potencia	ENF001	PAT007, PAT008	ENF005, ENF007, ENF008
+RES034	Resistencia	Commandos	Mixto	Propio Peso	Ninguna	Casa	Media	Intermedio	Media-Alta	PG	Complementario	ENF001, ENF002	PAT004, PAT006	PAT002

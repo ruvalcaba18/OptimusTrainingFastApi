@@ -1,0 +1,25 @@
+PAT001	Dolor Lumbar	Columna Lumbar	PATHOLOGY
+PAT002	Hernia Discal	Columna	PATHOLOGY
+PAT003	Dolor Cervical	Cuello	PATHOLOGY
+PAT004	Lesión de Hombro	Hombro	PATHOLOGY
+PAT005	Epicondilitis / Epitrocleitis	Codo	PATHOLOGY
+PAT006	Lesión de Muñeca	Muñeca	PATHOLOGY
+PAT007	Lesión de Rodilla	Rodilla	PATHOLOGY
+PAT008	Lesión de Tobillo	Tobillo	PATHOLOGY
+PAT009	Lesión de Cadera	Cadera	PATHOLOGY
+PAT010	Escoliosis	Columna	PATHOLOGY
+PAT011	Inestabilidad de Hombro	Hombro	PATHOLOGY
+PAT012	Tendinopatía Rotuliana	Rodilla	PATHOLOGY
+PAT013	Fascitis Plantar	Pie	PATHOLOGY
+PAT014	Síndrome Patelofemoral	Rodilla	PATHOLOGY
+PAT015	Dolor Crónico de Espalda	Columna	PATHOLOGY
+ENF001	Hipertensión Controlada	Cardiovascular	DISEASE
+ENF002	Sobrepeso	Metabólica	DISEASE
+ENF003	Obesidad	Metabólica	DISEASE
+ENF004	Diabetes Tipo 2	Metabólica	DISEASE
+ENF005	Enfermedad Cardiovascular	Cardiovascular	DISEASE
+ENF006	Asma Controlada	Respiratoria	DISEASE
+ENF007	Osteoporosis	Osteomuscular	DISEASE
+ENF008	Adulto Mayor	Población Especial	DISEASE
+ENF009	Sedentarismo	Estilo de Vida	DISEASE
+ENF010	Embarazo	Población Especial	DISEASE

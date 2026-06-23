@@ -1,0 +1,17 @@
+from pydantic import BaseModel
+from typing import Optional, List
+from app.schemas.training.goal_schema import GoalSchema
+
+class MethodSchema(BaseModel):
+    id: int
+    code: str
+    name: str
+    category: str  # 'FORCE' or 'RESISTANCE'
+    type: str
+    level: str
+    complexity: str
+    intensity: Optional[str] = None
+    tempo: Optional[str] = None
+    goals: List[GoalSchema] = []
+
+    model_config = {"from_attributes": True}

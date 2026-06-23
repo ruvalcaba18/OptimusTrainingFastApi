@@ -1,0 +1,30 @@
+FMT001	Series Tradicionales	FORCE	Fuerza General	Básico	Baja	60-80		GMM,SB
+FMT002	Sobrecarga Progresiva	FORCE	Hipertrofia	Básico-Intermedio	Baja	65-85		GMM,SB
+FMT003	Pirámide	FORCE	Hipertrofia/Fuerza	Intermedio	Media	60-90		GMM,RD
+FMT004	Superseries	FORCE	Densidad	Intermedio	Media	60-80		PG
+FMT005	Triseries	FORCE	Densidad	Intermedio	Media	60-80		PG
+FMT006	Drop Sets	FORCE	Hipertrofia	Intermedio-Avanzado	Alta	60-80		GMM
+FMT007	Rest Pause	FORCE	Hipertrofia/Fuerza	Avanzado	Alta	75-90		GMM
+FMT008	Circuito de Fuerza	FORCE	Metabólico	Básico-Intermedio	Baja	50-70		PG,SB
+FMT009	Fuerza Máxima	FORCE	Fuerza Neural	Avanzado	Alta	85-100		RD
+FMT010	Potencia	FORCE	Explosiva	Avanzado	Alta	30-70		RD
+MET001	Continuo	RESISTANCE	Cardio	Básico	Baja			SB
+MET002	Continuo Progresivo	RESISTANCE	Cardio	Intermedio	Media			PG
+MET003	Intervalos Simples	RESISTANCE	Intervalado	Básico	Media			SB
+MET004	Intervalos Moderados	RESISTANCE	Intervalado	Intermedio	Media-Alta			PG
+MET005	Intervalos Intensivos	RESISTANCE	Intervalado	Avanzado	Alta			RD
+MET006	HIIT 1:1	RESISTANCE	HIIT	Intermedio	Alta			PG
+MET007	HIIT 2:1	RESISTANCE	HIIT	Avanzado	Alta			RD
+MET008	HIIT Piramidal	RESISTANCE	HIIT	Avanzado	Alta			RD
+MET009	Circuito Tradicional	RESISTANCE	Circuito	Básico	Media			PG,SB
+MET010	Circuito Metabólico	RESISTANCE	Circuito	Intermedio	Alta			PG
+MET011	Circuito Funcional	RESISTANCE	Circuito	Intermedio	Media			PG,SB
+MET012	Circuito Deportivo	RESISTANCE	Circuito	Avanzado	Alta			RD
+MET013	EMOM Básico	RESISTANCE	Densidad	Básico	Media			PG
+MET014	EMOM Progresivo	RESISTANCE	Densidad	Avanzado	Alta			RD
+MET015	AMRAP Básico	RESISTANCE	Densidad	Intermedio	Media-Alta			PG
+MET016	AMRAP Progresivo	RESISTANCE	Densidad	Avanzado	Alta			RD
+MET017	Fartlek Libre	RESISTANCE	Variable	Intermedio	Variable			RD
+MET018	Fartlek por Tiempo	RESISTANCE	Variable	Intermedio	Variable			RD
+MET019	Fartlek por Distancia	RESISTANCE	Variable	Avanzado	Variable			RD
+MET020	Fartlek Piramidal	RESISTANCE	Variable	Avanzado	Variable			RD

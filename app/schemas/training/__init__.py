@@ -14,6 +14,12 @@ from .training_schemas import (
     TrainingPlanResponse,
     CoachAthleteResponse,
 )
+from .level_schema import LevelSchema
+from .goal_schema import GoalSchema
+from .condition_schema import ConditionSchema
+from .method_schema import MethodSchema
+from .excersice_schema import ExcersiceResponse, ExcersiceConditionResponse
+
 
 __all__ = [
     "PlanStatus",
@@ -30,4 +36,11 @@ __all__ = [
     "TrainingPlanUpdate",
     "TrainingPlanResponse",
     "CoachAthleteResponse",
+    "LevelSchema",
+    "GoalSchema",
+    "ConditionSchema",
+    "MethodSchema",
+    "ExcersiceResponse",
+    "ExcersiceConditionResponse",
 ]
+
