@@ -37,6 +37,10 @@ __all__ = [
     "Method",
     "Excersice",
 ]
-from app.models.training import CoachAthlete, TrainingPlan, DailyWorkout, ExerciseDetail
+from app.models.coach_athlete import CoachAthlete
+from app.models.training_plan import TrainingPlan
+from app.models.daily_workout import DailyWorkout
+from app.models.exercise_detail import ExerciseDetail
+
 
 
