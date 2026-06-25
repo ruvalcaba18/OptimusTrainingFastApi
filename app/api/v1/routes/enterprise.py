@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.core.cache import cache_get, cache_set, cache_delete_pattern, make_key
 from app.database import get_db
 from app.api.deps import get_current_user
-from app.models.user import User
+from app.models import User
 from app.controllers.enterprise.enterprise_controller import enterprise_controller
 from app.schemas.enterprise import (
     EnterpriseCreate,

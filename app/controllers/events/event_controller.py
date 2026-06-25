@@ -3,8 +3,8 @@ from typing import Optional
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.models.user import User
-from app.services.event_service import event_service
+from app.models import User
+from app.services import event_service
 from app.schemas.events import (
     EventCreate,
     EventUpdate,

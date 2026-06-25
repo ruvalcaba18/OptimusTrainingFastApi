@@ -3,12 +3,12 @@ from fastapi import HTTPException, status
 from typing import Any, Dict
 from sqlalchemy.orm import Session 
 
-from app.services.chat_service import chat_service
+from app.services import chat_service
 from app.schemas.chat.chat import ChatRequest
-from app.models.user import User
+from app.models import User
 from app.core import security
 from app.core.config import settings
-from app.models.prompt_log import PromptLog
+from app.models import PromptLog
 
 class ChatController:
     @staticmethod

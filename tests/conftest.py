@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from app.main import app
 from app.database import Base, get_db
 from app.core.security import get_password_hash
-from app.models.user import User
+from app.models import User
 
 TEST_DATABASE_URL = "sqlite:///:memory:"
 

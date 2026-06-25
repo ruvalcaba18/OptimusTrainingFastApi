@@ -6,8 +6,8 @@ from typing import List, Optional
 from sqlalchemy import func as sa_func
 from sqlalchemy.orm import Session
 
-from app.models.enterprise import Enterprise, EnterpriseCode, EnterpriseMember
-from app.models.active_break import ActiveBreakSession, ActiveBreakLog
+from app.models import Enterprise, EnterpriseCode, EnterpriseMember
+from app.models import ActiveBreakSession, ActiveBreakLog
 from app.schemas.enterprise import (
     EnterpriseCreate,
     ActiveBreakCreate,

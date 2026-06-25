@@ -9,7 +9,7 @@ from app.database import get_db
 from app.controllers.users.user_controller import user_controller
 from app.schemas.users import UserCreate, UserResponse, UserUpdate, UserRegistrationResponse
 from app.api.deps import get_current_user
-from app.models.user import User
+from app.models import User
 
 router = APIRouter()
 

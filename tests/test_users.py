@@ -85,7 +85,7 @@ class TestUpdateUser:
         assert resp.json()["first_name"] == "Actualizado"
 
     def test_cannot_update_other_user(self, client, db, auth_headers):
-        from app.models.user import User
+        from app.models import User
         from app.core.security import get_password_hash
         other = User(
             email="other@optimus.com",
@@ -113,7 +113,7 @@ class TestUpdateUser:
 
 class TestDeleteUser:
     def test_delete_own_user(self, client, db):
-        from app.models.user import User
+        from app.models import User
         from app.core.security import get_password_hash
         user = User(
             email="todelete@optimus.com",
@@ -162,7 +162,7 @@ class TestProfilePicture:
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_upload_other_user_photo_forbidden(self, client, db, auth_headers):
-        from app.models.user import User
+        from app.models import User
         from app.core.security import get_password_hash
         other = User(
             email="photo_other@optimus.com",

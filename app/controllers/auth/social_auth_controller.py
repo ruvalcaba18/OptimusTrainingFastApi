@@ -4,12 +4,12 @@ from typing import Callable, Awaitable
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.models.user import User
-from app.services.user_service import user_service
+from app.models import User
+from app.services import user_service
 from app.schemas.users import Token
 from app.schemas.users.social_auth_request import SocialAuthRequest
 from app.core import security
-from app.services.social_auth import AppleProvider, GoogleProvider, FacebookProvider
+from app.services import AppleProvider, GoogleProvider, FacebookProvider
 
 
 class SocialAuthController:

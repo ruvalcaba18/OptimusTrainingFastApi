@@ -6,7 +6,7 @@ from app.database import get_db
 from app.api import deps
 from app.controllers.chat.chat_controller import chat_controller
 from app.schemas.chat.chat import ChatRequest
-from app.models.user import User
+from app.models import User
 
 router = APIRouter()
 

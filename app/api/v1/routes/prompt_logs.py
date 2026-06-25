@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.api import deps
-from app.models.user import User
-from app.models.prompt_log import PromptLog
+from app.models import User
+from app.models import PromptLog
 from app.schemas.prompts.prompt_log_response import PromptLogResponse
 
 router = APIRouter()

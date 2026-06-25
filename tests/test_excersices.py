@@ -1,22 +1,13 @@
 import pytest
 from pathlib import Path
 from fastapi import status
-from app.database.seed_all import (
-    seed_levels,
-    seed_goals,
-    seed_conditions,
-    seed_methods,
-    seed_exercises,
-)
+from app.database.seed_all import DatabaseSeeder
 
 @pytest.fixture(autouse=True)
 def seed_test_db(db):
     data_dir = Path(__file__).parent.parent / "app" / "database" / "data"
-    levels_map = seed_levels(db, data_dir)
-    goals_map = seed_goals(db, data_dir)
-    conditions_map = seed_conditions(db, data_dir)
-    seed_methods(db, goals_map, data_dir)
-    seed_exercises(db, goals_map, conditions_map, data_dir)
+    seeder = DatabaseSeeder(db, data_dir)
+    seeder.seed_all(include_matrix=False)
 
 class TestExcersiceCatalog:
 

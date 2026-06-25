@@ -1,8 +1,8 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from app.services.condition_service import condition_service
-from app.models.condition import Condition
+from app.services import condition_service
+from app.models import Condition
 
 class ConditionController:
 

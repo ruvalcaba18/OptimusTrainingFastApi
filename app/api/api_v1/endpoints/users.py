@@ -2,10 +2,10 @@ from typing import Any
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.core.db import get_db
-from app.services.user_service import user_service
+from app.services import user_service
 from app.schemas.users import UserCreate, UserResponse, UserUpdate
 from app.api import deps
-from app.models.user import User
+from app.models import User
 
 router = APIRouter()
 

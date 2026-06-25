@@ -1,8 +1,8 @@
 from typing import List
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from app.services.level_service import level_service
-from app.models.level import Level
+from app.services import level_service
+from app.models import Level
 
 class LevelController:
 

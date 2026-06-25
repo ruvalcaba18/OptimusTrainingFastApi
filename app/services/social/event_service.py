@@ -3,7 +3,7 @@ from typing import List, Optional
 from sqlalchemy import func as sa_func
 from sqlalchemy.orm import Session
 
-from app.models.event import Event, EventParticipant
+from app.models import Event, EventParticipant
 from app.schemas.events import EventCreate, EventUpdate
 
 

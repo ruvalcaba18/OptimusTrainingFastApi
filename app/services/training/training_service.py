@@ -2,13 +2,13 @@ from datetime import datetime, date, timedelta
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from app.models.coach_athlete import CoachAthlete
-from app.models.training_plan import TrainingPlan
-from app.models.daily_workout import DailyWorkout
-from app.models.exercise_detail import ExerciseDetail
+from app.models import CoachAthlete
+from app.models import TrainingPlan
+from app.models import DailyWorkout
+from app.models import ExerciseDetail
 from app.models.Enums.PlanStatus import PlanStatus
 from app.models.Enums.WorkoutStatus import WorkoutStatus
-from app.models.coach import CoachProfile
+from app.models import CoachProfile
 from app.schemas.training import TrainingPlanCreate, DailyWorkoutCreate, ExerciseDetailCreate
 
 

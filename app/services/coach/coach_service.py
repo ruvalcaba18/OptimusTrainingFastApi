@@ -3,8 +3,8 @@ from typing import List, Optional, Tuple
 from sqlalchemy import func as sa_func
 from sqlalchemy.orm import Session
 
-from app.models.coach import CoachProfile
-from app.models.coach_booking import CoachBooking
+from app.models import CoachProfile
+from app.models import CoachBooking
 from app.schemas.coaches import CoachCreate, CoachUpdate, BookingCreate
 
 class CoachService:

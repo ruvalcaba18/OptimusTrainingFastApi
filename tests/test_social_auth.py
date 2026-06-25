@@ -24,7 +24,7 @@ FACEBOOK_VERIFIED_USER = {
 class TestSocialAuthApple:
     def test_apple_login_creates_new_user(self, client):
         with patch(
-            "app.services.social_auth.apple_provider.AppleProvider.verify_token",
+            "app.services.user.social_auth.apple_provider.AppleProvider.verify_token",
             new_callable=AsyncMock,
             return_value=APPLE_VERIFIED_USER,
         ):
@@ -45,7 +45,7 @@ class TestSocialAuthApple:
             "provider_id": "apple.sub.existing",
         }
         with patch(
-            "app.services.social_auth.apple_provider.AppleProvider.verify_token",
+            "app.services.user.social_auth.apple_provider.AppleProvider.verify_token",
             new_callable=AsyncMock,
             return_value=existing_user_data,
         ):
@@ -63,7 +63,7 @@ class TestSocialAuthApple:
     def test_apple_invalid_token_rejected(self, client):
         from fastapi import HTTPException
         with patch(
-            "app.services.social_auth.apple_provider.AppleProvider.verify_token",
+            "app.services.user.social_auth.apple_provider.AppleProvider.verify_token",
             new_callable=AsyncMock,
             side_effect=HTTPException(status_code=401, detail="Invalid token"),
         ):
@@ -74,7 +74,7 @@ class TestSocialAuthApple:
         assert resp.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_apple_deactivated_user_rejected(self, client, db):
-        from app.models.user import User
+        from app.models import User
         from app.core.security import get_password_hash
         deactivated = User(
             email="deactivated.apple@test.com",
@@ -93,7 +93,7 @@ class TestSocialAuthApple:
         db.commit()
 
         with patch(
-            "app.services.social_auth.apple_provider.AppleProvider.verify_token",
+            "app.services.user.social_auth.apple_provider.AppleProvider.verify_token",
             new_callable=AsyncMock,
             return_value={"email": "deactivated.apple@test.com", "name": None, "provider_id": "x"},
         ):
@@ -107,7 +107,7 @@ class TestSocialAuthApple:
 class TestSocialAuthGoogle:
     def test_google_login_creates_new_user(self, client):
         with patch(
-            "app.services.social_auth.google_provider.GoogleProvider.verify_token",
+            "app.services.user.social_auth.google_provider.GoogleProvider.verify_token",
             new_callable=AsyncMock,
             return_value=GOOGLE_VERIFIED_USER,
         ):
@@ -120,7 +120,7 @@ class TestSocialAuthGoogle:
 
     def test_google_login_existing_user(self, client, test_user):
         with patch(
-            "app.services.social_auth.google_provider.GoogleProvider.verify_token",
+            "app.services.user.social_auth.google_provider.GoogleProvider.verify_token",
             new_callable=AsyncMock,
             return_value={"email": test_user.email, "name": "Test", "provider_id": "g.sub"},
         ):
@@ -136,7 +136,7 @@ class TestSocialAuthGoogle:
 
     def test_google_second_login_same_token_returns_same_user(self, client):
         with patch(
-            "app.services.social_auth.google_provider.GoogleProvider.verify_token",
+            "app.services.user.social_auth.google_provider.GoogleProvider.verify_token",
             new_callable=AsyncMock,
             return_value=GOOGLE_VERIFIED_USER,
         ):
@@ -149,7 +149,7 @@ class TestSocialAuthGoogle:
 class TestSocialAuthFacebook:
     def test_facebook_login_creates_new_user(self, client):
         with patch(
-            "app.services.social_auth.facebook_provider.FacebookProvider.verify_token",
+            "app.services.user.social_auth.facebook_provider.FacebookProvider.verify_token",
             new_callable=AsyncMock,
             return_value=FACEBOOK_VERIFIED_USER,
         ):
@@ -166,7 +166,7 @@ class TestSocialAuthFacebook:
 
     def test_facebook_login_existing_user(self, client, test_user):
         with patch(
-            "app.services.social_auth.facebook_provider.FacebookProvider.verify_token",
+            "app.services.user.social_auth.facebook_provider.FacebookProvider.verify_token",
             new_callable=AsyncMock,
             return_value={"email": test_user.email, "name": "FB", "provider_id": "fb.id"},
         ):
@@ -180,7 +180,7 @@ class TestSocialAuthFacebook:
 class TestSocialAuthNameResolution:
     def test_name_from_body_takes_priority(self, client, db):
         with patch(
-            "app.services.social_auth.google_provider.GoogleProvider.verify_token",
+            "app.services.user.social_auth.google_provider.GoogleProvider.verify_token",
             new_callable=AsyncMock,
             return_value={
                 "email": "namepriority@test.com",
@@ -193,14 +193,14 @@ class TestSocialAuthNameResolution:
                 json={"token": "tok", "first_name": "Body", "last_name": "Priority"},
             )
         assert resp.status_code == status.HTTP_200_OK
-        from app.services.user_service import user_service
+        from app.services import user_service
         from app.database import SessionLocal
         with SessionLocal() as s:
             pass
 
     def test_name_falls_back_to_provider(self, client):
         with patch(
-            "app.services.social_auth.google_provider.GoogleProvider.verify_token",
+            "app.services.user.social_auth.google_provider.GoogleProvider.verify_token",
             new_callable=AsyncMock,
             return_value={
                 "email": "fallback@test.com",
@@ -216,7 +216,7 @@ class TestSocialAuthNameResolution:
 
     def test_name_falls_back_to_email_prefix(self, client):
         with patch(
-            "app.services.social_auth.google_provider.GoogleProvider.verify_token",
+            "app.services.user.social_auth.google_provider.GoogleProvider.verify_token",
             new_callable=AsyncMock,
             return_value={
                 "email": "emailprefix@test.com",

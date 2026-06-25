@@ -4,8 +4,8 @@ from typing import Optional
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.models.user import User
-from app.services.enterprise_service import enterprise_service
+from app.models import User
+from app.services import enterprise_service
 from app.schemas.enterprise import (
     EnterpriseCreate,
     EnterpriseResponse,

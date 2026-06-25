@@ -1,14 +1,7 @@
-from sqlalchemy import Table, Column, ForeignKey, Integer, String, Text
+from sqlalchemy import Column, Integer, String, Text
 from sqlalchemy.orm import relationship
 from typing import final
 from app.database import Base
-
-method_goal = Table(
-    "method_goal",
-    Base.metadata,
-    Column("method_id", Integer, ForeignKey("methods.id", ondelete="CASCADE"), primary_key=True),
-    Column("goal_id", Integer, ForeignKey("goals.id", ondelete="CASCADE"), primary_key=True),
-)
 
 @final
 class Method(Base):
@@ -24,4 +17,4 @@ class Method(Base):
     intensity = Column(String(50), nullable=True)   
     tempo = Column(String(100), nullable=True)    
     
-    goals = relationship("Goal", secondary=method_goal, backref="methods")
+    goals = relationship("Goal", secondary="method_goal", backref="methods")

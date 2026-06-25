@@ -1,8 +1,8 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from app.models.excersices import Excersice
-from app.models.condition import Condition, ExcersiceCondition
-from app.models.goal import Goal
+from app.models import Excersice
+from app.models import Condition, ExcersiceCondition
+from app.models import Goal
 
 class ExcersiceService:
     def list_excersices(

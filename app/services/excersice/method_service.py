@@ -1,6 +1,6 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from app.models.method import Method
+from app.models import Method
 
 class MethodService:
     def list_methods(self, db: Session, category: Optional[str] = None) -> List[Method]:

@@ -8,7 +8,7 @@ from app.database import get_db
 from app.controllers.auth.auth_controller import auth_controller
 from app.schemas.users import Token, UserLogin, PasswordReset
 from app.api.deps import get_current_user
-from app.models.user import User
+from app.models import User
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

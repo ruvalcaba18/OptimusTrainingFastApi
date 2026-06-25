@@ -2,11 +2,11 @@ from datetime import timedelta
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.services.user_service import user_service
+from app.services import user_service
 from app.core import security
 from app.core.config import settings
 from app.schemas.users import Token, UserLogin
-from app.models.user import User
+from app.models import User
 
 
 class AuthController:
@@ -49,7 +49,7 @@ class AuthController:
 
     @staticmethod
     def recover_password(db: Session, email: str) -> dict:
-        from app.services.email_service import email_service
+        from app.services import email_service
         user = user_service.get_by_email(db, email=email)
         if user:
             token = security.create_password_reset_token(email)

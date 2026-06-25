@@ -2,7 +2,7 @@ from datetime import timedelta
 from fastapi import HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
-from app.models.user import User
+from app.models import User
 from app.schemas.users import (
     UserCreate, 
     UserUpdate, 
@@ -10,8 +10,8 @@ from app.schemas.users import (
     UserRegistrationResponse, 
     Token
 )
-from app.services.user_service import user_service
-from app.services.upload_service import save_profile_picture, delete_profile_picture
+from app.services import user_service
+from app.services import save_profile_picture, delete_profile_picture
 from app.core import security
 from app.core.config import settings
 

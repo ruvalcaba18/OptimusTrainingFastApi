@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
 
@@ -23,3 +24,9 @@ class User(Base):
     profile_picture_url = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
+
+    profile = relationship("UserProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    pathologies = relationship("Condition", secondary="user_pathology", backref="users_with_pathology")
+    diseases = relationship("Condition", secondary="user_disease", backref="users_with_disease")
+    equipments = relationship("Equipment", secondary="user_equipment", backref="users")
+

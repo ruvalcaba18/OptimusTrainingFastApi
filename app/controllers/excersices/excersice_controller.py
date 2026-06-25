@@ -1,8 +1,8 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from app.services.excersice_service import excersice_service
-from app.models.excersices import Excersice
+from app.services import excersice_service
+from app.models import Excersice
 
 class ExcersiceController:
 

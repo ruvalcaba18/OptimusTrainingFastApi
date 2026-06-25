@@ -1,8 +1,8 @@
 from typing import List
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from app.services.goal_service import goal_service
-from app.models.goal import Goal
+from app.services import goal_service
+from app.models import Goal
 
 class GoalController:
 

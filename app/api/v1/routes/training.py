@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.api import deps
 from app.controllers.training_controller import training_controller
-from app.models.user import User
+from app.models import User
 from app.schemas.training import (
     TrainingPlanCreate,
     TrainingPlanResponse,

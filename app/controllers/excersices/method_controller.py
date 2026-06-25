@@ -1,8 +1,8 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from app.services.method_service import method_service
-from app.models.method import Method
+from app.services import method_service
+from app.models import Method
 
 class MethodController:
 
