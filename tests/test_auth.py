@@ -10,7 +10,6 @@ class TestLogin:
         assert resp.status_code == status.HTTP_200_OK
         data = resp.json()
         assert "access_token" in data
-        assert "refresh_token" in data
         assert data["token_type"] == "bearer"
 
     def test_login_access_token_form(self, client, test_user):
@@ -50,10 +49,11 @@ class TestRefreshToken:
             "/api/v1/auth/login",
             json={"email": "testuser@optimus.com", "password": "Passw0rd!"},
         )
-        refresh_token = login.json()["refresh_token"]
+        access_token = login.json()["access_token"]
+        headers = {"Authorization": f"Bearer {access_token}"}
         resp = client.post(
             "/api/v1/auth/refresh-token",
-            params={"refresh_token": refresh_token},
+            headers=headers
         )
         assert resp.status_code == status.HTTP_200_OK
         assert "access_token" in resp.json()

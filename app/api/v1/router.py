@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from app.api.v1.routes import (
     users, auth, social_auth, enterprise, coaches, events,
-    competitions, training, chat, prompt_logs, excersices, routines
+    competitions, training, excersices, routines
 )
 
 api_router = APIRouter()
@@ -17,5 +17,3 @@ api_router.include_router(excersices.router, prefix="/excersices", tags=["Catál
 api_router.include_router(routines.router, prefix="/routines", tags=["Generación Automática de Rutinas"])
 api_router.include_router(events.router, prefix="/events", tags=["Social — Eventos"])
 api_router.include_router(competitions.router, prefix="/competitions", tags=["Social — Competencias"])
-api_router.include_router(chat.router, prefix="/chat", tags=["Inteligencia Artificial"])
-api_router.include_router(prompt_logs.router, prefix="/prompt-logs", tags=["Historial de Prompts"])

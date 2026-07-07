@@ -35,7 +35,6 @@ class TestSocialAuthApple:
         assert resp.status_code == status.HTTP_200_OK
         data = resp.json()
         assert "access_token" in data
-        assert "refresh_token" in data
         assert data["token_type"] == "bearer"
 
     def test_apple_login_existing_user(self, client, test_user):

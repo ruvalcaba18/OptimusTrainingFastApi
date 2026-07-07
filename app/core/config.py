@@ -33,7 +33,6 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str = ""
     FACEBOOK_APP_ID: str = ""
     FACEBOOK_APP_SECRET: str = ""
-    OPENAI_API_KEY: str = ""
 
     REDIS_URL: str = "redis://localhost:6379/0"
     RATE_LIMIT_ENABLED: bool = True

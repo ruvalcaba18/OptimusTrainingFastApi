@@ -11,10 +11,8 @@ from app.models.Enums.WorkoutStatus import WorkoutStatus
 from app.models import CoachProfile
 from app.schemas.training import TrainingPlanCreate, DailyWorkoutCreate, ExerciseDetailCreate
 
-
 class TrainingService:
-                                                                              
-
+                                                                            
     @staticmethod
     def assign_athlete(db: Session, coach_id: int, athlete_id: int) -> CoachAthlete:
                                 

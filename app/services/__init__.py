@@ -20,8 +20,6 @@ from app.services.social.event_service import event_service
 
 from app.services.enterprise.enterprise_service import enterprise_service
 
-from app.services.chat.chat_service import chat_service
-
 __all__ = [
     "user_service",
     "save_profile_picture",
@@ -42,5 +40,4 @@ __all__ = [
     "competition_service",
     "event_service",
     "enterprise_service",
-    "chat_service",
 ]

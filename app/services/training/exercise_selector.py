@@ -1,5 +1,6 @@
 from typing import List, Dict, Any, Optional, Tuple
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from app.models import Excersice
 from app.models import Condition, ExcersiceCondition
 from app.models import Goal
@@ -21,6 +22,34 @@ LEVEL_VALUES = {
 class ExerciseSelector:
     
     def select_exercises(self, db: Session, user: User) -> List[Dict[str, Any]]:
+        # Intentar utilizar la función optimizada de PostgreSQL
+        try:
+            if db.bind.dialect.name == "postgresql":
+                result = db.execute(
+                    text("SELECT * FROM fn_get_viable_exercises(:user_id)"),
+                    {"user_id": user.id}
+                ).fetchall()
+                
+                selected_exercises = []
+                for row in result:
+                    ex = Excersice(
+                        id=row.exercise_id,
+                        code=row.exercise_code,
+                        name=row.exercise_name,
+                        muscle_group=row.muscle_group,
+                        pattern=row.pattern,
+                        complexity=row.complexity
+                    )
+                    selected_exercises.append({
+                        "exercise": ex,
+                        "caution_warnings": row.caution_warnings,
+                        "has_caution": len(row.caution_warnings) > 0
+                    })
+                return selected_exercises
+        except Exception:
+            pass
+
+        # Fallback local (SQLite para pruebas y base de datos sin migración)
         profile = user.profile
         if not profile:
             return self._fallback_all_exercises(db)
