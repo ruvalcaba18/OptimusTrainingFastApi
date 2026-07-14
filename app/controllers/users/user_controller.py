@@ -118,5 +118,16 @@ class UserController:
             db.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
+    @staticmethod
+    def update_training_profile(db: Session, profile_in, current_user: User):
+        try:
+            updated_user = user_service.update_training_profile(db, db_obj=current_user, profile_in=profile_in)
+            db.commit()
+            return updated_user
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
 
 user_controller = UserController()

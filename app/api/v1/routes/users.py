@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 from app.database import get_db
 from app.controllers.users.user_controller import user_controller
-from app.schemas.users import UserCreate, UserResponse, UserUpdate, UserRegistrationResponse
+from app.schemas.users import UserCreate, UserResponse, UserUpdate, UserRegistrationResponse, UserProfileUpdate
 from app.api.deps import get_current_user
 from app.models import User
 
@@ -89,3 +89,14 @@ def delete_user(
     current_user: User = Depends(get_current_user),
 ) -> Any:
     return user_controller.delete_user(db, user_id=user_id, current_user=current_user)
+
+
+@router.put("/me/profile", response_model=UserResponse, summary="Actualizar perfil de entrenamiento, equipamiento y condiciones médicas")
+def update_user_profile(
+    profile_in: UserProfileUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> Any:
+    return user_controller.update_training_profile(db, profile_in=profile_in, current_user=current_user)
+
+

@@ -8,6 +8,7 @@ from app.services.excersice.condition_service import condition_service
 from app.services.excersice.goal_service import goal_service
 from app.services.excersice.level_service import level_service
 from app.services.excersice.method_service import method_service
+from app.services.excersice.equipment_service import equipment_service
 
 from app.services.training.training_service import training_service
 from app.services.training.routine_generator import routine_generator
@@ -33,6 +34,7 @@ __all__ = [
     "goal_service",
     "level_service",
     "method_service",
+    "equipment_service",
     "training_service",
     "routine_generator",
     "exercise_selector",

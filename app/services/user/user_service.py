@@ -81,5 +81,51 @@ class UserService:
             db.flush()
         return db_user
 
+    @staticmethod
+    def update_training_profile(db: Session, db_obj: User, profile_in) -> User:
+        from app.models import UserProfile, Goal, Level, Equipment, Condition
+        
+        # 1. Asegurar que el perfil exista
+        if not db_obj.profile:
+            db_obj.profile = UserProfile(id=db_obj.id)
+            db.add(db_obj.profile)
+
+        # 2. Buscar y asignar Goal
+        goal = db.query(Goal).filter(Goal.code == profile_in.goal_code).first()
+        if goal:
+            db_obj.profile.goal_id = goal.id
+
+        # 3. Buscar y asignar Level
+        level = db.query(Level).filter(Level.code == profile_in.level_code).first()
+        if level:
+            db_obj.profile.level_id = level.id
+
+        # 4. Asignar Equipamiento
+        if profile_in.equipment_ids is not None:
+            equipments = db.query(Equipment).filter(Equipment.id.in_(profile_in.equipment_ids)).all()
+            db_obj.equipments = equipments
+
+        # 5. Asignar Patologías
+        if profile_in.pathology_ids is not None:
+            pathologies = db.query(Condition).filter(
+                Condition.id.in_(profile_in.pathology_ids),
+                Condition.type == "PATHOLOGY"
+            ).all()
+            db_obj.pathologies = pathologies
+
+        # 6. Asignar Enfermedades
+        if profile_in.disease_ids is not None:
+            diseases = db.query(Condition).filter(
+                Condition.id.in_(profile_in.disease_ids),
+                Condition.type == "DISEASE"
+            ).all()
+            db_obj.diseases = diseases
+
+        db.add(db_obj)
+        db.flush()
+        db.refresh(db_obj)
+        return db_obj
+
+
 
 user_service = UserService()

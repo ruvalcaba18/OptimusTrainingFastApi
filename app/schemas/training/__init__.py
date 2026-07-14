@@ -19,6 +19,7 @@ from .goal_schema import GoalSchema
 from .condition_schema import ConditionSchema
 from .method_schema import MethodSchema
 from .excersice_schema import ExcersiceResponse, ExcersiceConditionResponse
+from .equipment_schema import EquipmentSchema
 
 
 __all__ = [
@@ -42,5 +43,6 @@ __all__ = [
     "MethodSchema",
     "ExcersiceResponse",
     "ExcersiceConditionResponse",
+    "EquipmentSchema",
 ]
 

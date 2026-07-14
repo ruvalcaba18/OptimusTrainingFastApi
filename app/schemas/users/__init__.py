@@ -8,3 +8,5 @@ from .user_response import UserResponse, UserRegistrationResponse
 from .token import Token, TokenPayload
 from .password_reset import PasswordRecoveryRequest, PasswordReset
 from .social_auth_request import SocialAuthRequest
+from .user_profile_update import UserProfileUpdate
+

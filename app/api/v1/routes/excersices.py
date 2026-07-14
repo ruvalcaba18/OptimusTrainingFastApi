@@ -7,12 +7,14 @@ from app.controllers.excersices.goal_controller import goal_controller
 from app.controllers.excersices.condition_controller import condition_controller
 from app.controllers.excersices.method_controller import method_controller
 from app.controllers.excersices.excersice_controller import excersice_controller
+from app.controllers.excersices.equipment_controller import equipment_controller
 from app.schemas.training import (
     LevelSchema,
     GoalSchema,
     ConditionSchema,
     MethodSchema,
     ExcersiceResponse,
+    EquipmentSchema,
 )
 
 router = APIRouter()
@@ -72,3 +74,11 @@ def get_excersices(
         goal_code=goal_code,
         exclude_condition_codes=exclude_conditions
     )
+
+@router.get("/equipments", response_model=List[EquipmentSchema], summary="Listar equipamiento de entrenamiento")
+def get_equipments(db: Session = Depends(deps.get_db)):
+    """
+    Retorna la lista de equipamientos cargados en la aplicación.
+    """
+    return equipment_controller.list_equipments(db)
+
