@@ -1,11 +1,12 @@
 import time
 import logging
-from fastapi import Request
+from fastapi import FastAPI, Request
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 from jose import jwt, JWTError
 from app.core.config import settings
-
+from starlette.middleware.cors import CORSMiddleware
+  
 logger = logging.getLogger("optimus.access")
 
 SECURITY_HEADERS = {
@@ -52,3 +53,21 @@ class SecurityMiddleware(BaseHTTPMiddleware):
 
 
 AuthMiddleware = SecurityMiddleware
+
+class MiddlewareConfigurator:
+    """
+    Namespace class responsible for registering all middlewares to the FastAPI application.
+    """
+
+    @staticmethod
+    def register(app: FastAPI) -> None:
+        from starlette.middleware.cors import CORSMiddleware
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=settings.ALLOWED_ORIGINS,
+            allow_credentials=True,
+            allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+            allow_headers=["Authorization", "Content-Type", "Accept", "X-Request-ID"],
+            expose_headers=["X-Process-Time-Ms"],
+        )
+        app.add_middleware(SecurityMiddleware)
