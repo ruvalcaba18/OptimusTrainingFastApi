@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Optional
 
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
@@ -32,7 +32,7 @@ def register_coach(
     coach_in: CoachCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> CoachResponse:
     return coach_controller.register_coach(
         db, coach_in=coach_in, current_user=current_user
     )
@@ -49,7 +49,7 @@ def list_coaches(
     limit: int = 50,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> list[CoachResponse]:
     return coach_controller.list_coaches(
         db, specialty=specialty, skip=skip, limit=limit
     )
@@ -69,7 +69,7 @@ async def get_nearby_coaches(
     limit: int = 20,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> list[CoachNearbyResponse]:
     cache_key = make_key(
         "coaches", "nearby",
         round(lat, 2), round(lng, 2),
@@ -96,7 +96,7 @@ async def get_coach(
     coach_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> CoachResponse:
     cache_key = make_key("coach", "profile", coach_id)
     cached = await cache_get(cache_key)
     if cached is not None:
@@ -116,7 +116,7 @@ async def update_coach(
     coach_in: CoachUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> CoachResponse:
     result = coach_controller.update_coach(
         db, coach_id=coach_id, coach_in=coach_in, current_user=current_user
     )
@@ -134,7 +134,7 @@ def deactivate_coach(
     coach_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> CoachResponse:
     return coach_controller.deactivate_coach(
         db, coach_id=coach_id, current_user=current_user
     )
@@ -150,7 +150,7 @@ def create_booking(
     booking_in: BookingCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> BookingResponse:
     return coach_controller.create_booking(
         db, booking_in=booking_in, current_user=current_user
     )
@@ -166,7 +166,7 @@ def list_my_bookings(
     limit: int = 50,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> list[BookingResponse]:
     return coach_controller.list_my_bookings(
         db, current_user=current_user, skip=skip, limit=limit
     )
@@ -182,7 +182,7 @@ def list_coach_bookings(
     limit: int = 50,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> list[BookingResponse]:
     return coach_controller.list_coach_bookings(
         db, current_user=current_user, skip=skip, limit=limit
     )
@@ -198,7 +198,7 @@ def update_booking_status(
     status_in: BookingStatusUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> BookingResponse:
     return coach_controller.update_booking_status(
         db,
         booking_id=booking_id,
@@ -217,7 +217,7 @@ def create_review(
     review_in: ReviewCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> BookingResponse:
     return coach_controller.create_review(
         db, review_in=review_in, current_user=current_user
     )

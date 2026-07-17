@@ -1,4 +1,3 @@
-from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.api import deps
@@ -11,7 +10,7 @@ router = APIRouter()
 def generate_my_routine(
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
-) -> Any:
+) -> dict:
     try:
         routine = routine_generator.generate_routine(db, user=current_user)
         return routine

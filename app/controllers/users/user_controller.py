@@ -51,7 +51,9 @@ class UserController:
                 refresh_token=security.create_refresh_token(user.email),
                 token_type="bearer",
             )
+            
             db.commit()
+            
             return UserRegistrationResponse(user=UserResponse.model_validate(user), token=token)
         except Exception as e:
             db.rollback()

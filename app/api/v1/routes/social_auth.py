@@ -1,4 +1,3 @@
-from typing import Any
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -14,7 +13,7 @@ router = APIRouter()
 async def login_with_apple(
     body: SocialAuthRequest,
     db: Session = Depends(get_db),
-) -> Any:
+) -> Token:
     return await social_auth_controller.login_with_apple(db=db, body=body)
 
 
@@ -22,7 +21,7 @@ async def login_with_apple(
 async def login_with_google(
     body: SocialAuthRequest,
     db: Session = Depends(get_db),
-) -> Any:
+) -> Token:
     return await social_auth_controller.login_with_google(db=db, body=body)
 
 
@@ -30,5 +29,5 @@ async def login_with_google(
 async def login_with_facebook(
     body: SocialAuthRequest,
     db: Session = Depends(get_db),
-) -> Any:
+) -> Token:
     return await social_auth_controller.login_with_facebook(db=db, body=body)

@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Optional
 
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
@@ -36,7 +36,7 @@ def create_enterprise(
     enterprise_in: EnterpriseCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> EnterpriseResponse:
     return enterprise_controller.create_enterprise(db, enterprise_in=enterprise_in)
 
 
@@ -48,7 +48,7 @@ def create_enterprise(
 def get_my_enterprise(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> EnterpriseResponse:
     return enterprise_controller.get_my_enterprise(db, current_user=current_user)
 
 
@@ -61,7 +61,7 @@ def validate_code(
     code_in: ValidateCodeRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> ValidateCodeResponse:
     return enterprise_controller.validate_code(
         db, code_in=code_in, current_user=current_user
     )
@@ -77,7 +77,7 @@ def generate_codes(
     code_req: CodeGenerateRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> list[EnterpriseCodeResponse]:
     return enterprise_controller.generate_codes(db, code_req=code_req)
 
 
@@ -92,7 +92,7 @@ def list_codes(
     limit: int = 100,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> list[EnterpriseCodeResponse]:
     return enterprise_controller.list_codes(
         db, enterprise_id=enterprise_id, skip=skip, limit=limit
     )
@@ -109,7 +109,7 @@ def list_members(
     limit: int = 100,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> list[EnterpriseMemberResponse]:
     return enterprise_controller.list_members(
         db, enterprise_id=enterprise_id, skip=skip, limit=limit
     )
@@ -125,7 +125,7 @@ async def create_active_break(
     break_in: ActiveBreakCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> ActiveBreakResponse:
     result = enterprise_controller.create_active_break(db, break_in=break_in)
     await cache_delete_pattern("active_breaks:*")
     return result
@@ -143,7 +143,7 @@ async def list_active_breaks(
     limit: int = 50,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> list[ActiveBreakResponse]:
     cache_key = make_key("active_breaks", duration, category, skip, limit)
     cached = await cache_get(cache_key)
     if cached is not None:
@@ -165,7 +165,7 @@ def get_active_break(
     break_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> ActiveBreakResponse:
     return enterprise_controller.get_active_break(db, break_id=break_id)
 
 
@@ -179,7 +179,7 @@ def start_break(
     log_in: ActiveBreakLogCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> ActiveBreakLogResponse:
     return enterprise_controller.start_break(
         db, log_in=log_in, current_user=current_user
     )
@@ -194,7 +194,7 @@ def complete_break(
     log_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> ActiveBreakLogResponse:
     return enterprise_controller.complete_break(
         db, log_id=log_id, current_user=current_user
     )
@@ -208,7 +208,7 @@ def complete_break(
 def get_my_stats(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> ActiveBreakStatsResponse:
     return enterprise_controller.get_my_stats(
         db, current_user=current_user
     )

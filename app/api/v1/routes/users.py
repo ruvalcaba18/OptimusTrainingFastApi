@@ -1,9 +1,6 @@
-from typing import Any
 from fastapi import APIRouter, Depends, UploadFile, File, status
 from sqlalchemy.orm import Session
 import logging
-
-logger = logging.getLogger(__name__)
 
 from app.database import get_db
 from app.controllers.users.user_controller import user_controller
@@ -11,6 +8,7 @@ from app.schemas.users import UserCreate, UserResponse, UserUpdate, UserRegistra
 from app.api.deps import get_current_user
 from app.models import User
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
@@ -20,7 +18,7 @@ def read_users(
     limit: int = 100,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> list[UserResponse]:
     return user_controller.list_users(db, skip=skip, limit=limit)
 
 
@@ -28,7 +26,7 @@ def read_users(
 def create_user(
     user_in: UserCreate,
     db: Session = Depends(get_db),
-) -> Any:
+) -> UserRegistrationResponse:
     logger.info(f"Attempting to register user: {user_in.email}")
     try:
         result = user_controller.create_user(db, user_in=user_in)
@@ -42,7 +40,7 @@ def create_user(
 @router.get("/me", response_model=UserResponse, summary="Mi perfil")
 def read_user_me(
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> UserResponse:
     return current_user
 
 
@@ -51,7 +49,7 @@ def read_user_by_id(
     user_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> UserResponse:
     return user_controller.get_user(db, user_id=user_id)
 
 
@@ -61,7 +59,7 @@ def update_user(
     user_in: UserUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> UserResponse:
     return user_controller.update_user(db, user_id=user_id, user_in=user_in, current_user=current_user)
 
 
@@ -76,7 +74,7 @@ async def upload_profile_picture(
     file: UploadFile = File(..., description="Imagen de perfil (JPG, PNG o WEBP, máx 5 MB)"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> UserResponse:
     return await user_controller.upload_profile_picture(
         db, user_id=user_id, file=file, current_user=current_user
     )
@@ -87,7 +85,7 @@ def delete_user(
     user_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> UserResponse:
     return user_controller.delete_user(db, user_id=user_id, current_user=current_user)
 
 
@@ -96,7 +94,7 @@ def update_user_profile(
     profile_in: UserProfileUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> UserResponse:
     return user_controller.update_training_profile(db, profile_in=profile_in, current_user=current_user)
 
 

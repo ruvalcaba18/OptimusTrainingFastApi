@@ -5,10 +5,8 @@ from app.models import User
 from app.schemas.users import UserCreate, UserUpdate
 from app.core.security import get_password_hash
 
-
 class UserService:
                                                                                
-
     @staticmethod
     def get_by_email(db: Session, email: str) -> Optional[User]:
         return db.query(User).filter(User.email == email).first()

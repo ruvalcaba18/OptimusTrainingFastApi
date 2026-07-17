@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Optional
 
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
@@ -30,7 +30,7 @@ def create_competition(
     comp_in: CompetitionCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> CompetitionResponse:
     return competition_controller.create_competition(
         db, comp_in=comp_in, current_user=current_user
     )
@@ -47,7 +47,7 @@ def list_competitions(
     limit: int = 50,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> list[CompetitionResponse]:
     return competition_controller.list_competitions(
         db, sport_type=sport_type, comp_status=comp_status, skip=skip, limit=limit
     )
@@ -61,7 +61,7 @@ def get_competition(
     competition_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> CompetitionResponse:
     return competition_controller.get_competition(db, comp_id=competition_id)
 
 @router.put(
@@ -74,7 +74,7 @@ def update_competition(
     comp_in: CompetitionUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> CompetitionResponse:
     return competition_controller.update_competition(
         db, comp_id=competition_id, comp_in=comp_in, current_user=current_user
     )
@@ -89,7 +89,7 @@ def join_competition(
     join_in: JoinCompetitionRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> CompetitionParticipantResponse:
     return competition_controller.join_competition(
         db, join_in=join_in, current_user=current_user
     )
@@ -103,7 +103,7 @@ async def update_score(
     score_in: ScoreUpdateRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> CompetitionParticipantResponse:
     result = competition_controller.update_score(
         db, score_in=score_in, current_user=current_user
     )
@@ -119,7 +119,7 @@ async def get_ranking(
     competition_id: int = Query(..., description="ID de la competencia"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Any:
+) -> RankingResponse:
     cache_key = make_key("ranking", competition_id)
     cached = await cache_get(cache_key)
     if cached is not None:

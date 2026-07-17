@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from .training_type import TrainingType
+from .gender import UserGender
 
 class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None
@@ -12,4 +13,6 @@ class UserUpdate(BaseModel):
     height: Optional[float] = None
     exercise_frequency: Optional[str] = None
     training_type: Optional[TrainingType] = None
+    gender: Optional[UserGender] = None
     password: Optional[str] = Field(None, min_length=8)
+

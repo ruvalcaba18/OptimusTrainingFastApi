@@ -1,5 +1,5 @@
-from typing import List, Optional
-from fastapi import APIRouter, Depends, status, Query
+from typing import List
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.api import deps
@@ -27,7 +27,7 @@ def assign_coach(
     coach_id: int,
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
-):
+) -> CoachAthleteResponse:
     return training_controller.assign_athlete_to_coach(db, coach_id, current_user)
 
 
@@ -40,7 +40,7 @@ def assign_coach(
 def get_my_athletes(
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
-):
+) -> List[CoachAthleteResponse]:
     return training_controller.list_my_athletes(db, current_user)
 
 
@@ -54,7 +54,7 @@ def create_plan(
     plan_in: TrainingPlanCreate,
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
-):
+) -> TrainingPlanResponse:
     return training_controller.create_monthly_plan(db, plan_in, current_user)
 
 
@@ -69,7 +69,7 @@ def add_workout_to_plan(
     workout_in: DailyWorkoutCreate,
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
-):
+) -> DailyWorkoutResponse:
     return training_controller.add_workout_to_plan(db, plan_id, workout_in, current_user)
 
 
@@ -84,7 +84,7 @@ def modify_workout(
     exercises: List[ExerciseDetailCreate],
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
-):
+) -> DailyWorkoutResponse:
     return training_controller.modify_workout(db, workout_id, exercises, current_user)
 
 
@@ -98,7 +98,7 @@ def accept_plan(
     plan_id: int,
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
-):
+) -> TrainingPlanResponse:
     return training_controller.athlete_accept_plan(db, plan_id, current_user)
 
 
@@ -112,7 +112,7 @@ def validate_workout(
     workout_id: int,
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
-):
+) -> DailyWorkoutResponse:
     return training_controller.validate_workout_completion(db, workout_id, current_user)
 
 
@@ -127,5 +127,5 @@ def check_payment_status(
     year: int = Query(..., ge=2024, description="Año a consultar"),
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
-):
+) -> dict:
     return training_controller.check_payment_status(db, coach_id, month, year)

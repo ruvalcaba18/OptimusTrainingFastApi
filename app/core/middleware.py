@@ -61,7 +61,6 @@ class MiddlewareConfigurator:
 
     @staticmethod
     def register(app: FastAPI) -> None:
-        from starlette.middleware.cors import CORSMiddleware
         app.add_middleware(
             CORSMiddleware,
             allow_origins=settings.ALLOWED_ORIGINS,

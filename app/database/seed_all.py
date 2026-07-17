@@ -65,6 +65,7 @@ class DatabaseSeeder:
                 lvl = Level(code=code, name=name, description=description)
                 self.session.add(lvl)
                 self.levels_map[code] = lvl
+                
         self.session.commit()
 
     def seed_goals(self):
@@ -360,6 +361,7 @@ class DatabaseSeeder:
             )
             self.session.add(pm)
         self.session.commit()
+        
         print("Programming matrix seeded successfully!")
 
 def seed_database():

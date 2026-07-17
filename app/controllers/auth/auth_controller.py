@@ -1,19 +1,21 @@
 from datetime import timedelta
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-
+from typing import final
 from app.services import user_service
 from app.core import security
 from app.core.config import settings
 from app.schemas.users import Token, UserLogin
-from app.models import User
+from jose import jwt, JWTError
+from app.schemas.users import UserUpdate
 
-
+@final
 class AuthController:
 
     @staticmethod
     def login(db: Session, user_in: UserLogin) -> Token:
         user = user_service.get_by_email(db, email=user_in.email)
+        
         if not user or not security.verify_password(user_in.password, user.hashed_password):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -26,27 +28,57 @@ class AuthController:
             )
         
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        refresh_token_expires = timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+        
         return Token(
             access_token=security.create_access_token(
                 user.email, expires_delta=access_token_expires
             ),
+            refresh_token=security.create_refresh_token(
+                user.email, expires_delta=refresh_token_expires
+            ),
             token_type="bearer",
         )
-
+        
     @staticmethod
-    def refresh_access_token(db: Session, user: User) -> Token:
-        """
-        Genera un nuevo access token para un usuario que ya tiene un token válido.
-        Esto permite la rotación de tokens sin un refresh_token por separado.
-        """
+    def refresh_access_token(db: Session, refresh_token: str) -> Token:
+        try:
+            payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+            if payload.get("type") != "refresh":
+                raise JWTError("Invalid token type")
+            
+            email = payload.get("sub")
+            if not email: 
+                raise JWTError("Missing subject")
+        except JWTError:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token de renovación inválido o expirado"
+            ) 
+            
+        user = user_service.get_by_email(db,email=email)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Usuario no encontrado"
+            )
+        
+        if not user.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="cuenta inactiva"
+            )
+            
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        refresh_token_expires = timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+        
         return Token(
-            access_token=security.create_access_token(
-                user.email, expires_delta=access_token_expires
-            ),
-            token_type="bearer",
+            access_token=security.create_access_token(user.email, access_token_expires),
+            refresh_token=security.create_refresh_token(user.email, refresh_token_expires),
+            token_type="bearer"
         )
-
+         
+        
     @staticmethod
     def recover_password(db: Session, email: str) -> dict:
         from app.services import email_service
@@ -59,8 +91,6 @@ class AuthController:
 
     @staticmethod
     def reset_password(db: Session, token: str, new_password: str) -> dict:
-        from jose import jwt, JWTError
-        from app.schemas.users import UserUpdate
         try:
             payload = jwt.decode(
                 token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]

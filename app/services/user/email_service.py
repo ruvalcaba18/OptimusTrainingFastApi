@@ -11,7 +11,13 @@ class EmailService:
                                                                          
         reset_link = f"http://localhost:8000/reset-password?token={token}"
         
-        message_content = f
+        message_content = (
+            f"Hola,\n\n"
+            f"Has solicitado restablecer tu contraseña en {project_name}.\n"
+            f"Por favor, haz clic en el siguiente enlace para restablecerla:\n"
+            f"{reset_link}\n\n"
+            f"Si no solicitaste este cambio, puedes ignorar este correo.\n"
+        )
                          
         logger.info(f"ENVIANDO CORREO DE RECUPERACIÓN A: {email_to}")
         logger.info(f"CONTENIDO:\n{message_content}")

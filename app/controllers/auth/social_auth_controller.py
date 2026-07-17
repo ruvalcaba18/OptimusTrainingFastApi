@@ -136,6 +136,7 @@ class SocialAuthController:
         db.add(db_user)
         db.flush()
         db.refresh(db_user)
+        
         return db_user
 
 
