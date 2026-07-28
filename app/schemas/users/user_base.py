@@ -9,12 +9,12 @@ class UserBase(BaseModel):
     email: EmailStr
     first_name: str = Field(..., min_length=1)
     last_name: str = Field(..., min_length=1)
-    phone: str
+    phone: str = Field(...,min_lenght=8)
     age: int = Field(..., gt=0)
-    weight: float = Field(..., gt=0)
-    height: float = Field(..., gt=0)
+    weight: float = Field(default=None, gt=0)
+    height: float = Field(default=None, gt=0)
     exercise_frequency: str
-    training_type: TrainingType
+    training_type: TrainingType = Field(default=TrainingType.CASA)
     gender: Optional[UserGender] = None
 
     @field_validator("phone")

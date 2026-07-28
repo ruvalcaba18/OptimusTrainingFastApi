@@ -1,7 +1,5 @@
 from datetime import datetime, timezone
 from typing import Optional
-
-from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.models import User
@@ -20,186 +18,139 @@ from app.schemas.enterprise import (
     ActiveBreakLogResponse,
     ActiveBreakStatsResponse,
 )
+from app.controllers.enterprise.exceptions import (
+    EnterpriseNotFoundError,
+    InvalidEnterpriseCodeError,
+    EnterpriseCodeExpiredError,
+    EnterpriseCodeAlreadyUsedError,
+    AlreadyLinkedEnterpriseError,
+    ActiveBreakNotFoundError,
+    BreakAlreadyCompletedError,
+)
+from app.core.error_handlers import handle_controller_errors
 
 
 class EnterpriseController:
 
-                                                                       
     @staticmethod
+    @handle_controller_errors
     def create_enterprise(
         db: Session, enterprise_in: EnterpriseCreate
     ) -> EnterpriseResponse:
-        try:
-            enterprise = enterprise_service.create_enterprise(db, enterprise_in)
-            db.commit()
-            return enterprise
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error al crear la empresa: {str(e)}",
-            )
+        enterprise = enterprise_service.create_enterprise(db, enterprise_in)
+        db.commit()
+        return enterprise
 
     @staticmethod
+    @handle_controller_errors
     def get_enterprise(db: Session, enterprise_id: int) -> EnterpriseResponse:
         enterprise = enterprise_service.get_enterprise_by_id(db, enterprise_id)
         if not enterprise:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Empresa no encontrada",
-            )
+            raise EnterpriseNotFoundError()
         return enterprise
 
-                                                                       
     @staticmethod
+    @handle_controller_errors
     def validate_code(
         db: Session, code_in: ValidateCodeRequest, current_user: User
     ) -> ValidateCodeResponse:
         db_code = enterprise_service.get_code_by_value(db, code_in.code)
 
         if not db_code:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Código inválido.",
-            )
+            raise InvalidEnterpriseCodeError()
 
         if db_code.is_used:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Este código ya fue utilizado.",
-            )
+            raise EnterpriseCodeAlreadyUsedError()
 
         if db_code.expires_at < datetime.now(timezone.utc):
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Este código ha expirado.",
-            )
+            raise EnterpriseCodeExpiredError()
 
-                                                               
         existing = enterprise_service.get_membership(
             db, user_id=current_user.id, enterprise_id=db_code.enterprise_id
         )
         if existing:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Ya estás vinculado a esta empresa.",
-            )
+            raise AlreadyLinkedEnterpriseError()
 
-        try:
-                                      
-            enterprise_service.redeem_code(db, db_code, user_id=current_user.id)
+        enterprise_service.redeem_code(db, db_code, user_id=current_user.id)
+        enterprise_service.create_membership(
+            db, enterprise_id=db_code.enterprise_id, user_id=current_user.id
+        )
+        enterprise = enterprise_service.get_enterprise_by_id(
+            db, db_code.enterprise_id
+        )
 
-                             
-            enterprise_service.create_membership(
-                db, enterprise_id=db_code.enterprise_id, user_id=current_user.id
-            )
+        db.commit()
+        return ValidateCodeResponse(
+            message=f"Vinculado exitosamente a {enterprise.name}",
+            enterprise=EnterpriseResponse.model_validate(enterprise),
+        )
 
-            enterprise = enterprise_service.get_enterprise_by_id(
-                db, db_code.enterprise_id
-            )
-
-            db.commit()
-            return ValidateCodeResponse(
-                message=f"Vinculado exitosamente a {enterprise.name}",
-                enterprise=EnterpriseResponse.model_validate(enterprise),
-            )
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error al validar código: {str(e)}",
-            )
-
-                                                                       
     @staticmethod
+    @handle_controller_errors
     def generate_codes(
         db: Session, code_req: CodeGenerateRequest
     ) -> list[EnterpriseCodeResponse]:
         enterprise = enterprise_service.get_enterprise_by_id(db, code_req.enterprise_id)
         if not enterprise:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Empresa no encontrada",
-            )
+            raise EnterpriseNotFoundError()
 
-        try:
-            codes = enterprise_service.generate_codes(
-                db,
-                enterprise_id=code_req.enterprise_id,
-                quantity=code_req.quantity,
-                expire_in_days=code_req.expire_in_days,
-            )
-            db.commit()
-            return codes
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error al generar códigos: {str(e)}",
-            )
+        codes = enterprise_service.generate_codes(
+            db,
+            enterprise_id=code_req.enterprise_id,
+            quantity=code_req.quantity,
+            expire_in_days=code_req.expire_in_days,
+        )
+        db.commit()
+        return codes
 
     @staticmethod
+    @handle_controller_errors
     def list_codes(
         db: Session, enterprise_id: int, skip: int = 0, limit: int = 100
     ) -> list[EnterpriseCodeResponse]:
         enterprise = enterprise_service.get_enterprise_by_id(db, enterprise_id)
         if not enterprise:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Empresa no encontrada",
-            )
+            raise EnterpriseNotFoundError()
         return enterprise_service.get_codes_by_enterprise(
             db, enterprise_id=enterprise_id, skip=skip, limit=limit
         )
 
-                                                                       
     @staticmethod
+    @handle_controller_errors
     def get_my_enterprise(
         db: Session, current_user: User
     ) -> EnterpriseResponse:
         memberships = enterprise_service.get_user_memberships(db, user_id=current_user.id)
         if not memberships:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="No estás vinculado a ninguna empresa. Valida tu código primero.",
-            )
-                                                            
+            raise EnterpriseNotFoundError("No estás vinculado a ninguna empresa. Valida tu código primero.")
         enterprise = enterprise_service.get_enterprise_by_id(
             db, memberships[0].enterprise_id
         )
         return enterprise
 
     @staticmethod
+    @handle_controller_errors
     def list_members(
         db: Session, enterprise_id: int, skip: int = 0, limit: int = 100
     ) -> list[EnterpriseMemberResponse]:
         enterprise = enterprise_service.get_enterprise_by_id(db, enterprise_id)
         if not enterprise:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Empresa no encontrada",
-            )
+            raise EnterpriseNotFoundError()
         return enterprise_service.get_enterprise_members(
             db, enterprise_id=enterprise_id, skip=skip, limit=limit
         )
 
-                                                                      
     @staticmethod
+    @handle_controller_errors
     def create_active_break(
         db: Session, break_in: ActiveBreakCreate
     ) -> ActiveBreakResponse:
-        try:
-            active_break = enterprise_service.create_active_break(db, break_in)
-            db.commit()
-            return active_break
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error al crear pausa activa: {str(e)}",
-            )
+        active_break = enterprise_service.create_active_break(db, break_in)
+        db.commit()
+        return active_break
 
     @staticmethod
+    @handle_controller_errors
     def list_active_breaks(
         db: Session,
         duration: Optional[int] = None,
@@ -212,47 +163,36 @@ class EnterpriseController:
         )
 
     @staticmethod
+    @handle_controller_errors
     def get_active_break(db: Session, break_id: int) -> ActiveBreakResponse:
         active_break = enterprise_service.get_active_break_by_id(db, break_id)
         if not active_break:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Pausa activa no encontrada",
-            )
+            raise ActiveBreakNotFoundError()
         return active_break
 
     @staticmethod
+    @handle_controller_errors
     def start_break(
         db: Session, log_in: ActiveBreakLogCreate, current_user: User
     ) -> ActiveBreakLogResponse:
         active_break = enterprise_service.get_active_break_by_id(db, log_in.session_id)
         if not active_break:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Pausa activa no encontrada",
-            )
+            raise ActiveBreakNotFoundError()
 
-                                                  
         memberships = enterprise_service.get_user_memberships(db, user_id=current_user.id)
         enterprise_id = memberships[0].enterprise_id if memberships else None
 
-        try:
-            log = enterprise_service.start_break_log(
-                db,
-                session_id=log_in.session_id,
-                user_id=current_user.id,
-                enterprise_id=enterprise_id,
-            )
-            db.commit()
-            return log
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error al iniciar pausa: {str(e)}",
-            )
+        log = enterprise_service.start_break_log(
+            db,
+            session_id=log_in.session_id,
+            user_id=current_user.id,
+            enterprise_id=enterprise_id,
+        )
+        db.commit()
+        return log
 
     @staticmethod
+    @handle_controller_errors
     def complete_break(
         db: Session, log_id: int, current_user: User
     ) -> ActiveBreakLogResponse:
@@ -260,28 +200,16 @@ class EnterpriseController:
             db, log_id=log_id, user_id=current_user.id
         )
         if not log:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Registro de pausa no encontrado",
-            )
+            raise ActiveBreakNotFoundError("Registro de pausa no encontrado")
         if log.completed:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Esta pausa ya fue completada",
-            )
+            raise BreakAlreadyCompletedError()
 
-        try:
-            completed_log = enterprise_service.complete_break_log(db, log)
-            db.commit()
-            return completed_log
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error al completar pausa: {str(e)}",
-            )
+        completed_log = enterprise_service.complete_break_log(db, log)
+        db.commit()
+        return completed_log
 
     @staticmethod
+    @handle_controller_errors
     def get_my_stats(
         db: Session, current_user: User
     ) -> ActiveBreakStatsResponse:

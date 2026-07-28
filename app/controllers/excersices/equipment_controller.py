@@ -1,16 +1,16 @@
 from typing import List
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
 from app.services import equipment_service
 from app.models import Equipment
+from app.core.error_handlers import handle_controller_errors
+
 
 class EquipmentController:
 
     @staticmethod
+    @handle_controller_errors
     def list_equipments(db: Session) -> List[Equipment]:
-        try:
-            return equipment_service.list_equipments(db)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Error al listar equipamientos: {str(e)}")
+        return equipment_service.list_equipments(db)
+
 
 equipment_controller = EquipmentController()

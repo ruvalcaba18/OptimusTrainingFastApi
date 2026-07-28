@@ -1,16 +1,16 @@
 from typing import List
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
 from app.services import level_service
 from app.models import Level
+from app.core.error_handlers import handle_controller_errors
+
 
 class LevelController:
 
     @staticmethod
+    @handle_controller_errors
     def list_levels(db: Session) -> List[Level]:
-        try:
-            return level_service.list_levels(db)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Error al listar niveles: {str(e)}")
+        return level_service.list_levels(db)
+
 
 level_controller = LevelController()

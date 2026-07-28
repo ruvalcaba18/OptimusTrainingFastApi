@@ -1,7 +1,5 @@
 import secrets
 from typing import Callable, Awaitable
-
-from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.models import User
@@ -10,11 +8,14 @@ from app.schemas.users import Token
 from app.schemas.users.social_auth_request import SocialAuthRequest
 from app.core import security
 from app.services import AppleProvider, GoogleProvider, FacebookProvider
+from app.controllers.auth.exceptions import InactiveAccountError
+from app.core.error_handlers import handle_controller_errors
 
 
 class SocialAuthController:
 
     @staticmethod
+    @handle_controller_errors
     async def login_with_apple(db: Session, body: SocialAuthRequest) -> Token:
         return await SocialAuthController._handle(
             db=db,
@@ -24,6 +25,7 @@ class SocialAuthController:
         )
 
     @staticmethod
+    @handle_controller_errors
     async def login_with_google(db: Session, body: SocialAuthRequest) -> Token:
         return await SocialAuthController._handle(
             db=db,
@@ -33,6 +35,7 @@ class SocialAuthController:
         )
 
     @staticmethod
+    @handle_controller_errors
     async def login_with_facebook(db: Session, body: SocialAuthRequest) -> Token:
         return await SocialAuthController._handle(
             db=db,
@@ -40,7 +43,6 @@ class SocialAuthController:
             provider="facebook",
             verify_fn=FacebookProvider.verify_token,
         )
-
 
     @staticmethod
     async def _handle(
@@ -78,10 +80,7 @@ class SocialAuthController:
 
         if existing_user:
             if not existing_user.is_active:
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail="Cuenta desactivada. Contacta al soporte.",
-                )
+                raise InactiveAccountError("Cuenta desactivada. Contacta al soporte.")
             return existing_user
 
         return SocialAuthController._create_social_user(
@@ -136,7 +135,7 @@ class SocialAuthController:
         db.add(db_user)
         db.flush()
         db.refresh(db_user)
-        
+
         return db_user
 
 

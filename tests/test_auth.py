@@ -49,11 +49,10 @@ class TestRefreshToken:
             "/api/v1/auth/login",
             json={"email": "testuser@optimus.com", "password": "Passw0rd!"},
         )
-        access_token = login.json()["access_token"]
-        headers = {"Authorization": f"Bearer {access_token}"}
+        refresh_token = login.json()["refresh_token"]
         resp = client.post(
             "/api/v1/auth/refresh-token",
-            headers=headers
+            json={"refresh_token": refresh_token},
         )
         assert resp.status_code == status.HTTP_200_OK
         assert "access_token" in resp.json()
@@ -61,6 +60,6 @@ class TestRefreshToken:
     def test_refresh_token_invalid(self, client):
         resp = client.post(
             "/api/v1/auth/refresh-token",
-            params={"refresh_token": "not.a.valid.token"},
+            json={"refresh_token": "not.a.valid.token"},
         )
         assert resp.status_code == status.HTTP_401_UNAUTHORIZED

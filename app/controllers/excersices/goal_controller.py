@@ -1,16 +1,16 @@
 from typing import List
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
 from app.services import goal_service
 from app.models import Goal
+from app.core.error_handlers import handle_controller_errors
+
 
 class GoalController:
 
     @staticmethod
+    @handle_controller_errors
     def list_goals(db: Session) -> List[Goal]:
-        try:
-            return goal_service.list_goals(db)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Error al listar objetivos: {str(e)}")
+        return goal_service.list_goals(db)
+
 
 goal_controller = GoalController()

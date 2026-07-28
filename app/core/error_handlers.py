@@ -1,10 +1,20 @@
+import functools
+import inspect
 import logging
 import traceback
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError, ResponseValidationError
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError, OperationalError
+from sqlalchemy.orm import Session
 from starlette.exceptions import HTTPException as StarletteHTTPException
+
+from app.core.exceptions import (
+    AppException,
+    BadRequestError,
+    ForbiddenError,
+    InternalServerError,
+)
 
 logger = logging.getLogger("optimus.errors")
 
@@ -16,7 +26,86 @@ def _error_response(status_code: int, code: str, message: str, details=None) -> 
     return JSONResponse(status_code=status_code, content=body)
 
 
+def _extract_db_session(*args, **kwargs) -> Session | None:
+    for arg in args:
+        if isinstance(arg, Session):
+            return arg
+    for v in kwargs.values():
+        if isinstance(v, Session):
+            return v
+    return None
+
+
+def handle_controller_errors(func):
+    """
+    Decorator for controller methods that:
+    1. Automatic DB rollback on exception if Session is present.
+    2. Lets AppException and StarletteHTTPException pass through to FastAPI handlers.
+    3. Translates standard Python exceptions (ValueError, PermissionError) into domain exceptions.
+    4. Catches unexpected exceptions, logs traceback, calls rollback, and raises InternalServerError safely.
+    """
+    if inspect.iscoroutinefunction(func):
+        @functools.wraps(func)
+        async def async_wrapper(*args, **kwargs):
+            try:
+                return await func(*args, **kwargs)
+            except (AppException, StarletteHTTPException):
+                db = _extract_db_session(*args, **kwargs)
+                if db:
+                    db.rollback()
+                raise
+            except ValueError as e:
+                db = _extract_db_session(*args, **kwargs)
+                if db:
+                    db.rollback()
+                raise BadRequestError(str(e))
+            except PermissionError as e:
+                db = _extract_db_session(*args, **kwargs)
+                if db:
+                    db.rollback()
+                raise ForbiddenError(str(e))
+            except Exception as e:
+                db = _extract_db_session(*args, **kwargs)
+                if db:
+                    db.rollback()
+                logger.error("Unhandled error in controller function '%s':\n%s", func.__name__, traceback.format_exc())
+                raise InternalServerError("Ocurrió un error interno al procesar la solicitud.")
+        return async_wrapper
+    else:
+        @functools.wraps(func)
+        def sync_wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except (AppException, StarletteHTTPException):
+                db = _extract_db_session(*args, **kwargs)
+                if db:
+                    db.rollback()
+                raise
+            except ValueError as e:
+                db = _extract_db_session(*args, **kwargs)
+                if db:
+                    db.rollback()
+                raise BadRequestError(str(e))
+            except PermissionError as e:
+                db = _extract_db_session(*args, **kwargs)
+                if db:
+                    db.rollback()
+                raise ForbiddenError(str(e))
+            except Exception as e:
+                db = _extract_db_session(*args, **kwargs)
+                if db:
+                    db.rollback()
+                logger.error("Unhandled error in controller function '%s':\n%s", func.__name__, traceback.format_exc())
+                raise InternalServerError("Ocurrió un error interno al procesar la solicitud.")
+        return sync_wrapper
+
+
 def register_exception_handlers(app: FastAPI) -> None:
+
+    @app.exception_handler(AppException)
+    async def app_exception_handler(request: Request, exc: AppException):
+        logger.warning("AppException %s %s → %s: %s", exc.status_code, request.url.path, exc.code, exc.message)
+        return _error_response(exc.status_code, exc.code, exc.message, exc.details)
 
     @app.exception_handler(StarletteHTTPException)
     async def http_exception_handler(request: Request, exc: StarletteHTTPException):

@@ -1,6 +1,4 @@
 from typing import Optional
-
-from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.models import User
@@ -15,34 +13,35 @@ from app.schemas.coaches import (
     BookingResponse,
     ReviewCreate,
 )
+from app.controllers.coaches.exceptions import (
+    CoachNotFoundError,
+    CoachAlreadyExistsError,
+    CoachUnavailableError,
+    SelfBookingError,
+    BookingNotFoundError,
+    SessionAlreadyReviewedError,
+)
+from app.core.exceptions import ForbiddenError
+from app.core.error_handlers import handle_controller_errors
 
 
 class CoachController:
 
-                                                                       
     @staticmethod
+    @handle_controller_errors
     def register_coach(
         db: Session, coach_in: CoachCreate, current_user: User
     ) -> CoachResponse:
         existing = coach_service.get_by_user_id(db, user_id=current_user.id)
         if existing:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Ya tienes un perfil de coach registrado.",
-            )
+            raise CoachAlreadyExistsError()
 
-        try:
-            coach = coach_service.create(db, user_id=current_user.id, coach_in=coach_in)
-            db.commit()
-            return coach
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error al registrar coach: {str(e)}",
-            )
+        coach = coach_service.create(db, user_id=current_user.id, coach_in=coach_in)
+        db.commit()
+        return coach
 
     @staticmethod
+    @handle_controller_errors
     def list_coaches(
         db: Session,
         specialty: Optional[str] = None,
@@ -54,71 +53,45 @@ class CoachController:
         )
 
     @staticmethod
+    @handle_controller_errors
     def get_coach(db: Session, coach_id: int) -> CoachResponse:
         coach = coach_service.get_by_id(db, coach_id)
         if not coach:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Coach no encontrado",
-            )
+            raise CoachNotFoundError()
         return coach
 
     @staticmethod
+    @handle_controller_errors
     def update_coach(
         db: Session, coach_id: int, coach_in: CoachUpdate, current_user: User
     ) -> CoachResponse:
         coach = coach_service.get_by_id(db, coach_id)
         if not coach:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Coach no encontrado",
-            )
+            raise CoachNotFoundError()
         if coach.user_id != current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="No autorizado para editar este perfil",
-            )
+            raise ForbiddenError("No autorizado para editar este perfil")
 
-        try:
-            updated = coach_service.update(db, db_obj=coach, coach_in=coach_in)
-            db.commit()
-            return updated
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error al actualizar coach: {str(e)}",
-            )
+        updated = coach_service.update(db, db_obj=coach, coach_in=coach_in)
+        db.commit()
+        return updated
 
     @staticmethod
+    @handle_controller_errors
     def deactivate_coach(
         db: Session, coach_id: int, current_user: User
     ) -> CoachResponse:
         coach = coach_service.get_by_id(db, coach_id)
         if not coach:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Coach no encontrado",
-            )
+            raise CoachNotFoundError()
         if coach.user_id != current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="No autorizado para desactivar este perfil",
-            )
+            raise ForbiddenError("No autorizado para desactivar este perfil")
 
-        try:
-            deactivated = coach_service.deactivate(db, db_obj=coach)
-            db.commit()
-            return deactivated
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error al desactivar coach: {str(e)}",
-            )
+        deactivated = coach_service.deactivate(db, db_obj=coach)
+        db.commit()
+        return deactivated
 
-                                                                       
     @staticmethod
+    @handle_controller_errors
     def get_nearby_coaches(
         db: Session,
         lat: float,
@@ -145,43 +118,27 @@ class CoachController:
             for coach, distance in results
         ]
 
-                                                                       
     @staticmethod
+    @handle_controller_errors
     def create_booking(
         db: Session, booking_in: BookingCreate, current_user: User
     ) -> BookingResponse:
-                                                                               
         coach = coach_service.get_by_id_for_update(db, booking_in.coach_id)
         if not coach:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Coach no encontrado",
-            )
+            raise CoachNotFoundError()
         if not coach.is_active or not coach.is_available:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Este coach no está disponible actualmente",
-            )
+            raise CoachUnavailableError()
         if coach.user_id == current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="No puedes contratarte a ti mismo",
-            )
+            raise SelfBookingError()
 
-        try:
-            booking = coach_service.create_booking(
-                db, coach=coach, athlete_id=current_user.id, booking_in=booking_in
-            )
-            db.commit()
-            return booking
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error al crear reservación: {str(e)}",
-            )
+        booking = coach_service.create_booking(
+            db, coach=coach, athlete_id=current_user.id, booking_in=booking_in
+        )
+        db.commit()
+        return booking
 
     @staticmethod
+    @handle_controller_errors
     def list_my_bookings(
         db: Session, current_user: User, skip: int = 0, limit: int = 50
     ) -> list[BookingResponse]:
@@ -190,102 +147,66 @@ class CoachController:
         )
 
     @staticmethod
+    @handle_controller_errors
     def list_coach_bookings(
         db: Session, current_user: User, skip: int = 0, limit: int = 50
     ) -> list[BookingResponse]:
         coach = coach_service.get_by_user_id(db, user_id=current_user.id)
         if not coach:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="No tienes un perfil de coach registrado",
-            )
+            raise CoachNotFoundError("No tienes un perfil de coach registrado")
         return coach_service.get_bookings_by_coach(
             db, coach_id=coach.id, skip=skip, limit=limit
         )
 
     @staticmethod
+    @handle_controller_errors
     def update_booking_status(
         db: Session,
         booking_id: int,
         status_in: BookingStatusUpdate,
         current_user: User,
     ) -> BookingResponse:
-                                                                         
         booking = coach_service.get_booking_by_id_for_update(db, booking_id)
         if not booking:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Reservación no encontrada",
-            )
+            raise BookingNotFoundError()
 
-                                                     
         coach = coach_service.get_by_id(db, booking.coach_id)
         if not coach or coach.user_id != current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Solo el coach puede cambiar el estado de la reservación",
-            )
+            raise ForbiddenError("Solo el coach puede cambiar el estado de la reservación")
 
-        try:
-            updated = coach_service.update_booking_status(
-                db,
-                booking=booking,
-                new_status=status_in.status.value,
-                coach_notes=status_in.coach_notes,
-            )
-            db.commit()
-            return updated
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error al actualizar reservación: {str(e)}",
-            )
+        updated = coach_service.update_booking_status(
+            db,
+            booking=booking,
+            new_status=status_in.status.value,
+            coach_notes=status_in.coach_notes,
+        )
+        db.commit()
+        return updated
 
-                                                                       
     @staticmethod
+    @handle_controller_errors
     def create_review(
         db: Session, review_in: ReviewCreate, current_user: User
     ) -> BookingResponse:
         booking = coach_service.get_booking_by_id(db, review_in.booking_id)
         if not booking:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Reservación no encontrada",
-            )
+            raise BookingNotFoundError()
         if booking.athlete_id != current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Solo el atleta puede calificar la sesión",
-            )
+            raise ForbiddenError("Solo el atleta puede calificar la sesión")
         if booking.status != "completed":
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Solo puedes calificar sesiones completadas",
-            )
+            raise CoachUnavailableError("Solo puedes calificar sesiones completadas")
         if booking.athlete_rating is not None:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Ya calificaste esta sesión",
-            )
+            raise SessionAlreadyReviewedError()
 
-        try:
-            reviewed = coach_service.add_review(
-                db,
-                booking=booking,
-                rating=review_in.rating,
-                review=review_in.review,
-            )
-                                                  
-            coach_service.recalculate_coach_rating(db, coach_id=booking.coach_id)
-            db.commit()
-            return reviewed
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error al calificar sesión: {str(e)}",
-            )
+        reviewed = coach_service.add_review(
+            db,
+            booking=booking,
+            rating=review_in.rating,
+            review=review_in.review,
+        )
+        coach_service.recalculate_coach_rating(db, coach_id=booking.coach_id)
+        db.commit()
+        return reviewed
 
 
 coach_controller = CoachController()

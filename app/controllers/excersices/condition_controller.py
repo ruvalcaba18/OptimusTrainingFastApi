@@ -1,16 +1,16 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
 from app.services import condition_service
 from app.models import Condition
+from app.core.error_handlers import handle_controller_errors
+
 
 class ConditionController:
 
     @staticmethod
+    @handle_controller_errors
     def list_conditions(db: Session, type: Optional[str] = None) -> List[Condition]:
-        try:
-            return condition_service.list_conditions(db, type=type)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Error al listar condiciones médicas: {str(e)}")
+        return condition_service.list_conditions(db, type=type)
+
 
 condition_controller = ConditionController()
