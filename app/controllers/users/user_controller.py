@@ -58,6 +58,7 @@ class UserController:
         )
 
         db.commit()
+        
         return UserRegistrationResponse(user=UserResponse.model_validate(user), token=token)
 
     @staticmethod
@@ -72,6 +73,7 @@ class UserController:
 
         updated_user = user_service.update(db, db_obj=user, user_in=user_in)
         db.commit()
+        
         return updated_user
 
     @staticmethod
@@ -88,6 +90,7 @@ class UserController:
         url = await save_profile_picture(user_id=user_id, file=file)
         updated_user = user_service.update_profile_picture(db, db_obj=user, url=url)
         db.commit()
+        
         return updated_user
 
     @staticmethod
@@ -102,6 +105,7 @@ class UserController:
         delete_profile_picture(user_id=user_id)
         deleted_user = user_service.delete(db, user_id=user_id)
         db.commit()
+        
         return deleted_user
 
     @staticmethod

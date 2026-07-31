@@ -31,6 +31,7 @@ def create_user(
     try:
         result = user_controller.create_user(db, user_in=user_in)
         logger.info(f"User registered successfully: {user_in.email}")
+        
         return result
     except Exception as e:
         logger.error(f"Error registering user {user_in.email}: {str(e)}")

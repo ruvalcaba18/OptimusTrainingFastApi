@@ -21,3 +21,12 @@ class UserBase(BaseModel):
     @classmethod
     def validate_phone(cls, v: str) -> str:
         return PhoneValidator.validate(v)
+    
+    @field_validator("gender",mode="before")
+    @classmethod
+    def validate_gender(cls, value: str) -> str:
+        
+        if value is not None and isinstance(value, str):
+            return value.lower()
+        
+        return value
