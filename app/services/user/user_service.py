@@ -2,6 +2,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from app.models import User
+from app.models import UserProfile, Goal, Level
 from app.schemas.users import UserCreate, UserUpdate
 from app.core.security import get_password_hash
 
@@ -39,9 +40,24 @@ class UserService:
         )
         
         db.add(db_user)
-        db.flush()                                                                   
+        db.flush()
         db.refresh(db_user)
-        
+
+        profile = UserProfile(id=db_user.id)
+
+        if user_in.goal_code:
+            goal = db.query(Goal).filter(Goal.code == user_in.goal_code).first()
+            if goal:
+                profile.goal_id = goal.id
+
+        if user_in.level_code:
+            level = db.query(Level).filter(Level.code == user_in.level_code).first()
+            if level:
+                profile.level_id = level.id
+
+        db.add(profile)
+        db.flush()
+
         return db_user
 
     @staticmethod
