@@ -91,9 +91,9 @@ def get_session_durations(db: Session = Depends(deps.get_db)) -> List[SessionDur
     
     return session_duration_controller.list_session_duration(db)
  
-@router.get("workout_places",
-             response_model=WorkoutPlacementSchema,
+@router.get("/workout-places",
+             response_model=List[WorkoutPlacementSchema],
              summary="Listar lugares de entrenamiento disponibles")
-def list_workout_places(db: Session) -> List[WorkoutPlacementSchema]:
+def list_workout_places(db: Session = Depends(deps.get_db)) -> List[WorkoutPlacementSchema]:
      
      return workout_place_controller.list_workout_place(db)
