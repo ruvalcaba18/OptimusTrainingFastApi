@@ -30,7 +30,6 @@ def upgrade() -> None:
     )
     op.create_index(op.f('ix_session_durations_code'), 'session_durations', ['code'], unique=True)
     op.create_index(op.f('ix_session_durations_id'), 'session_durations', ['id'], unique=False)
-    op.create_index(op.f('ix_session_durations_name'), 'session_durations', ['name'], unique=True)
     op.create_table('workout_places',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('code', sa.String(length=20), nullable=False),
@@ -40,15 +39,6 @@ def upgrade() -> None:
     )
     op.create_index(op.f('ix_workout_places_code'), 'workout_places', ['code'], unique=True)
     op.create_index(op.f('ix_workout_places_id'), 'workout_places', ['id'], unique=False)
-    op.drop_index(op.f('idx_excersice_condition_ex_cond'), table_name='excersice_condition')
-    op.drop_index(op.f('idx_excersice_equipment_ex_eq'), table_name='excersice_equipment')
-    op.drop_index(op.f('idx_excersice_goal_ex_goal'), table_name='excersice_goal')
-    op.drop_index(op.f('idx_excersices_name_trgm'), table_name='excersices', postgresql_ops={'name': 'gin_trgm_ops'}, postgresql_using='gin')
-    op.drop_index(op.f('idx_programming_matrix_goal_level'), table_name='programming_matrix')
-    op.drop_index(op.f('idx_user_disease_user_cond'), table_name='user_disease')
-    op.drop_index(op.f('idx_user_equipment_user_eq'), table_name='user_equipment')
-    op.drop_index(op.f('idx_user_pathology_user_cond'), table_name='user_pathology')
-    op.drop_index(op.f('idx_user_profiles_goal_level'), table_name='user_profiles')
     # ### end Alembic commands ###
 
 
