@@ -1,4 +1,5 @@
 import re
+from typing import final
 from pathlib import Path
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
@@ -13,7 +14,10 @@ from app.models import ExcersiceEquipment
 from app.models import ProgrammingMatrix
 from app.models import ExcersiceGoal
 from app.models import MethodGoal
+from app.models import SessionDuration
+from app.models import WorkoutPlace
 
+@final
 class DatabaseSeeder:
     def __init__(self, session: Session, data_dir: Path):
         self.session = session
@@ -31,6 +35,8 @@ class DatabaseSeeder:
         self.seed_equipment()
         self.seed_methods()
         self.seed_exercises()
+        self.seed_session_durations()
+        self.seed_workout_places()
         if include_matrix:
             self.seed_programming_matrix()
 
@@ -47,6 +53,8 @@ class DatabaseSeeder:
         self.session.query(Level).delete()
         self.session.query(Equipment).delete()
         self.session.query(ProgrammingMatrix).delete()
+        self.session.query(SessionDuration).delete()
+        self.session.query(WorkoutPlace).delete()
         self.session.commit()
 
     def seed_levels(self):
@@ -363,6 +371,31 @@ class DatabaseSeeder:
         self.session.commit()
         
         print("Programming matrix seeded successfully!")
+        
+
+    def seed_session_durations(self):
+        print("Seeding session durations...")
+        data = [
+            ("EXPRESS",  "Express (15-30 min)",   "Sesiones rápidas y de alta intensidad."),
+            ("STANDARD", "Estándar (45-60 min)",   "El tiempo ideal para un entrenamiento completo."),
+            ("EXTENDED", "Extendido (90+ min)",     "Para quienes disfrutan de sesiones largas y detalladas."),
+            ("VARIABLE", "Variable",               "Mi tiempo cambia cada día y necesito flexibilidad."),
+        ]
+        for code, name, description in data:
+            self.session.add(SessionDuration(code=code, name=name, description=description))
+        self.session.commit()
+
+    def seed_workout_places(self):
+        print("Seeding workout places...")
+        data = [
+            ("gimnasio", "Gimnasio completo", "Tengo acceso a máquinas, pesas y racks."),
+            ("casa",     "En casa",           "Entrenaré en mi hogar, con o sin equipo."),
+            ("afuera",   "Al aire libre",     "Prefiero parques, pistas o barras al aire libre."),
+            ("mixto",    "Híbrido",           "Combinaré diferentes lugares (casa, gym o parque)."),
+        ]
+        for code, name, description in data:
+            self.session.add(WorkoutPlace(code=code, name=name, description=description))
+        self.session.commit()
 
 def seed_database():
     data_dir = Path(__file__).parent / "data"

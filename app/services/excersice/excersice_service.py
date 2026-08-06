@@ -29,7 +29,7 @@ class ExcersiceService:
             query = query.join(Excersice.goals).filter(Goal.code == goal_code)
 
         if exclude_condition_codes:
-            # Subquery to find all exercise IDs that have any of the given condition codes marked as FORBIDDEN
+            
             forbidden_subquery = (
                 db.query(ExcersiceCondition.excersice_id)
                 .join(Condition)

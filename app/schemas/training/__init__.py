@@ -20,6 +20,8 @@ from .condition_schema import ConditionSchema
 from .method_schema import MethodSchema
 from .excersice_schema import ExcersiceResponse, ExcersiceConditionResponse
 from .equipment_schema import EquipmentSchema
+from .session_duration_schema import SessionDurationSchema
+from .workout_placement_schema import WorkoutPlacementSchema
 
 
 __all__ = [
@@ -39,6 +41,8 @@ __all__ = [
     "CoachAthleteResponse",
     "LevelSchema",
     "GoalSchema",
+    "SessionDurationSchema",
+    "WorkoutPlacementSchema"
     "ConditionSchema",
     "MethodSchema",
     "ExcersiceResponse",

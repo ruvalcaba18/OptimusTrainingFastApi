@@ -8,6 +8,9 @@ from app.controllers.excersices.condition_controller import condition_controller
 from app.controllers.excersices.method_controller import method_controller
 from app.controllers.excersices.excersice_controller import excersice_controller
 from app.controllers.excersices.equipment_controller import equipment_controller
+from app.controllers.excersices.session_duration_controller import session_duration_controller
+from app.controllers.excersices.workout_place_controller import workout_place_controller
+
 from app.schemas.training import (
     LevelSchema,
     GoalSchema,
@@ -15,6 +18,8 @@ from app.schemas.training import (
     MethodSchema,
     ExcersiceResponse,
     EquipmentSchema,
+    SessionDurationSchema, 
+    WorkoutPlacementSchema
 )
 
 router = APIRouter()
@@ -78,3 +83,17 @@ def get_equipments(
     
     return equipment_controller.list_equipments(db)
 
+@router.get("/session-durations",
+            response_model=List[SessionDurationSchema],
+            summary="Listar duraciones de sesión disponibles"
+)
+def get_session_durations(db: Session = Depends(deps.get_db)) -> List[SessionDurationSchema]:
+    
+    return session_duration_controller.list_session_duration(db)
+ 
+@router.get("workout-places",
+             response_model=WorkoutPlacementSchema,
+             summary="Listar lugares de entrenamiento disponibles")
+def list_workout_places(db: Session) -> List[WorkoutPlacementSchema]:
+     
+     return workout_place_controller.list_workout_place(db)
