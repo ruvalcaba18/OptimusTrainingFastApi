@@ -1,5 +1,5 @@
 from typing import List, final
-from sqlalchemy import Session 
+from sqlalchemy.orm import Session
 from app.services.excersice.workout_place_service import workout_place_service
 from app.core.error_handlers import handle_controller_errors
 from app.models.excersice.workout_place import WorkoutPlace
