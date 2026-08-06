@@ -83,7 +83,7 @@ def get_equipments(
     
     return equipment_controller.list_equipments(db)
 
-@router.get("/session-durations",
+@router.get("/session_durations",
             response_model=List[SessionDurationSchema],
             summary="Listar duraciones de sesión disponibles"
 )
@@ -91,7 +91,7 @@ def get_session_durations(db: Session = Depends(deps.get_db)) -> List[SessionDur
     
     return session_duration_controller.list_session_duration(db)
  
-@router.get("workout-places",
+@router.get("workout_places",
              response_model=WorkoutPlacementSchema,
              summary="Listar lugares de entrenamiento disponibles")
 def list_workout_places(db: Session) -> List[WorkoutPlacementSchema]:
