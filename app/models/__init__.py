@@ -1,5 +1,4 @@
 from app.models.user.user import User
-from app.models.user.user_profile import UserProfile
 from app.models.user.user_pathology import UserPathology
 from app.models.user.user_disease import UserDisease
 from app.models.user.user_equipment import UserEquipment
@@ -61,7 +60,6 @@ __all__ = [
     "Excersice",
     "Equipment",
     "ExcersiceEquipment",
-    "UserProfile",
     "ProgrammingMatrix",
     "UserPathology",
     "UserDisease",

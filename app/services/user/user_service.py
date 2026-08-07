@@ -2,7 +2,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from app.models import User
-from app.models import UserProfile, Goal, Level
+from app.models import Goal, Level
 from app.schemas.users import UserCreate, UserUpdate
 from app.core.security import get_password_hash
 
@@ -43,19 +43,17 @@ class UserService:
         db.flush()
         db.refresh(db_user)
 
-        profile = UserProfile(id=db_user.id)
-
         if user_in.goal_code:
             goal = db.query(Goal).filter(Goal.code == user_in.goal_code).first()
             if goal:
-                profile.goal_id = goal.id
+                db_user.goal_id = goal.id
 
         if user_in.level_code:
             level = db.query(Level).filter(Level.code == user_in.level_code).first()
             if level:
-                profile.level_id = level.id
+                db_user.level_id = level.id
 
-        db.add(profile)
+        db.add(db_user)
         db.flush()
 
         return db_user
@@ -101,19 +99,15 @@ class UserService:
 
     @staticmethod
     def update_training_profile(db: Session, db_obj: User, profile_in) -> User:
-        from app.models import UserProfile, Goal, Level, Equipment, Condition
+        from app.models import Goal, Level, Equipment, Condition
         
-        if not db_obj.profile:
-            db_obj.profile = UserProfile(id=db_obj.id)
-            db.add(db_obj.profile)
-
         goal = db.query(Goal).filter(Goal.code == profile_in.goal_code).first()
         if goal:
-            db_obj.profile.goal_id = goal.id
+            db_obj.goal_id = goal.id
 
         level = db.query(Level).filter(Level.code == profile_in.level_code).first()
         if level:
-            db_obj.profile.level_id = level.id
+            db_obj.level_id = level.id
 
         if profile_in.equipment_ids is not None:
             equipments = db.query(Equipment).filter(Equipment.id.in_(profile_in.equipment_ids)).all()

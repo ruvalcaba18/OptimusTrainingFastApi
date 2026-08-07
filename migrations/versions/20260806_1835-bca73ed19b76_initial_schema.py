@@ -1,11 +1,10 @@
-"""initial_schema
+"""Initial schema
 
-Revision ID: a69f5758c1f7
+Revision ID: bca73ed19b76
 Revises: 
-Create Date: 2026-07-06 18:41:34.196622
+Create Date: 2026-08-06 18:35:46.235839
 
 """
-import os
 from typing import Sequence, Union
 
 from alembic import op
@@ -13,19 +12,10 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'a69f5758c1f7'
+revision: str = 'bca73ed19b76'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
-
-# Helper para cargar los archivos SQL de optimización modularizados
-MIGRATION_DIR = os.path.dirname(__file__)
-SQL_DIR = os.path.abspath(os.path.join(MIGRATION_DIR, "..", "sql"))
-
-def read_sql_file(filename: str) -> str:
-    path = os.path.join(SQL_DIR, filename)
-    with open(path, "r", encoding="utf-8") as f:
-        return f.read()
 
 
 def upgrade() -> None:
@@ -122,6 +112,68 @@ def upgrade() -> None:
     )
     op.create_index(op.f('ix_methods_code'), 'methods', ['code'], unique=True)
     op.create_index(op.f('ix_methods_id'), 'methods', ['id'], unique=False)
+    op.create_table('session_durations',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('code', sa.String(length=20), nullable=False),
+    sa.Column('name', sa.String(length=100), nullable=False),
+    sa.Column('description', sa.Text(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_session_durations_code'), 'session_durations', ['code'], unique=True)
+    op.create_index(op.f('ix_session_durations_id'), 'session_durations', ['id'], unique=False)
+    op.create_index(op.f('ix_session_durations_name'), 'session_durations', ['name'], unique=True)
+    op.create_table('workout_places',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('code', sa.String(length=20), nullable=False),
+    sa.Column('name', sa.String(length=100), nullable=False),
+    sa.Column('description', sa.Text(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_workout_places_code'), 'workout_places', ['code'], unique=True)
+    op.create_index(op.f('ix_workout_places_id'), 'workout_places', ['id'], unique=False)
+    op.create_table('excersice_condition',
+    sa.Column('excersice_id', sa.Integer(), nullable=False),
+    sa.Column('condition_id', sa.Integer(), nullable=False),
+    sa.Column('relationship', sa.String(length=50), nullable=False),
+    sa.ForeignKeyConstraint(['condition_id'], ['conditions.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['excersice_id'], ['excersices.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('excersice_id', 'condition_id')
+    )
+    op.create_table('excersice_equipment',
+    sa.Column('excersice_id', sa.Integer(), nullable=False),
+    sa.Column('equipment_id', sa.Integer(), nullable=False),
+    sa.Column('is_primary', sa.Boolean(), nullable=False),
+    sa.ForeignKeyConstraint(['equipment_id'], ['equipment.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['excersice_id'], ['excersices.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('excersice_id', 'equipment_id')
+    )
+    op.create_table('excersice_goal',
+    sa.Column('excersice_id', sa.Integer(), nullable=False),
+    sa.Column('goal_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['excersice_id'], ['excersices.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['goal_id'], ['goals.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('excersice_id', 'goal_id')
+    )
+    op.create_table('method_goal',
+    sa.Column('method_id', sa.Integer(), nullable=False),
+    sa.Column('goal_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['goal_id'], ['goals.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['method_id'], ['methods.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('method_id', 'goal_id')
+    )
+    op.create_table('programming_matrix',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('goal_code', sa.String(length=50), nullable=False),
+    sa.Column('level_code', sa.String(length=50), nullable=False),
+    sa.Column('volume', sa.String(length=50), nullable=False),
+    sa.Column('sets', sa.Integer(), nullable=False),
+    sa.Column('reps', sa.String(length=50), nullable=False),
+    sa.Column('rest', sa.String(length=50), nullable=False),
+    sa.Column('method_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['method_id'], ['methods.id'], ondelete='SET NULL'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_programming_matrix_id'), 'programming_matrix', ['id'], unique=False)
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('email', sa.String(), nullable=False),
@@ -140,6 +192,10 @@ def upgrade() -> None:
     sa.Column('profile_picture_url', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('goal_id', sa.Integer(), nullable=True),
+    sa.Column('level_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['goal_id'], ['goals.id'], ondelete='SET NULL'),
+    sa.ForeignKeyConstraint(['level_id'], ['levels.id'], ondelete='SET NULL'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
@@ -255,49 +311,6 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_events_id'), 'events', ['id'], unique=False)
-    op.create_table('excersice_condition',
-    sa.Column('excersice_id', sa.Integer(), nullable=False),
-    sa.Column('condition_id', sa.Integer(), nullable=False),
-    sa.Column('relationship', sa.String(length=50), nullable=False),
-    sa.ForeignKeyConstraint(['condition_id'], ['conditions.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['excersice_id'], ['excersices.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('excersice_id', 'condition_id')
-    )
-    op.create_table('excersice_equipment',
-    sa.Column('excersice_id', sa.Integer(), nullable=False),
-    sa.Column('equipment_id', sa.Integer(), nullable=False),
-    sa.Column('is_primary', sa.Boolean(), nullable=False),
-    sa.ForeignKeyConstraint(['equipment_id'], ['equipment.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['excersice_id'], ['excersices.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('excersice_id', 'equipment_id')
-    )
-    op.create_table('excersice_goal',
-    sa.Column('excersice_id', sa.Integer(), nullable=False),
-    sa.Column('goal_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['excersice_id'], ['excersices.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['goal_id'], ['goals.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('excersice_id', 'goal_id')
-    )
-    op.create_table('method_goal',
-    sa.Column('method_id', sa.Integer(), nullable=False),
-    sa.Column('goal_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['goal_id'], ['goals.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['method_id'], ['methods.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('method_id', 'goal_id')
-    )
-    op.create_table('programming_matrix',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('goal_code', sa.String(length=50), nullable=False),
-    sa.Column('level_code', sa.String(length=50), nullable=False),
-    sa.Column('volume', sa.String(length=50), nullable=False),
-    sa.Column('sets', sa.Integer(), nullable=False),
-    sa.Column('reps', sa.String(length=50), nullable=False),
-    sa.Column('rest', sa.String(length=50), nullable=False),
-    sa.Column('method_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['method_id'], ['methods.id'], ondelete='SET NULL'),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index(op.f('ix_programming_matrix_id'), 'programming_matrix', ['id'], unique=False)
     op.create_table('prompt_logs',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
@@ -330,18 +343,6 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['pathology_id'], ['conditions.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('user_id', 'pathology_id')
-    )
-    op.create_table('user_profiles',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('goal_id', sa.Integer(), nullable=True),
-    sa.Column('level_id', sa.Integer(), nullable=True),
-    sa.Column('age', sa.Integer(), nullable=True),
-    sa.Column('weight', sa.Float(), nullable=True),
-    sa.Column('height', sa.Float(), nullable=True),
-    sa.ForeignKeyConstraint(['goal_id'], ['goals.id'], ondelete='SET NULL'),
-    sa.ForeignKeyConstraint(['id'], ['users.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['level_id'], ['levels.id'], ondelete='SET NULL'),
-    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('coach_athletes',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -440,13 +441,6 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_exercise_details_id'), 'exercise_details', ['id'], unique=False)
-    
-    # ─── OPTIMIZACIONES PERSONALIZADAS DE BASE DE DATOS ──────────────────────────
-    # Cargar y ejecutar las optimizaciones modularizadas desde los archivos SQL
-    op.execute(read_sql_file("create_vw_excersice_details.sql"))
-    op.execute(read_sql_file("create_fn_get_viable_exercises.sql"))
-    op.execute(read_sql_file("create_triggers.sql"))
-    op.execute(read_sql_file("create_indexes.sql"))
     # ### end Alembic commands ###
 
 
@@ -467,19 +461,12 @@ def downgrade() -> None:
     op.drop_table('coach_bookings')
     op.drop_index(op.f('ix_coach_athletes_id'), table_name='coach_athletes')
     op.drop_table('coach_athletes')
-    op.drop_table('user_profiles')
     op.drop_table('user_pathology')
     op.drop_table('user_equipment')
     op.drop_table('user_disease')
     op.drop_index(op.f('ix_prompt_logs_user_id'), table_name='prompt_logs')
     op.drop_index(op.f('ix_prompt_logs_id'), table_name='prompt_logs')
     op.drop_table('prompt_logs')
-    op.drop_index(op.f('ix_programming_matrix_id'), table_name='programming_matrix')
-    op.drop_table('programming_matrix')
-    op.drop_table('method_goal')
-    op.drop_table('excersice_goal')
-    op.drop_table('excersice_equipment')
-    op.drop_table('excersice_condition')
     op.drop_index(op.f('ix_events_id'), table_name='events')
     op.drop_table('events')
     op.drop_index(op.f('ix_enterprise_members_id'), table_name='enterprise_members')
@@ -496,6 +483,19 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_users_id'), table_name='users')
     op.drop_index(op.f('ix_users_email'), table_name='users')
     op.drop_table('users')
+    op.drop_index(op.f('ix_programming_matrix_id'), table_name='programming_matrix')
+    op.drop_table('programming_matrix')
+    op.drop_table('method_goal')
+    op.drop_table('excersice_goal')
+    op.drop_table('excersice_equipment')
+    op.drop_table('excersice_condition')
+    op.drop_index(op.f('ix_workout_places_id'), table_name='workout_places')
+    op.drop_index(op.f('ix_workout_places_code'), table_name='workout_places')
+    op.drop_table('workout_places')
+    op.drop_index(op.f('ix_session_durations_name'), table_name='session_durations')
+    op.drop_index(op.f('ix_session_durations_id'), table_name='session_durations')
+    op.drop_index(op.f('ix_session_durations_code'), table_name='session_durations')
+    op.drop_table('session_durations')
     op.drop_index(op.f('ix_methods_id'), table_name='methods')
     op.drop_index(op.f('ix_methods_code'), table_name='methods')
     op.drop_table('methods')
@@ -518,27 +518,4 @@ def downgrade() -> None:
     op.drop_table('conditions')
     op.drop_index(op.f('ix_active_break_sessions_id'), table_name='active_break_sessions')
     op.drop_table('active_break_sessions')
-    
-    # ─── LIMPIEZA DE OPTIMIZACIONES PERSONALIZADAS ────────────────────────────────
-    # Deshacer índices adicionales
-    op.execute("DROP INDEX IF EXISTS idx_programming_matrix_goal_level;")
-    op.execute("DROP INDEX IF EXISTS idx_excersice_equipment_ex_eq;")
-    op.execute("DROP INDEX IF EXISTS idx_excersice_condition_ex_cond;")
-    op.execute("DROP INDEX IF EXISTS idx_excersice_goal_ex_goal;")
-    op.execute("DROP INDEX IF EXISTS idx_user_equipment_user_eq;")
-    op.execute("DROP INDEX IF EXISTS idx_user_disease_user_cond;")
-    op.execute("DROP INDEX IF EXISTS idx_user_pathology_user_cond;")
-    op.execute("DROP INDEX IF EXISTS idx_user_profiles_goal_level;")
-    op.execute("DROP INDEX IF EXISTS idx_excersices_name_trgm;")
-    
-    # Deshacer triggers
-    op.execute("DROP TRIGGER IF EXISTS trg_rotate_training_plans ON training_plans;")
-    op.execute("DROP FUNCTION IF EXISTS fn_rotate_user_training_plans();")
-    op.execute("DROP TRIGGER IF EXISTS trg_update_user_profiles_timestamp ON user_profiles;")
-    op.execute("DROP TRIGGER IF EXISTS trg_update_users_timestamp ON users;")
-    op.execute("DROP FUNCTION IF EXISTS fn_update_timestamp();")
-    
-    # Deshacer función y vista
-    op.execute("DROP FUNCTION IF EXISTS fn_get_viable_exercises(INT);")
-    op.execute("DROP VIEW IF EXISTS vw_excersice_details;")
     # ### end Alembic commands ###
