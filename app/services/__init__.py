@@ -12,6 +12,9 @@ from app.services.excersice.equipment_service import equipment_service
 from app.services.excersice.session_duration_service import session_duration_service
 from app.services.excersice.workout_place_service import workout_place_service
 from app.services.excersice.workout_hybird_places_service import workout_hybrid_places_service
+from app.services.excersice.gym_equipment_service import gym_equipment_service
+from app.services.excersice.home_equipment_service import home_equipment_service
+from app.services.excersice.outdoor_equipment_service import outdoor_equipment_service
 
 from app.services.training.training_service import training_service
 from app.services.training.routine_generator import routine_generator
@@ -44,6 +47,9 @@ __all__ = [
     "session_duration_service",
     "workout_place_service",
     "workout_hybrid_places_service",
+    "gym_equipment_service",
+    "home_equipment_service",
+    "outdoor_equipment_service",
     "coach_service",
     "competition_service",
     "event_service",

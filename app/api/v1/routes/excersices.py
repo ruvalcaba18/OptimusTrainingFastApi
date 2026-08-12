@@ -12,6 +12,9 @@ from app.controllers.excersices.session_duration_controller import session_durat
 from app.controllers.excersices.workout_place_controller import workout_place_controller
 from app.controllers.excersices.everyday_item_controller import everyday_item_controller
 from app.controllers.excersices.workout_hybrid_places_controller import workou_hybrid_places_controller
+from app.controllers.excersices.gym_equipment_controller import gym_equipment_controller
+from app.controllers.excersices.home_equipment_controller import home_equipment_controller
+from app.controllers.excersices.outdoor_equipment_controller import outdoor_equipment_controller
 
 from app.schemas.training import (
     LevelSchema,
@@ -24,7 +27,10 @@ from app.schemas.training import (
     SessionDurationSchema, 
     WorkoutPlacementSchema,
     EveryDayItemSchema,
-    WorkOutHybridPalcesSchema
+    WorkOutHybridPalcesSchema,
+    GymEquipmentSchema,
+    HomeEquipmentSchema,
+    OutdoorEquipmentSchema
 )
 
 router = APIRouter()
@@ -120,6 +126,38 @@ def list_everyday_items(db: Session = Depends(deps.get_db)) -> List[EveryDayItem
     response_model=EquipmentCategoriesResponse,
     summary="Listar categorías de equipamiento"
 )
-def get_equipment_categories() -> EquipmentCategoriesResponse:
-    return equipment_controller.get_equipment_categories()
+def get_equipment_categories(db: Session = Depends(deps.get_db)) -> EquipmentCategoriesResponse:
+    return equipment_controller.get_equipment_categories(db)
+
+@router.get(
+    "/gym-equipments",
+    response_model=List[GymEquipmentSchema],
+    summary="Listar equipamiento de gimnasio disponible"
+)
+def get_gym_equipments(db: Session = Depends(deps.get_db)) -> List[GymEquipmentSchema]:
+    return gym_equipment_controller.list_gym_equipment(db)
+
+@router.get(
+    "/home-equipments",
+    response_model=List[HomeEquipmentSchema],
+    summary="Listar equipamiento de casa disponible"
+)
+def get_home_equipments(db: Session = Depends(deps.get_db)) -> List[HomeEquipmentSchema]:
+    return home_equipment_controller.list_home_equipment(db)
+
+@router.get(
+    "/outdoor-equipments",
+    response_model=List[OutdoorEquipmentSchema],
+    summary="Listar equipamiento de exterior disponible"
+)
+def get_outdoor_equipments(db: Session = Depends(deps.get_db)) -> List[OutdoorEquipmentSchema]:
+    return outdoor_equipment_controller.list_outdoor_equipment(db)
+
+@router.get(
+    "/everyday-items",
+    response_model=List[EveryDayItemSchema],
+    summary="Listar elementos de uso diario (formato alternativo)"
+)
+def get_everyday_items(db: Session = Depends(deps.get_db)) -> List[EveryDayItemSchema]:
+    return everyday_item_controller.list_everyday_item_controller(db=db)
      

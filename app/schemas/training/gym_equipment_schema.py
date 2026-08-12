@@ -1,9 +1,10 @@
 from pydantic import BaseModel, field_validator
-from typing import List, final, Union
+from typing import List, final
 
 @final
-class EquipmentCategoryItem(BaseModel):
-    code: Union[str, None] = None
+class GymEquipmentSchema(BaseModel):
+    id: int
+    code: str
     name: str
     mapping: List[str]
 

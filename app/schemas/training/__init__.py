@@ -26,6 +26,10 @@ from .session_duration_schema import SessionDurationSchema
 from .workout_placement_schema import WorkoutPlacementSchema
 from .hybrid_place_schema import WorkOutHybridPalcesSchema
 
+from .gym_equipment_schema import GymEquipmentSchema
+from .home_equipment_schema import HomeEquipmentSchema
+from .outdoor_equipment_schema import OutdoorEquipmentSchema
+
 __all__ = [
     "PlanStatus",
     "WorkoutStatus",
@@ -53,5 +57,8 @@ __all__ = [
     "ExcersiceConditionResponse",
     "EquipmentSchema",
     "EquipmentCategoriesResponse",
+    "GymEquipmentSchema",
+    "HomeEquipmentSchema",
+    "OutdoorEquipmentSchema",
 ]
 

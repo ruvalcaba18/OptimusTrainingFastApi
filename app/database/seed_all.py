@@ -18,6 +18,11 @@ from app.models import SessionDuration
 from app.models import WorkoutPlace
 from app.models import WorkoutHybridPlaces
 from app.models import EverydayItem
+from app.models import GymEquipmentModel, HomeEquipmentModel, OutdoorEquipmentModel
+from app.models.Enums.GymEquipment import GymEquipment
+from app.models.Enums.HomeEquipment import HomeEquipment
+from app.models.Enums.OutdoorEquipment import OutdoorEquipment
+from app.models.Enums.EverydayItems import EverydayItems
 
 @final
 class DatabaseSeeder:
@@ -39,7 +44,11 @@ class DatabaseSeeder:
         self.seed_exercises()
         self.seed_session_durations()
         self.seed_workout_places()
+        self.seed_workout_hybrid_places()
         self.seed_everyday_items()
+        self.seed_gym_equipment()
+        self.seed_home_equipment()
+        self.seed_outdoor_equipment()
         
         if include_matrix:
             self.seed_programming_matrix()
@@ -60,6 +69,9 @@ class DatabaseSeeder:
         self.session.query(WorkoutPlace).delete()
         self.session.query(WorkoutHybridPlaces).delete()
         self.session.query(EverydayItem).delete()
+        self.session.query(GymEquipmentModel).delete()
+        self.session.query(HomeEquipmentModel).delete()
+        self.session.query(OutdoorEquipmentModel).delete()
         
         self.session.commit()
 
@@ -417,22 +429,76 @@ class DatabaseSeeder:
         self.session.commit()
         
     def seed_everyday_items(self):
-        data = [
-            ("Silla Estable / Banco de Comedor","Silla de comedor o cualquier tipo de silla que se tenga en casa"),
-            ("Garrafones de Agua (5L-20L)", "Cualquier tipo de garrafon es bueno incluso si no se tiene uno de 5 o 20 litros"),
-            ("Mochila Cargada (Libros/Arroz)", "Puedes cargarla de cualquier tipo de cosa en caso de no tener libros o arroz."),
-            ("Toallas de Mano", "Cualquier tipo de toalla de cualquier tamaño"),
-            ("Palo de Escoba o Fregona","O cualquier tipo de palo que te ayude a hacer ejercicio."),
-            ("Escalones Interiores"," o cualquier parte que este un poco elevada que te ayude a subir y bajar."),
-            ("Sofá o Sillón","Sofá o Sillón"),
-            ("Botellas de Detergente (con asa)","o botellas de agua"),
-            ("Libros Gruesos (Enciclopedias)","o cualquier tipo de libro"),
-            ("Pared Despejada","Pared Despejada")
-        ]
-        
-        for name, description in data:
-            self.session.add(EverydayItem(name=name,description=description))
-        self.commit()        
+        print("Seeding everyday items...")
+        mappings = {
+            EverydayItems.CHAIR: ("chair", "Silla de comedor o cualquier tipo de silla que se tenga en casa", "Silla,Banco"),
+            EverydayItems.WATER_JUGS: ("waterJugs", "Cualquier tipo de garrafón es bueno incluso si no se tiene uno de 5 o 20 litros", "Garrafón,Peso"),
+            EverydayItems.LOADED_BACKPACK: ("loadedBackpack", "Puedes cargarla de cualquier tipo de cosa en caso de no tener libros o arroz.", "Mochila,Peso"),
+            EverydayItems.TOWELS: ("towels", "Cualquier tipo de toalla de cualquier tamaño", "Toalla"),
+            EverydayItems.BROOMSTICK: ("broomstick", "O cualquier tipo de palo que te ayude a hacer ejercicio.", "Palo"),
+            EverydayItems.STAIRS: ("stairs", " o cualquier parte que esté un poco elevada que te ayude a subir y bajar.", "Escalón"),
+            EverydayItems.SOFA: ("sofa", "Sofá o Sillón", "Sofá"),
+            EverydayItems.DETERGENT_BOTTLES: ("detergentBottles", "o botellas de agua", "Detergente,Peso"),
+            EverydayItems.THICK_BOOKS: ("thickBooks", "o cualquier tipo de libro", "Libros,Peso"),
+            EverydayItems.CLEAR_WALL: ("clearWall", "Pared Despejada", "Pared")
+        }
+        for enum_val, (code, description, mapping) in mappings.items():
+            self.session.add(EverydayItem(code=code, name=enum_val.value, description=description, mapping=mapping))
+        self.session.commit()
+
+    def seed_gym_equipment(self):
+        print("Seeding gym equipment...")
+        mappings = {
+            GymEquipment.DUMBBELLS: ("dumbbells", "Mancuernas,Mancuerna"),
+            GymEquipment.MACHINES: ("machines", "Máquina"),
+            GymEquipment.CABLES: ("cables", "Polea"),
+            GymEquipment.RACKS: ("racks", "Smith,Máquina Smith"),
+            GymEquipment.BARBELL: ("barbell", "Barra"),
+            GymEquipment.PLYO_BOX: ("plyoBox", "Cajón Pliométrico"),
+            GymEquipment.HEAVY_BAG: ("heavyBag", "Costal"),
+            GymEquipment.ASSAULT_BIKE: ("assaultBike", "Bicicleta"),
+            GymEquipment.BENCHES: ("benches", "Banco"),
+            GymEquipment.KETTLEBELLS: ("kettlebells", "Kettlebell")
+        }
+        for enum_val, (code, mapping) in mappings.items():
+            self.session.add(GymEquipmentModel(code=code, name=enum_val.value, mapping=mapping))
+        self.session.commit()
+
+    def seed_home_equipment(self):
+        print("Seeding home equipment...")
+        mappings = {
+            HomeEquipment.RESISTANCE_BANDS: ("resistanceBands", "Banda"),
+            HomeEquipment.MINI_BANDS: ("miniBands", "Banda"),
+            HomeEquipment.ADJUSTABLE_DUMBBELLS: ("adjustableDumbbells", "Mancuernas,Mancuerna"),
+            HomeEquipment.JUMP_ROPE: ("jumpRope", "Cuerda"),
+            HomeEquipment.PULLUP_RACK: ("pullupRack", "Smith"),
+            HomeEquipment.PULLUP_BAR: ("pullupBar", "Barra"),
+            HomeEquipment.YOGA_MAT: ("yogaMat", "Colchoneta"),
+            HomeEquipment.AB_WHEEL: ("abWheel", "Rueda"),
+            HomeEquipment.ANKLE_WEIGHTS: ("ankleWeights", "Peso"),
+            HomeEquipment.SWISS_BALL: ("swissBall", "Pelota")
+        }
+        for enum_val, (code, mapping) in mappings.items():
+            self.session.add(HomeEquipmentModel(code=code, name=enum_val.value, mapping=mapping))
+        self.session.commit()
+
+    def seed_outdoor_equipment(self):
+        print("Seeding outdoor equipment...")
+        mappings = {
+            OutdoorEquipment.TRACK: ("track", "Pista"),
+            OutdoorEquipment.PULLUP_BARS: ("pullupBars", "Barra"),
+            OutdoorEquipment.PARALLEL_BARS: ("parallelBars", "Paralelas"),
+            OutdoorEquipment.CONCRETE_BENCHES: ("concreteBenches", "Banco"),
+            OutdoorEquipment.MONKEY_BARS: ("monkeyBars", "Pasamanos"),
+            OutdoorEquipment.HILLS: ("hills", "Cuesta"),
+            OutdoorEquipment.BLEACHERS: ("bleachers", "Gradas"),
+            OutdoorEquipment.RINGS: ("rings", "Anillas"),
+            OutdoorEquipment.LOW_WALLS: ("lowWalls", "Pared"),
+            OutdoorEquipment.SAND: ("sand", "Arena")
+        }
+        for enum_val, (code, mapping) in mappings.items():
+            self.session.add(OutdoorEquipmentModel(code=code, name=enum_val.value, mapping=mapping))
+        self.session.commit()
 
 def seed_database():
     data_dir = Path(__file__).parent / "data"
