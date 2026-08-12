@@ -127,6 +127,9 @@ class UserService:
             ).all()
             db_obj.diseases = diseases
 
+        if hasattr(profile_in, "custom_equipment") and profile_in.custom_equipment is not None:
+            db_obj.custom_equipment = profile_in.custom_equipment
+
         db.add(db_obj)
         db.flush()
         db.refresh(db_obj)

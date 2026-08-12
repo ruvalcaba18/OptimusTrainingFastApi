@@ -7,3 +7,4 @@ class UserTrainingProfileUpdate(BaseModel):
     equipment_ids: List[int] = []
     pathology_ids: List[int] = []
     disease_ids: List[int] = []
+    custom_equipment: Optional[str] = None

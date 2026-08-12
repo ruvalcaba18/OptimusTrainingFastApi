@@ -22,6 +22,7 @@ class User(Base):
     training_type = Column(String, nullable=False)
     gender = Column(String, nullable=True) 
     profile_picture_url = Column(String, nullable=True)
+    custom_equipment = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
 

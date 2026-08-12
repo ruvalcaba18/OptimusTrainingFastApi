@@ -19,6 +19,7 @@ class UserBase(BaseModel):
     gender: Optional[UserGender] = None
     goal_code: Optional[str] = None
     level_code: Optional[str] = None
+    custom_equipment: Optional[str] = None
 
     @field_validator("phone")
     @classmethod
