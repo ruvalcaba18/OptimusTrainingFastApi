@@ -10,6 +10,8 @@ from app.controllers.excersices.excersice_controller import excersice_controller
 from app.controllers.excersices.equipment_controller import equipment_controller
 from app.controllers.excersices.session_duration_controller import session_duration_controller
 from app.controllers.excersices.workout_place_controller import workout_place_controller
+from app.controllers.excersices.everyday_item_controller import everyday_item_controller
+from app.controllers.excersices.workout_hybrid_places_controller import workou_hybrid_places_controller
 
 from app.schemas.training import (
     LevelSchema,
@@ -18,8 +20,11 @@ from app.schemas.training import (
     MethodSchema,
     ExcersiceResponse,
     EquipmentSchema,
+    EquipmentCategoriesResponse,
     SessionDurationSchema, 
-    WorkoutPlacementSchema
+    WorkoutPlacementSchema,
+    EveryDayItemSchema,
+    WorkOutHybridPalcesSchema
 )
 
 router = APIRouter()
@@ -97,3 +102,24 @@ def get_session_durations(db: Session = Depends(deps.get_db)) -> List[SessionDur
 def list_workout_places(db: Session = Depends(deps.get_db)) -> List[WorkoutPlacementSchema]:
      
      return workout_place_controller.list_workout_place(db)
+
+@router.get("/hybrid-places",
+             response_model=List[WorkOutHybridPalcesSchema], 
+             summary="Listar lugares Hybridos de entrenamiento")
+def list_hybrid_workout_places(db: Session = Depends(deps.get_db)) -> List[WorkOutHybridPalcesSchema]:
+     return workou_hybrid_places_controller.list_workout_hybrid_places(db=db)
+
+@router.get("/everyday_tiems",
+            response_model=List[EveryDayItemSchema],
+            summary="Listar elementos de uso diario")
+def list_everyday_items(db: Session = Depends(deps.get_db)) -> List[EveryDayItemSchema]:
+    return everyday_item_controller.list_everyday_item_controller(db=db)
+
+@router.get(
+    "/equipments/categories",
+    response_model=EquipmentCategoriesResponse,
+    summary="Listar categorías de equipamiento"
+)
+def get_equipment_categories() -> EquipmentCategoriesResponse:
+    return equipment_controller.get_equipment_categories()
+     

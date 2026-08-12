@@ -7,4 +7,4 @@ class WorkoutPlacementSchema(BaseModel):
     name: str
     description: Optional[str] = None
     
-    model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
+    model_config = ConfigDict(from_attributes=True,extra='forbid', str_strip_whitespace=True)

@@ -145,7 +145,7 @@ class TestProfilePicture:
     def test_upload_valid_jpg(self, client, auth_headers, test_user):
         fake_image = io.BytesIO(b"\xff\xd8\xff\xe0" + b"\x00" * 100)
         resp = client.post(
-            f"/api/v1/users/{test_user.id}/photo",
+            f"/api/v1/users/photo/{test_user.id}",
             files={"file": ("photo.jpg", fake_image, "image/jpeg")},
             headers=auth_headers,
         )
@@ -155,7 +155,7 @@ class TestProfilePicture:
     def test_upload_invalid_extension(self, client, auth_headers, test_user):
         fake_gif = io.BytesIO(b"GIF89a" + b"\x00" * 50)
         resp = client.post(
-            f"/api/v1/users/{test_user.id}/photo",
+            f"/api/v1/users/photo/{test_user.id}",
             files={"file": ("photo.gif", fake_gif, "image/gif")},
             headers=auth_headers,
         )
@@ -182,7 +182,7 @@ class TestProfilePicture:
         db.refresh(other)
         fake = io.BytesIO(b"\xff\xd8\xff\xe0" + b"\x00" * 100)
         resp = client.post(
-            f"/api/v1/users/{other.id}/photo",
+            f"/api/v1/users/photo/{other.id}",
             files={"file": ("photo.jpg", fake, "image/jpeg")},
             headers=auth_headers,
         )

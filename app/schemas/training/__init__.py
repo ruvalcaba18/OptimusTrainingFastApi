@@ -17,12 +17,14 @@ from .training_schemas import (
 from .level_schema import LevelSchema
 from .goal_schema import GoalSchema
 from .condition_schema import ConditionSchema
+from .everyday_items_schema import EveryDayItemSchema
 from .method_schema import MethodSchema
 from .excersice_schema import ExcersiceResponse, ExcersiceConditionResponse
 from .equipment_schema import EquipmentSchema
+from .equipment_categories_response_schema import EquipmentCategoriesResponse
 from .session_duration_schema import SessionDurationSchema
 from .workout_placement_schema import WorkoutPlacementSchema
-
+from .hybrid_place_schema import WorkOutHybridPalcesSchema
 
 __all__ = [
     "PlanStatus",
@@ -42,11 +44,14 @@ __all__ = [
     "LevelSchema",
     "GoalSchema",
     "SessionDurationSchema",
-    "WorkoutPlacementSchema"
+    "WorkoutPlacementSchema",
+    "WorkOutHybridPalcesSchema",
+    "EveryDayItemSchema",
     "ConditionSchema",
     "MethodSchema",
     "ExcersiceResponse",
     "ExcersiceConditionResponse",
     "EquipmentSchema",
+    "EquipmentCategoriesResponse",
 ]
 

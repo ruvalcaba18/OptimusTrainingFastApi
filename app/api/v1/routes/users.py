@@ -65,7 +65,7 @@ def update_user(
 
 
 @router.post(
-    "/{user_id}/photo",
+    "/photo/{user_id}",
     response_model=UserResponse,
     summary="Subir foto de perfil",
     description="Sube una foto JPG/PNG/WEBP de hasta 5 MB como foto de perfil.",

@@ -16,6 +16,8 @@ from app.models import ExcersiceGoal
 from app.models import MethodGoal
 from app.models import SessionDuration
 from app.models import WorkoutPlace
+from app.models import WorkoutHybridPlaces
+from app.models import EverydayItem
 
 @final
 class DatabaseSeeder:
@@ -37,11 +39,12 @@ class DatabaseSeeder:
         self.seed_exercises()
         self.seed_session_durations()
         self.seed_workout_places()
+        self.seed_everyday_items()
+        
         if include_matrix:
             self.seed_programming_matrix()
 
     def clear_database(self):
-        print("Cleaning up existing tables...")
         self.session.query(ExcersiceCondition).delete()
         self.session.query(ExcersiceEquipment).delete()
         self.session.query(ExcersiceGoal).delete()
@@ -55,6 +58,9 @@ class DatabaseSeeder:
         self.session.query(ProgrammingMatrix).delete()
         self.session.query(SessionDuration).delete()
         self.session.query(WorkoutPlace).delete()
+        self.session.query(WorkoutHybridPlaces).delete()
+        self.session.query(EverydayItem).delete()
+        
         self.session.commit()
 
     def seed_levels(self):
@@ -331,7 +337,7 @@ class DatabaseSeeder:
         print(f"Successfully seeded {ex_count} exercises!")
 
     def seed_programming_matrix(self):
-        print("Seeding programming matrix...")
+        
         methods_by_code = {m.code: m for m in self.session.query(Method).all()}
         
         rules = [
@@ -384,6 +390,19 @@ class DatabaseSeeder:
         for code, name, description in data:
             self.session.add(SessionDuration(code=code, name=name, description=description))
         self.session.commit()
+    
+    
+    def seed_workout_hybrid_places(self):
+        
+        data = [
+            ("GYM", "Gimnasio" , "Haz pagado el gimnasio o deseas ir a un gimnasio"),
+            ("HOUSE", "Casa", "Deseas hacer ejercicio en casa"),
+            ("FREE", "Aire Libre", "Deseas hacer ejercicio al aire libre o mixto")
+        ]    
+        
+        for code, name , description in data:
+            self.session.add(WorkoutHybridPlaces(code=code, name=name, description=description))
+        self.session.commit()
 
     def seed_workout_places(self):
         print("Seeding workout places...")
@@ -396,6 +415,24 @@ class DatabaseSeeder:
         for code, name, description in data:
             self.session.add(WorkoutPlace(code=code, name=name, description=description))
         self.session.commit()
+        
+    def seed_everyday_items(self):
+        data = [
+            ("Silla Estable / Banco de Comedor","Silla de comedor o cualquier tipo de silla que se tenga en casa"),
+            ("Garrafones de Agua (5L-20L)", "Cualquier tipo de garrafon es bueno incluso si no se tiene uno de 5 o 20 litros"),
+            ("Mochila Cargada (Libros/Arroz)", "Puedes cargarla de cualquier tipo de cosa en caso de no tener libros o arroz."),
+            ("Toallas de Mano", "Cualquier tipo de toalla de cualquier tamaño"),
+            ("Palo de Escoba o Fregona","O cualquier tipo de palo que te ayude a hacer ejercicio."),
+            ("Escalones Interiores"," o cualquier parte que este un poco elevada que te ayude a subir y bajar."),
+            ("Sofá o Sillón","Sofá o Sillón"),
+            ("Botellas de Detergente (con asa)","o botellas de agua"),
+            ("Libros Gruesos (Enciclopedias)","o cualquier tipo de libro"),
+            ("Pared Despejada","Pared Despejada")
+        ]
+        
+        for name, description in data:
+            self.session.add(EverydayItem(name=name,description=description))
+        self.commit()        
 
 def seed_database():
     data_dir = Path(__file__).parent / "data"

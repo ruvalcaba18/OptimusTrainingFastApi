@@ -24,6 +24,8 @@ from app.models.excersice.excersice_goal import ExcersiceGoal
 from app.models.excersice.method_goal import MethodGoal
 from app.models.excersice.session_duration import SessionDuration
 from app.models.excersice.workout_place import WorkoutPlace
+from app.models.excersice.workout_hybrid_places import WorkoutHybridPlaces
+from app.models.excersice.everyday_item import EverydayItem
 
 from app.models.training.training_plan import TrainingPlan
 from app.models.training.daily_workout import DailyWorkout
@@ -57,6 +59,8 @@ __all__ = [
     "Method",
     "SessionDuration",
     "WorkoutPlace",
+    "WorkoutHybridPlaces",
+    "EverydayItem",
     "Excersice",
     "Equipment",
     "ExcersiceEquipment",

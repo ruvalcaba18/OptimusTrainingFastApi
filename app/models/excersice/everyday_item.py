@@ -1,0 +1,11 @@
+from sqlalchemy import Column, Text, String, Integer
+from typing import final 
+from app.database import Base 
+
+@final
+class EverydayItem(Base):
+    __tablename__ = "everyday_item"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(100), unique=True, nullable=False,index=True)
+    description = Column(Text,nullable=True)

@@ -6,6 +6,7 @@ from app.models.excersice.workout_place import WorkoutPlace
 
 @final
 class WorkoutController: 
+    
     @staticmethod
     @handle_controller_errors
     def list_workout_place(db: Session) -> List[WorkoutPlace]:
