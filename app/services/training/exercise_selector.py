@@ -50,9 +50,7 @@ class ExerciseSelector:
             pass
 
         # Fallback local (SQLite para pruebas y base de datos sin migración)
-        profile = user.profile
-        if not profile:
-            return self._fallback_all_exercises(db)
+        profile = user
 
         exercises = self._get_exercises_by_goal(db, profile.goal_id)
 

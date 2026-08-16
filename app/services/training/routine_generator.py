@@ -1,5 +1,5 @@
 import random
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from sqlalchemy.orm import Session
 from app.models import User
 from app.models import ProgrammingMatrix
@@ -7,14 +7,14 @@ from app.services.training.exercise_selector import exercise_selector
 
 class RoutineGenerator:
     @staticmethod
-    def generate_routine(db: Session, user: User) -> Dict[str, Any]:
+    def generate_routine(db: Session, user: User, day: Optional[int] = None) -> Dict[str, Any]:
         """
         Generador automático de rutinas personalizadas (Fase 7).
         Obtiene los ejercicios viables filtrados por salud, nivel y equipamiento,
         y les aplica las variables de la matriz de programación correspondientes.
         """
-        profile = user.profile
-        if not profile:
+        profile = user
+        if not profile.goal_id:
             raise ValueError("El usuario no tiene un perfil configurado.")
 
         # Obtener los ejercicios válidos para el usuario
@@ -49,10 +49,25 @@ class RoutineGenerator:
         rest = matrix_rule.rest if matrix_rule else "60s"
         method_name = matrix_rule.method.name if (matrix_rule and matrix_rule.method) else "Series Tradicionales"
 
-        # Seleccionar un set de hasta 5 ejercicios viables para componer la rutina diaria
-        # Intentamos mezclar y seleccionar un subconjunto para no saturar al usuario
-        sample_size = min(len(viable_exercises), 5)
-        selected_sample = random.sample(viable_exercises, sample_size)
+        # Determinar cantidad de ejercicios según la duración elegida
+        duration_code = (user.session_duration_code or "").upper()
+        if duration_code == "EXPRESS":
+            num_exercises = 3
+        elif duration_code == "STANDARD":
+            num_exercises = 5
+        elif duration_code == "EXTENDED":
+            num_exercises = 7
+        else:
+            num_exercises = 4  # Para VARIABLE o None
+
+        sample_size = min(len(viable_exercises), num_exercises)
+
+        if day is not None:
+            # Sembrar el generador aleatorio para que el día siempre dé la misma rutina al mismo usuario
+            local_random = random.Random(f"{user.id}_{day}")
+            selected_sample = local_random.sample(viable_exercises, sample_size)
+        else:
+            selected_sample = random.sample(viable_exercises, sample_size)
 
         routine_exercises = []
         for item in selected_sample:
@@ -77,6 +92,7 @@ class RoutineGenerator:
             "reps": reps,
             "rest": rest,
             "method_name": method_name,
+            "day": day,
             "exercises": routine_exercises
         }
 

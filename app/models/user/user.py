@@ -23,6 +23,8 @@ class User(Base):
     gender = Column(String, nullable=True) 
     profile_picture_url = Column(String, nullable=True)
     custom_equipment = Column(String, nullable=True)
+    session_duration_code = Column(String, nullable=True)
+    specific_days = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
 

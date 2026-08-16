@@ -130,6 +130,12 @@ class UserService:
         if hasattr(profile_in, "custom_equipment") and profile_in.custom_equipment is not None:
             db_obj.custom_equipment = profile_in.custom_equipment
 
+        if hasattr(profile_in, "session_duration_code") and profile_in.session_duration_code is not None:
+            db_obj.session_duration_code = profile_in.session_duration_code
+
+        if hasattr(profile_in, "specific_days") and profile_in.specific_days is not None:
+            db_obj.specific_days = ",".join(str(d) for d in profile_in.specific_days)
+
         db.add(db_obj)
         db.flush()
         db.refresh(db_obj)

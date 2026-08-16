@@ -1,7 +1,6 @@
 import pytest
 from pathlib import Path
 from fastapi import status
-from app.models import UserProfile
 from app.models import Level
 from app.models import Goal
 from app.models import Condition
@@ -23,15 +22,12 @@ def test_generate_routine_with_basic_profile(client, db, test_user, auth_headers
     goal = db.query(Goal).filter(Goal.code == "PG").first()
     level = db.query(Level).filter(Level.code == "NIV1").first()
     
-    profile = UserProfile(
-        id=test_user.id,
-        goal_id=goal.id,
-        level_id=level.id,
-        age=25,
-        weight=70.0,
-        height=170.0
-    )
-    db.add(profile)
+    test_user.goal_id = goal.id
+    test_user.level_id = level.id
+    test_user.age = 25
+    test_user.weight = 70.0
+    test_user.height = 170.0
+    db.add(test_user)
     
     mancuernas = db.query(Equipment).filter(Equipment.name == "Mancuernas").first()
     if mancuernas:
@@ -58,15 +54,12 @@ def test_generate_routine_excludes_forbidden_conditions(client, db, test_user, a
     goal = db.query(Goal).filter(Goal.code == "PG").first()
     level = db.query(Level).filter(Level.code == "NIV1").first()
     
-    profile = UserProfile(
-        id=test_user.id,
-        goal_id=goal.id,
-        level_id=level.id,
-        age=25,
-        weight=70.0,
-        height=170.0
-    )
-    db.add(profile)
+    test_user.goal_id = goal.id
+    test_user.level_id = level.id
+    test_user.age = 25
+    test_user.weight = 70.0
+    test_user.height = 170.0
+    db.add(test_user)
     
 
     hernia = db.query(Condition).filter(Condition.code == "PAT002").first()

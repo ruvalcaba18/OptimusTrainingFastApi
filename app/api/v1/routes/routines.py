@@ -3,16 +3,18 @@ from sqlalchemy.orm import Session
 from app.api import deps
 from app.models import User
 from app.services import routine_generator
+from typing import Optional
 
 router = APIRouter()
 
 @router.post("/generate", summary="Generar una rutina de entrenamiento personalizada", status_code=status.HTTP_200_OK)
 def generate_my_routine(
+    day: Optional[int] = None,
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> dict:
     try:
-        routine = routine_generator.generate_routine(db, user=current_user)
+        routine = routine_generator.generate_routine(db, user=current_user, day=day)
         return routine
     except ValueError as e:
         raise HTTPException(

@@ -2,7 +2,7 @@ from pydantic import BaseModel, EmailStr, Field, field_validator
 from .training_type import TrainingType
 from .gender import UserGender
 from .phone_validator import PhoneValidator
-from typing import Optional, final
+from typing import Optional, final, List, Any
 
 
 @final
@@ -20,6 +20,8 @@ class UserBase(BaseModel):
     goal_code: Optional[str] = None
     level_code: Optional[str] = None
     custom_equipment: Optional[str] = None
+    session_duration_code: Optional[str] = None
+    specific_days: Optional[List[int]] = None
 
     @field_validator("phone")
     @classmethod
@@ -32,3 +34,12 @@ class UserBase(BaseModel):
         if value is not None and isinstance(value, str):
             return value.lower()
         return value
+
+    @field_validator("specific_days", mode="before")
+    @classmethod
+    def parse_specific_days(cls, v: Any) -> Optional[List[int]]:
+        if isinstance(v, str):
+            if not v.strip():
+                return []
+            return [int(x.strip()) for x in v.split(",") if x.strip().isdigit()]
+        return v
