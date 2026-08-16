@@ -23,5 +23,6 @@ class Condition(Base):
     name = Column(String(200), nullable=False)
     type = Column(String(50), nullable=False)  
     category = Column(String(100), nullable=True) 
+    warning_message = Column(Text, nullable=True)
     
     excersices_association = sqla_relationship("ExcersiceCondition", back_populates="condition", cascade="all, delete-orphan")

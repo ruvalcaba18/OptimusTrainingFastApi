@@ -18,7 +18,7 @@ from app.models import SessionDuration
 from app.models import WorkoutPlace
 from app.models import WorkoutHybridPlaces
 from app.models import EverydayItem
-from app.models import GymEquipmentModel, HomeEquipmentModel, OutdoorEquipmentModel
+from app.models import GymEquipmentModel, HomeEquipmentModel, OutdoorEquipmentModel, LeisureActivityModel, HealthQuestionModel
 from app.models.Enums.GymEquipment import GymEquipment
 from app.models.Enums.HomeEquipment import HomeEquipment
 from app.models.Enums.OutdoorEquipment import OutdoorEquipment
@@ -49,6 +49,8 @@ class DatabaseSeeder:
         self.seed_gym_equipment()
         self.seed_home_equipment()
         self.seed_outdoor_equipment()
+        self.seed_leisure_activities()
+        self.seed_health_questions()
         
         if include_matrix:
             self.seed_programming_matrix()
@@ -72,6 +74,8 @@ class DatabaseSeeder:
         self.session.query(GymEquipmentModel).delete()
         self.session.query(HomeEquipmentModel).delete()
         self.session.query(OutdoorEquipmentModel).delete()
+        self.session.query(LeisureActivityModel).delete()
+        self.session.query(HealthQuestionModel).delete()
         
         self.session.commit()
 
@@ -115,6 +119,11 @@ class DatabaseSeeder:
     def seed_conditions(self):
         print("Seeding pathologies and diseases...")
         file_path = self.data_dir / "conditions.tsv"
+        
+        spine_codes = {"PAT002", "PAT001", "PAT010"}
+        disease_codes = {"ENF003", "ENF002", "ENF005", "ENF001"}
+        joint_codes = {"PAT007", "PAT008", "PAT009"}
+        
         with open(file_path, "r", encoding="utf-8") as f:
             for line in f:
                 line_str = line.strip()
@@ -126,7 +135,13 @@ class DatabaseSeeder:
                 category = cols[2].strip() if len(cols) > 2 and cols[2].strip() else None
                 cond_type = cols[3].strip() if len(cols) > 3 else "PATHOLOGY"
                 
-                cond = Condition(code=code, name=name, type=cond_type, category=category)
+                warning_msg = None
+                if code in spine_codes:
+                    warning_msg = "Hemos detectado sensibilidad en tu columna; adaptaremos tu plan con alternativas seguras y limitaremos cargas axiales directas."
+                elif code in disease_codes or code in joint_codes:
+                    warning_msg = "Adaptaremos tu plan para que sea de bajo impacto, protegiendo tus articulaciones y sistema cardiovascular."
+                
+                cond = Condition(code=code, name=name, type=cond_type, category=category, warning_message=warning_msg)
                 self.session.add(cond)
                 self.conditions_map[code] = cond
         self.session.commit()
@@ -498,6 +513,51 @@ class DatabaseSeeder:
         }
         for enum_val, (code, mapping) in mappings.items():
             self.session.add(OutdoorEquipmentModel(code=code, name=enum_val.value, mapping=mapping))
+        self.session.commit()
+
+    def seed_leisure_activities(self):
+        print("Seeding leisure activities...")
+        activities = [
+            ("walking", "Caminar"),
+            ("jogging", "Trotar y/o Sprints"),
+            ("cycling", "Bicicleta (regular / estacionaria / de aire)"),
+            ("dancing", "Bailar"),
+            ("hiking", "Senderismo / Hike"),
+            ("jumpRope", "Saltar la cuerda"),
+            ("skating", "Patinar (Patines / Patineta / Patín)"),
+            ("swimming", "Nadar"),
+            ("aerobics", "Aerobics (jumping / barre / steps)"),
+            ("yogaPilates", "Yoga / Pilates"),
+            ("racketSports", "Tenis / Padel / Squash"),
+            ("martialArts", "Boxeo / Artes Marciales (Recreativo)"),
+            ("surfing", "Surf / Bodyboard"),
+            ("climbing", "Escalada / Bouldering"),
+            ("teamSports", "Deportes de equipo (Fútbol / Básquet / Voley)")
+        ]
+        for code, name in activities:
+            self.session.add(LeisureActivityModel(code=code, name=name))
+        self.session.commit()
+
+    def seed_health_questions(self):
+        print("Seeding health questions...")
+        questions = [
+            HealthQuestionModel(
+                code="musculoskeletal",
+                title="¿Presentas alguna lesión o condición musculoesquelética?",
+                subtitle="Selecciona todas las que apliquen",
+                type="multiple",
+                category="PATHOLOGY"
+            ),
+            HealthQuestionModel(
+                code="healthConditions",
+                title="¿Presentas alguna condición de salud?",
+                subtitle="Selecciona todas las que apliquen",
+                type="multiple",
+                category="DISEASE"
+            )
+        ]
+        for q in questions:
+            self.session.add(q)
         self.session.commit()
 
 def seed_database():

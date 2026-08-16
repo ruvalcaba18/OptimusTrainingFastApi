@@ -36,4 +36,5 @@ class User(Base):
     pathologies = relationship("Condition", secondary="user_pathology", backref="users_with_pathology")
     diseases = relationship("Condition", secondary="user_disease", backref="users_with_disease")
     equipments = relationship("Equipment", secondary="user_equipment", backref="users")
+    leisure_activities = relationship("LeisureActivityModel", secondary="user_leisure_activity", backref="users")
 

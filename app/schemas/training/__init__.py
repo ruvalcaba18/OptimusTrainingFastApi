@@ -29,6 +29,8 @@ from .hybrid_place_schema import WorkOutHybridPalcesSchema
 from .gym_equipment_schema import GymEquipmentSchema
 from .home_equipment_schema import HomeEquipmentSchema
 from .outdoor_equipment_schema import OutdoorEquipmentSchema
+from .leisure_activity_schema import LeisureActivitySchema
+from .health_question_schema import HealthQuestionSchema
 
 __all__ = [
     "PlanStatus",
@@ -60,5 +62,7 @@ __all__ = [
     "GymEquipmentSchema",
     "HomeEquipmentSchema",
     "OutdoorEquipmentSchema",
+    "LeisureActivitySchema",
+    "HealthQuestionSchema",
 ]
 

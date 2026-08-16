@@ -29,6 +29,9 @@ from app.models.excersice.everyday_item import EverydayItem
 from app.models.excersice.gym_equipment import GymEquipmentModel
 from app.models.excersice.home_equipment import HomeEquipmentModel
 from app.models.excersice.outdoor_equipment import OutdoorEquipmentModel
+from app.models.excersice.leisure_activity import LeisureActivityModel
+from app.models.excersice.health_question import HealthQuestionModel
+from app.models.user.user_leisure_activity import UserLeisureActivity
 
 from app.models.training.training_plan import TrainingPlan
 from app.models.training.daily_workout import DailyWorkout
@@ -67,6 +70,9 @@ __all__ = [
     "GymEquipmentModel",
     "HomeEquipmentModel",
     "OutdoorEquipmentModel",
+    "LeisureActivityModel",
+    "HealthQuestionModel",
+    "UserLeisureActivity",
     "Excersice",
     "Equipment",
     "ExcersiceEquipment",

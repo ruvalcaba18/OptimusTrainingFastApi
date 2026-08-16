@@ -3,6 +3,7 @@ from .training_type import TrainingType
 from .gender import UserGender
 from .phone_validator import PhoneValidator
 from typing import Optional, final, List, Any
+from app.schemas.training.leisure_activity_schema import LeisureActivitySchema
 
 
 @final
@@ -22,6 +23,7 @@ class UserBase(BaseModel):
     custom_equipment: Optional[str] = None
     session_duration_code: Optional[str] = None
     specific_days: Optional[List[int]] = None
+    leisure_activities: Optional[List[LeisureActivitySchema]] = None
 
     @field_validator("phone")
     @classmethod

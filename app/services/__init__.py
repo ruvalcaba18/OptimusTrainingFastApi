@@ -15,6 +15,8 @@ from app.services.excersice.workout_hybird_places_service import workout_hybrid_
 from app.services.excersice.gym_equipment_service import gym_equipment_service
 from app.services.excersice.home_equipment_service import home_equipment_service
 from app.services.excersice.outdoor_equipment_service import outdoor_equipment_service
+from app.services.excersice.leisure_activity_service import leisure_activity_service
+from app.services.excersice.health_question_service import health_question_service
 
 from app.services.training.training_service import training_service
 from app.services.training.routine_generator import routine_generator
@@ -50,6 +52,8 @@ __all__ = [
     "gym_equipment_service",
     "home_equipment_service",
     "outdoor_equipment_service",
+    "leisure_activity_service",
+    "health_question_service",
     "coach_service",
     "competition_service",
     "event_service",

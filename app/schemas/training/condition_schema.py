@@ -7,5 +7,6 @@ class ConditionSchema(BaseModel):
     name: str
     type: str  
     category: Optional[str] = None
+    warning_message: Optional[str] = None
 
     model_config = {"from_attributes": True}

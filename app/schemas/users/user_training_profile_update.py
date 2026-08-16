@@ -10,3 +10,4 @@ class UserTrainingProfileUpdate(BaseModel):
     custom_equipment: Optional[str] = None
     session_duration_code: Optional[str] = None
     specific_days: Optional[List[int]] = None
+    leisure_activity_ids: Optional[List[int]] = None

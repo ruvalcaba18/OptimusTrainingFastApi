@@ -4,6 +4,8 @@ from app.controllers.enterprise.enterprise_controller import enterprise_controll
 from app.controllers.coaches.coach_controller import coach_controller, CoachController
 from app.controllers.events.event_controller import event_controller, EventController
 from app.controllers.competitions.competition_controller import competition_controller, CompetitionController
+from app.controllers.excersices.leisure_activity_controller import leisure_activity_controller
+from app.controllers.excersices.health_question_controller import health_question_controller
 
 __all__ = [
     "user_controller",
@@ -18,4 +20,6 @@ __all__ = [
     "EventController",
     "competition_controller",
     "CompetitionController",
+    "leisure_activity_controller",
+    "health_question_controller",
 ]

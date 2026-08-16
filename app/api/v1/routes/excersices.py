@@ -160,4 +160,26 @@ def get_outdoor_equipments(db: Session = Depends(deps.get_db)) -> List[OutdoorEq
 )
 def get_everyday_items(db: Session = Depends(deps.get_db)) -> List[EveryDayItemSchema]:
     return everyday_item_controller.list_everyday_item_controller(db=db)
+
+from app.controllers.excersices.leisure_activity_controller import leisure_activity_controller
+from app.schemas.training.leisure_activity_schema import LeisureActivitySchema
+
+@router.get(
+    "/leisure-activities",
+    response_model=List[LeisureActivitySchema],
+    summary="Listar actividades de tiempo libre"
+)
+def get_leisure_activities(db: Session = Depends(deps.get_db)) -> List[LeisureActivitySchema]:
+    return leisure_activity_controller.list_leisure_activities(db)
+
+from app.controllers.excersices.health_question_controller import health_question_controller
+from app.schemas.training.health_question_schema import HealthQuestionSchema
+
+@router.get(
+    "/health-questions",
+    response_model=List[HealthQuestionSchema],
+    summary="Listar preguntas de salud"
+)
+def get_health_questions(db: Session = Depends(deps.get_db)) -> List[HealthQuestionSchema]:
+    return health_question_controller.list_health_questions(db)
      

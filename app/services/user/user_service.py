@@ -136,6 +136,11 @@ class UserService:
         if hasattr(profile_in, "specific_days") and profile_in.specific_days is not None:
             db_obj.specific_days = ",".join(str(d) for d in profile_in.specific_days)
 
+        if hasattr(profile_in, "leisure_activity_ids") and profile_in.leisure_activity_ids is not None:
+            from app.models import LeisureActivityModel
+            leisure_activities = db.query(LeisureActivityModel).filter(LeisureActivityModel.id.in_(profile_in.leisure_activity_ids)).all()
+            db_obj.leisure_activities = leisure_activities
+
         db.add(db_obj)
         db.flush()
         db.refresh(db_obj)
