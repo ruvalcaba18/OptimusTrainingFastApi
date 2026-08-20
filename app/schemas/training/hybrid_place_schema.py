@@ -3,7 +3,7 @@ from typing import final, Optional
 
 @final 
 class WorkOutHybridPalcesSchema(BaseModel):
-    id: str
+    id: int
     code: str
     name: str
     description: Optional[str] = None

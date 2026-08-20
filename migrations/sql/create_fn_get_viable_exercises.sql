@@ -14,10 +14,10 @@ DECLARE
     v_goal_id INT;
 BEGIN
     -- 1. Obtener datos del perfil del usuario (objetivo y nivel)
-    SELECT up.goal_id, l.code INTO v_goal_id, v_level_code
-    FROM user_profiles up
-    LEFT JOIN levels l ON up.level_id = l.id
-    WHERE up.id = p_user_id;
+    SELECT u.goal_id, l.code INTO v_goal_id, v_level_code
+    FROM users u
+    LEFT JOIN levels l ON u.level_id = l.id
+    WHERE u.id = p_user_id;
 
     -- Si no hay nivel asignado, por defecto es NIV1
     IF v_level_code IS NULL THEN
