@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
+from app.models.Enums.UserTier import UserTier
 
 
 class User(Base):
@@ -25,6 +26,7 @@ class User(Base):
     custom_equipment = Column(String, nullable=True)
     session_duration_code = Column(String, nullable=True)
     specific_days = Column(String, nullable=True)
+    tier = Column(Enum(UserTier), default=UserTier.BASIC, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
 
@@ -37,4 +39,5 @@ class User(Base):
     diseases = relationship("Condition", secondary="user_disease", backref="users_with_disease")
     equipments = relationship("Equipment", secondary="user_equipment", backref="users")
     leisure_activities = relationship("LeisureActivityModel", secondary="user_leisure_activity", backref="users")
+    user_routines = relationship("UserRoutine", back_populates="user", cascade="all, delete-orphan")
 

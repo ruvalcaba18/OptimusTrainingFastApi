@@ -45,6 +45,12 @@ def read_user_me(
     return current_user
 
 
+@router.get("/plans/tiers", summary="Obtener los tipos de planes/suscripciones de usuario disponibles")
+def get_user_tiers() -> list[str]:
+    from app.models.Enums.UserTier import UserTier
+    return [tier.value for tier in UserTier]
+
+
 @router.get("/{user_id}", response_model=UserResponse, summary="Obtener usuario por ID")
 def read_user_by_id(
     user_id: int,

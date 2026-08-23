@@ -15,6 +15,10 @@ from app.controllers.excersices.workout_hybrid_places_controller import workou_h
 from app.controllers.excersices.gym_equipment_controller import gym_equipment_controller
 from app.controllers.excersices.home_equipment_controller import home_equipment_controller
 from app.controllers.excersices.outdoor_equipment_controller import outdoor_equipment_controller
+from app.controllers.excersices.leisure_activity_controller import leisure_activity_controller
+from app.schemas.training.leisure_activity_schema import LeisureActivitySchema
+from app.controllers.excersices.health_question_controller import health_question_controller
+from app.schemas.training.health_question_schema import HealthQuestionSchema
 
 from app.schemas.training import (
     LevelSchema,
@@ -161,8 +165,6 @@ def get_outdoor_equipments(db: Session = Depends(deps.get_db)) -> List[OutdoorEq
 def get_everyday_items(db: Session = Depends(deps.get_db)) -> List[EveryDayItemSchema]:
     return everyday_item_controller.list_everyday_item_controller(db=db)
 
-from app.controllers.excersices.leisure_activity_controller import leisure_activity_controller
-from app.schemas.training.leisure_activity_schema import LeisureActivitySchema
 
 @router.get(
     "/leisure-activities",
@@ -172,8 +174,6 @@ from app.schemas.training.leisure_activity_schema import LeisureActivitySchema
 def get_leisure_activities(db: Session = Depends(deps.get_db)) -> List[LeisureActivitySchema]:
     return leisure_activity_controller.list_leisure_activities(db)
 
-from app.controllers.excersices.health_question_controller import health_question_controller
-from app.schemas.training.health_question_schema import HealthQuestionSchema
 
 @router.get(
     "/health-questions",

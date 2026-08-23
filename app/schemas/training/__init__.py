@@ -31,6 +31,7 @@ from .home_equipment_schema import HomeEquipmentSchema
 from .outdoor_equipment_schema import OutdoorEquipmentSchema
 from .leisure_activity_schema import LeisureActivitySchema
 from .health_question_schema import HealthQuestionSchema
+from .user_routine_schema import UserRoutineUpdateSchema, UserRoutineResponseSchema
 
 __all__ = [
     "PlanStatus",
@@ -64,5 +65,7 @@ __all__ = [
     "OutdoorEquipmentSchema",
     "LeisureActivitySchema",
     "HealthQuestionSchema",
+    "UserRoutineUpdateSchema",
+    "UserRoutineResponseSchema",
 ]
 

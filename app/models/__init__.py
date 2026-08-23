@@ -37,6 +37,7 @@ from app.models.training.training_plan import TrainingPlan
 from app.models.training.daily_workout import DailyWorkout
 from app.models.training.exercise_detail import ExerciseDetail
 from app.models.training.programming_matrix import ProgrammingMatrix
+from app.models.training.user_routine import UserRoutine
 
 from app.models.prompt_log.prompt_log import PromptLog
 
@@ -57,6 +58,7 @@ __all__ = [
     "TrainingPlan",
     "DailyWorkout",
     "ExerciseDetail",
+    "UserRoutine",
     "PromptLog",
     "Level",
     "Goal",

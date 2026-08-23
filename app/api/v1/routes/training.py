@@ -59,7 +59,7 @@ def create_plan(
 
 
 @router.post(
-    "/plans/{plan_id}/workouts",
+    "/plans/workouts/{plan_id}",
     response_model=DailyWorkoutResponse,
     summary="Agregar Entrenamiento Diario al Plan",
     response_description="El entrenamiento diario creado con sus ejercicios.",
@@ -89,7 +89,7 @@ def modify_workout(
 
 
 @router.post(
-    "/plans/{plan_id}/accept",
+    "/plans/accept/{plan_id}",
     response_model=TrainingPlanResponse,
     summary="Aceptar Plan (Atleta)",
     response_description="El plan con estado actualizado a 'ACCEPTED'.",
@@ -103,7 +103,7 @@ def accept_plan(
 
 
 @router.post(
-    "/workouts/{workout_id}/validate",
+    "/workouts/validate/{workout_id}",
     response_model=DailyWorkoutResponse,
     summary="Validar Ejecución de Entrenamiento",
     response_description="El entrenamiento marcado como completado y validado.",

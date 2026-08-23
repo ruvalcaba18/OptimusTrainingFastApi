@@ -7,22 +7,11 @@ from app.models import Goal
 from app.models import Equipment
 from app.models import ExcersiceEquipment
 from app.models import User
-
-LEVEL_VALUES = {
-    "NIV1": 1,
-    "Básico": 1,
-    "NIV2": 2,
-    "Intermedio": 2,
-    "NIV3": 3,
-    "Avanzado": 3,
-    "NIV4": 4,
-    "Alto Rendimiento": 4,
-}
+from app.services.Enum import ExerciseLevel
 
 class ExerciseSelector:
     
     def select_exercises(self, db: Session, user: User) -> List[Dict[str, Any]]:
-        # Intentar utilizar la función optimizada de PostgreSQL
         if db.bind.dialect.name == "postgresql":
             try:
                 with db.begin_nested():
@@ -50,7 +39,6 @@ class ExerciseSelector:
             except Exception:
                 pass
 
-        # Fallback local (SQLite para pruebas y base de datos sin migración)
         profile = user
 
         exercises = self._get_exercises_by_goal(db, profile.goal_id)
@@ -59,7 +47,7 @@ class ExerciseSelector:
         user_equip_ids = {eq.id for eq in user.equipments}
 
         user_level_code = profile.level.code if profile.level else "NIV1"
-        user_level_value = LEVEL_VALUES.get(user_level_code, 1)
+        user_level_value = ExerciseLevel.from_code(user_level_code)
 
         selected_exercises = []
 
@@ -92,8 +80,8 @@ class ExerciseSelector:
             query = query.join(Excersice.goals).filter(Goal.id == goal_id)
         return query.all()
 
-    def _is_level_compatible(self, ex_level: str, user_level_value: int) -> bool:
-        ex_level_value = LEVEL_VALUES.get(ex_level, 1)
+    def _is_level_compatible(self, ex_level: str, user_level_value: ExerciseLevel) -> bool:
+        ex_level_value = ExerciseLevel.from_code(ex_level)
         return ex_level_value <= user_level_value
 
     def _evaluate_health_restrictions(
