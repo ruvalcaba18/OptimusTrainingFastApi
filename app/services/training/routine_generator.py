@@ -219,4 +219,39 @@ class RoutineGenerator:
         db.refresh(existing)
         return existing
 
+    @staticmethod
+    def get_monthly_plan(db: Session, user: User) -> Dict[str, Any]:
+        routines = db.query(UserRoutine).filter(
+            UserRoutine.user_id == user.id
+        ).order_by(UserRoutine.week, UserRoutine.day).all()
+
+        weeks_map: Dict[int, list] = {}
+        for routine in routines:
+            weeks_map.setdefault(routine.week, []).append(routine.day)
+
+        weeks = [
+            {"week": week, "days": sorted(days)}
+            for week, days in sorted(weeks_map.items())
+        ]
+
+        return {"weeks": weeks}
+
+    @staticmethod
+    def get_routine_for_day(db: Session, user: User, week: int, day: int) -> UserRoutine:
+        routine = db.query(UserRoutine).filter(
+            UserRoutine.user_id == user.id,
+            UserRoutine.week == week,
+            UserRoutine.day == day
+        ).first()
+
+        if not routine:
+            from fastapi import HTTPException, status
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"No se encontró rutina para semana {week}, día {day}."
+            )
+
+        return routine
+
+
 routine_generator = RoutineGenerator()
