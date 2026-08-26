@@ -15,7 +15,6 @@ class UserRoutineUpdateSchema(BaseModel):
 @final
 class UserRoutineResponseSchema(BaseModel):
     id: int
-    user_id: int
     week: int
     day: int
     goal: str

@@ -30,7 +30,6 @@ class RoutineGenerator:
         routine_exercises = RoutineGenerator._format_selected_exercises(selected_sample)
 
         return {
-            "user_id": user.id,
             "goal": user.goal.name if user.goal else "N/A",
             "level": user.level.name if user.level else "N/A",
             "volume": rules["volume"],
@@ -45,7 +44,6 @@ class RoutineGenerator:
     @staticmethod
     def _empty_fallback_routine(user: User) -> Dict[str, Any]:
         return {
-            "user_id": user.id,
             "goal": user.goal.name if user.goal else "N/A",
             "level": user.level.name if user.level else "N/A",
             "volume": "N/A",

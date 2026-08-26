@@ -1,5 +1,6 @@
 from enum import IntEnum
 
+
 class ExerciseLevel(IntEnum):
     BASIC = 1
     INTERMEDIATE = 2
