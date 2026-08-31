@@ -1,7 +1,7 @@
 import httpx
 from fastapi import HTTPException, status
-from app.core.config import settings
 
+from app.core.config import settings
 
 GOOGLE_TOKEN_INFO_URL = "https://oauth2.googleapis.com/tokeninfo"
 

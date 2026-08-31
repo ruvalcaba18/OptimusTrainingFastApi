@@ -1,20 +1,21 @@
 from datetime import timedelta
 from typing import final
-from sqlalchemy.orm import Session
-from jose import jwt, JWTError
 
-from app.services import user_service
-from app.core import security
-from app.core.config import settings
-from app.schemas.users import Token, UserLogin, UserUpdate
+from jose import JWTError, jwt
+from sqlalchemy.orm import Session
+
 from app.controllers.auth.exceptions import (
-    InvalidCredentialsError,
     InactiveAccountError,
+    InvalidCredentialsError,
     InvalidRefreshTokenError,
     InvalidResetTokenError,
 )
 from app.controllers.users.exceptions import UserNotFoundError
+from app.core import security
+from app.core.config import settings
 from app.core.error_handlers import handle_controller_errors
+from app.schemas.users import Token, UserLogin, UserUpdate
+from app.services import user_service
 
 
 @final

@@ -1,8 +1,11 @@
 from typing import List, final
+
 from sqlalchemy.orm import Session
-from app.services.excersice.outdoor_equipment_service import outdoor_equipment_service
-from app.models.excersice.outdoor_equipment import OutdoorEquipmentModel
+
 from app.core.error_handlers import handle_controller_errors
+from app.models.excersice.outdoor_equipment import OutdoorEquipmentModel
+from app.services.excersice.outdoor_equipment_service import outdoor_equipment_service
+
 
 @final
 class OutdoorEquipmentController:

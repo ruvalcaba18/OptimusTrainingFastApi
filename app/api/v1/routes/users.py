@@ -1,12 +1,19 @@
-from fastapi import APIRouter, Depends, UploadFile, File, status
-from sqlalchemy.orm import Session
 import logging
 
-from app.database import get_db
-from app.controllers.users.user_controller import user_controller
-from app.schemas.users import UserCreate, UserResponse, UserUpdate, UserRegistrationResponse, UserTrainingProfileUpdate
+from fastapi import APIRouter, Depends, File, UploadFile, status
+from sqlalchemy.orm import Session
+
 from app.api.deps import get_current_user
+from app.controllers.users.user_controller import user_controller
+from app.database import get_db
 from app.models import User
+from app.schemas.users import (
+    UserCreate,
+    UserRegistrationResponse,
+    UserResponse,
+    UserTrainingProfileUpdate,
+    UserUpdate,
+)
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

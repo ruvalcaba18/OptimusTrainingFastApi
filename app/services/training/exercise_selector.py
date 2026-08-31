@@ -1,13 +1,19 @@
-from typing import List, Dict, Any, Optional, Tuple
-from sqlalchemy.orm import Session
+from typing import Any, Dict, List, Optional, Tuple
+
 from sqlalchemy import text
-from app.models import Excersice
-from app.models import Condition, ExcersiceCondition
-from app.models import Goal
-from app.models import Equipment
-from app.models import ExcersiceEquipment
-from app.models import User
+from sqlalchemy.orm import Session
+
+from app.models import (
+    Condition,
+    Equipment,
+    Excersice,
+    ExcersiceCondition,
+    ExcersiceEquipment,
+    Goal,
+    User,
+)
 from app.services.Enum import ExerciseLevel
+
 
 class ExerciseSelector:
     

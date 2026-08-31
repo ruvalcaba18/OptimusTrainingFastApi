@@ -1,8 +1,10 @@
 from typing import List
+
 from sqlalchemy.orm import Session
-from app.services import equipment_service
-from app.models import Equipment
+
 from app.core.error_handlers import handle_controller_errors
+from app.models import Equipment
+from app.services import equipment_service
 
 
 class EquipmentController:
@@ -15,10 +17,10 @@ class EquipmentController:
     @staticmethod
     @handle_controller_errors
     def get_equipment_categories(db: Session) -> dict:
+        from app.models.excersice.everyday_item import EverydayItem
         from app.models.excersice.gym_equipment import GymEquipmentModel
         from app.models.excersice.home_equipment import HomeEquipmentModel
         from app.models.excersice.outdoor_equipment import OutdoorEquipmentModel
-        from app.models.excersice.everyday_item import EverydayItem
         
         gym = db.query(GymEquipmentModel).order_by(GymEquipmentModel.id).all()
         home = db.query(HomeEquipmentModel).order_by(HomeEquipmentModel.id).all()

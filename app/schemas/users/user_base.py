@@ -1,10 +1,14 @@
+from typing import Any, List, Optional, final
+
 from pydantic import BaseModel, EmailStr, Field, field_validator
-from .training_type import TrainingType
+
+from app.models.Enums.UserTier import UserTier
+from app.schemas.training.leisure_activity_schema import LeisureActivitySchema
+
 from .gender import UserGender
 from .phone_validator import PhoneValidator
-from typing import Optional, final, List, Any
-from app.schemas.training.leisure_activity_schema import LeisureActivitySchema
-from app.models.Enums.UserTier import UserTier
+from .training_type import TrainingType
+
 
 @final
 class UserBase(BaseModel):

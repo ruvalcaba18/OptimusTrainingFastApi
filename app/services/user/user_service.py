@@ -1,10 +1,11 @@
 from typing import List, Optional
+
 from sqlalchemy.orm import Session
 
-from app.models import User
-from app.models import Goal, Level
-from app.schemas.users import UserCreate, UserUpdate
 from app.core.security import get_password_hash
+from app.models import Goal, Level, User
+from app.schemas.users import UserCreate, UserUpdate
+
 
 class UserService:
                                                                                
@@ -99,7 +100,7 @@ class UserService:
 
     @staticmethod
     def update_training_profile(db: Session, db_obj: User, profile_in) -> User:
-        from app.models import Goal, Level, Equipment, Condition
+        from app.models import Condition, Equipment, Goal, Level
         
         goal = db.query(Goal).filter(Goal.code == profile_in.goal_code).first()
         if goal:

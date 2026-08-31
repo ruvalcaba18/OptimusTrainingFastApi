@@ -1,6 +1,6 @@
 import io
-from fastapi import status
 
+from fastapi import status
 
 USER_PAYLOAD = {
     "email": "nuevo@optimus.com",
@@ -85,8 +85,8 @@ class TestUpdateUser:
         assert resp.json()["first_name"] == "Actualizado"
 
     def test_cannot_update_other_user(self, client, db, auth_headers):
-        from app.models import User
         from app.core.security import get_password_hash
+        from app.models import User
         other = User(
             email="other@optimus.com",
             hashed_password=get_password_hash("Passw0rd!"),
@@ -113,8 +113,8 @@ class TestUpdateUser:
 
 class TestDeleteUser:
     def test_delete_own_user(self, client, db):
-        from app.models import User
         from app.core.security import get_password_hash
+        from app.models import User
         user = User(
             email="todelete@optimus.com",
             hashed_password=get_password_hash("Passw0rd!"),
@@ -162,8 +162,8 @@ class TestProfilePicture:
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_upload_other_user_photo_forbidden(self, client, db, auth_headers):
-        from app.models import User
         from app.core.security import get_password_hash
+        from app.models import User
         other = User(
             email="photo_other@optimus.com",
             hashed_password=get_password_hash("Passw0rd!"),

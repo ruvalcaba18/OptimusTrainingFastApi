@@ -1,15 +1,15 @@
 import secrets
-from typing import Callable, Awaitable
+from typing import Awaitable, Callable
+
 from sqlalchemy.orm import Session
 
+from app.controllers.auth.exceptions import InactiveAccountError
+from app.core import security
+from app.core.error_handlers import handle_controller_errors
 from app.models import User
-from app.services import user_service
 from app.schemas.users import Token
 from app.schemas.users.social_auth_request import SocialAuthRequest
-from app.core import security
-from app.services import AppleProvider, GoogleProvider, FacebookProvider
-from app.controllers.auth.exceptions import InactiveAccountError
-from app.core.error_handlers import handle_controller_errors
+from app.services import AppleProvider, FacebookProvider, GoogleProvider, user_service
 
 
 class SocialAuthController:

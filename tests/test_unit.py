@@ -1,4 +1,5 @@
 from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
 from fastapi import HTTPException
 
@@ -41,8 +42,9 @@ class TestSecurityTokens:
 class TestAppleProviderUnit:
     @pytest.mark.asyncio
     async def test_verify_token_missing_email_raises_401(self):
-        from app.services import AppleProvider
         from jose import jwt as jose_jwt
+
+        from app.services import AppleProvider
 
         mock_keys = [{"kid": "key1", "kty": "RSA"}]
         mock_payload = {"sub": "apple.user.123"}
@@ -76,8 +78,8 @@ class TestGoogleProviderUnit:
 
     @pytest.mark.asyncio
     async def test_unverified_email_raises_401(self):
-        from app.services import GoogleProvider
         from app.core.config import settings
+        from app.services import GoogleProvider
         mock_payload = {
             "aud": settings.GOOGLE_CLIENT_ID,
             "email": "unverified@g.com",

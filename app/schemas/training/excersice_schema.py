@@ -1,8 +1,11 @@
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
-from typing import Optional, List
+
 from app.models.Enums.ExcersicePattern import ExcersicePattern
-from app.schemas.training.goal_schema import GoalSchema
 from app.schemas.training.condition_schema import ConditionSchema
+from app.schemas.training.goal_schema import GoalSchema
+
 
 class ExcersiceConditionResponse(BaseModel):
     condition: ConditionSchema
@@ -13,7 +16,9 @@ class ExcersiceConditionResponse(BaseModel):
 class ExcersiceResponse(BaseModel):
     id: int
     code: str
+    exercise_id: Optional[str] = None
     name: str
+    image_url: Optional[str] = None
     muscle_group: str
     pattern: ExcersicePattern
     primary_tool: str

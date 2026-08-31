@@ -1,13 +1,15 @@
 from typing import List, Optional
+
 from sqlalchemy.orm import Session
-from app.models import Excersice
-from app.models import Condition, ExcersiceCondition
-from app.models import Goal
+
+from app.models import Condition, Excersice, ExcersiceCondition, Goal
+
 
 class ExcersiceService:
     def list_excersices(
         self,
         db: Session,
+        name: Optional[str] = None,
         muscle_group: Optional[str] = None,
         pattern: Optional[str] = None,
         level: Optional[str] = None,
@@ -15,6 +17,9 @@ class ExcersiceService:
         exclude_condition_codes: Optional[List[str]] = None,
     ) -> List[Excersice]:
         query = db.query(Excersice)
+
+        if name:
+            query = query.filter(Excersice.name.ilike(f"%{name}%"))
 
         if muscle_group:
             query = query.filter(Excersice.muscle_group == muscle_group)

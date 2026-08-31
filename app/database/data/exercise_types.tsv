@@ -1,0 +1,8 @@
+code	name_en	name_es	image_url
+ET001	STRENGTH	Fuerza	https://cdn.exercisedb.dev/exercisetypes/strength.webp
+ET002	CARDIO	Cardio	https://cdn.exercisedb.dev/exercisetypes/cardio.webp
+ET003	PLYOMETRICS	Pliometría	https://cdn.exercisedb.dev/exercisetypes/plyometrics.webp
+ET004	STRETCHING	Estiramiento	https://cdn.exercisedb.dev/exercisetypes/stretching.webp
+ET005	WEIGHTLIFTING	Levantamiento de Pesas	https://cdn.exercisedb.dev/exercisetypes/weightlifting.webp
+ET006	YOGA	Yoga	https://cdn.exercisedb.dev/exercisetypes/yoga.webp
+ET007	AEROBIC	Aeróbico	https://cdn.exercisedb.dev/exercisetypes/aerobic.webp

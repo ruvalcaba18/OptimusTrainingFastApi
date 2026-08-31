@@ -1,6 +1,9 @@
-from sqlalchemy import Column, Text, String, Integer
-from typing import final 
-from app.database import Base 
+from typing import final
+
+from sqlalchemy import Column, Integer, String, Text
+
+from app.database import Base
+
 
 @final
 class EverydayItem(Base):

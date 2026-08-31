@@ -3,19 +3,19 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
-from app.core.cache import cache_get, cache_set, cache_delete, make_key
-from app.database import get_db
 from app.api.deps import get_current_user
-from app.models import User
 from app.controllers.competitions.competition_controller import competition_controller
+from app.core.cache import cache_delete, cache_get, cache_set, make_key
+from app.database import get_db
+from app.models import User
 from app.schemas.competitions import (
     CompetitionCreate,
-    CompetitionUpdate,
-    CompetitionResponse,
-    JoinCompetitionRequest,
-    ScoreUpdateRequest,
     CompetitionParticipantResponse,
+    CompetitionResponse,
+    CompetitionUpdate,
+    JoinCompetitionRequest,
     RankingResponse,
+    ScoreUpdateRequest,
 )
 
 router = APIRouter()

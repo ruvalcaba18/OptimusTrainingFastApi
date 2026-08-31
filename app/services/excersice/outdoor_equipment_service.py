@@ -1,6 +1,9 @@
 from typing import List, final
+
 from sqlalchemy.orm import Session
+
 from app.models.excersice.outdoor_equipment import OutdoorEquipmentModel
+
 
 @final
 class OutdoorEquipmentService:

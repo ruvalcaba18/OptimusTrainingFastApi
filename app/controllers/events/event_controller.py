@@ -1,25 +1,26 @@
 from typing import Optional
+
 from sqlalchemy.orm import Session
 
-from app.models import User
-from app.services import event_service
-from app.schemas.events import (
-    EventCreate,
-    EventUpdate,
-    EventResponse,
-    JoinEventRequest,
-    LeaveEventRequest,
-    EventParticipantResponse,
-)
 from app.controllers.events.exceptions import (
-    EventNotFoundError,
+    AlreadyJoinedEventError,
     EventCancelledError,
     EventFullError,
-    AlreadyJoinedEventError,
+    EventNotFoundError,
     NotJoinedEventError,
 )
-from app.core.exceptions import ForbiddenError
 from app.core.error_handlers import handle_controller_errors
+from app.core.exceptions import ForbiddenError
+from app.models import User
+from app.schemas.events import (
+    EventCreate,
+    EventParticipantResponse,
+    EventResponse,
+    EventUpdate,
+    JoinEventRequest,
+    LeaveEventRequest,
+)
+from app.services import event_service
 
 
 class EventController:

@@ -6,12 +6,17 @@ from typing import List, Optional
 from sqlalchemy import func as sa_func
 from sqlalchemy.orm import Session
 
-from app.models import Enterprise, EnterpriseCode, EnterpriseMember
-from app.models import ActiveBreakSession, ActiveBreakLog
+from app.models import (
+    ActiveBreakLog,
+    ActiveBreakSession,
+    Enterprise,
+    EnterpriseCode,
+    EnterpriseMember,
+)
 from app.schemas.enterprise import (
-    EnterpriseCreate,
     ActiveBreakCreate,
     ActiveBreakUpdate,
+    EnterpriseCreate,
 )
 
 

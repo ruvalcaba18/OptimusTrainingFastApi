@@ -1,5 +1,7 @@
+from typing import List, Union, final
+
 from pydantic import BaseModel, field_validator
-from typing import List, final, Union
+
 
 @final
 class EquipmentCategoryItem(BaseModel):

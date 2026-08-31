@@ -1,7 +1,10 @@
 from datetime import datetime
 from typing import Optional
+
 from pydantic import BaseModel, Field
+
 from .coach_enums import BookingStatus, SessionType
+
 
 class BookingCreate(BaseModel):
     coach_id: int = Field(..., description="ID del perfil de coach")

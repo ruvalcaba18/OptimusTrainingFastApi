@@ -1,8 +1,11 @@
-from sqlalchemy import Column, Integer, ForeignKey, Date, Enum, Boolean, DateTime
-from sqlalchemy.orm import relationship
 from typing import final
+
+from sqlalchemy import Boolean, Column, Date, DateTime, Enum, ForeignKey, Integer
+from sqlalchemy.orm import relationship
+
 from app.database import Base
 from app.models.Enums.WorkoutStatus import WorkoutStatus
+
 
 @final
 class DailyWorkout(Base):

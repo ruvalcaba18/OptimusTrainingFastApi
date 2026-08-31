@@ -1,8 +1,16 @@
 from fastapi import APIRouter
 
 from app.api.v1.routes import (
-    users, auth, social_auth, enterprise, coaches, events,
-    competitions, training, excersices, routines
+    auth,
+    coaches,
+    competitions,
+    enterprise,
+    events,
+    excersices,
+    routines,
+    social_auth,
+    training,
+    users,
 )
 
 api_router = APIRouter()

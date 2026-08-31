@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 from app.core.cache import cache_service
 from app.core.config import settings
 

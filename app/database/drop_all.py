@@ -1,6 +1,8 @@
-from app.database import engine, Base
 import sqlalchemy as sa
-from app.models import * 
+
+from app.database import Base, engine
+from app.models import *
+
 
 def drop_everything():
     

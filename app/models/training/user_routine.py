@@ -1,8 +1,11 @@
-from sqlalchemy import Column, Integer, ForeignKey, String, DateTime, JSON
+from typing import final
+
+from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from typing import final
+
 from app.database import Base
+
 
 @final
 class UserRoutine(Base):

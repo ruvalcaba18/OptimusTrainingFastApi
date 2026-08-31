@@ -1,19 +1,20 @@
 from typing import List
+
 from sqlalchemy.orm import Session
+
+from app.core.error_handlers import handle_controller_errors
+from app.core.exceptions import BadRequestError, ForbiddenError, NotFoundError
 from app.models import User
-from app.services import training_service
-from app.services import coach_service
 from app.schemas.training import (
-    TrainingPlanCreate,
-    TrainingPlanResponse,
+    CoachAthleteResponse,
     DailyWorkoutCreate,
     DailyWorkoutResponse,
     ExerciseDetailCreate,
     PlanStatus,
-    CoachAthleteResponse,
+    TrainingPlanCreate,
+    TrainingPlanResponse,
 )
-from app.core.exceptions import NotFoundError, ForbiddenError, BadRequestError
-from app.core.error_handlers import handle_controller_errors
+from app.services import coach_service, training_service
 
 
 class TrainingController:

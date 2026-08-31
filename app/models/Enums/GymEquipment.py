@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import final
 
+
 @final
 class GymEquipment(str, Enum):
     DUMBBELLS = "Mancuernas de Peso Libre"

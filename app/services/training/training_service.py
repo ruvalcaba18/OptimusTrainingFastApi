@@ -1,15 +1,24 @@
-from datetime import datetime, date, timedelta
+from datetime import date, datetime, timedelta
 from typing import List, Optional
-from sqlalchemy.orm import Session
+
 from sqlalchemy import func
-from app.models import CoachAthlete
-from app.models import TrainingPlan
-from app.models import DailyWorkout
-from app.models import ExerciseDetail
+from sqlalchemy.orm import Session
+
+from app.models import (
+    CoachAthlete,
+    CoachProfile,
+    DailyWorkout,
+    ExerciseDetail,
+    TrainingPlan,
+)
 from app.models.Enums.PlanStatus import PlanStatus
 from app.models.Enums.WorkoutStatus import WorkoutStatus
-from app.models import CoachProfile
-from app.schemas.training import TrainingPlanCreate, DailyWorkoutCreate, ExerciseDetailCreate
+from app.schemas.training import (
+    DailyWorkoutCreate,
+    ExerciseDetailCreate,
+    TrainingPlanCreate,
+)
+
 
 class TrainingService:
                                                                             

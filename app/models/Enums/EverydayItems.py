@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import final
 
+
 @final
 class EverydayItems(str, Enum):
     CHAIR = "Silla Estable / Banco de Comedor"

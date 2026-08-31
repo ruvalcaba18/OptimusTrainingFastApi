@@ -1,8 +1,13 @@
-from typing import final, List
+from typing import List, final
+
 from sqlalchemy.orm import Session
-from app.services.excersice.workout_hybird_places_service import workout_hybrid_places_service
+
 from app.core.error_handlers import handle_controller_errors
 from app.models.excersice.workout_hybrid_places import WorkoutHybridPlaces
+from app.services.excersice.workout_hybird_places_service import (
+   workout_hybrid_places_service,
+)
+
 
 @final
 class WorkOutHybridPlacesController:

@@ -1,13 +1,16 @@
 import json
 import logging
+from typing import Any, List, Optional
+
 import redis.asyncio as aioredis
-from typing import Any, Optional, List
+
+from app.core.cache.exceptions import CacheSerializationError, RedisConnectionError
 from app.core.config import settings
-from app.core.cache.exceptions import RedisConnectionError, CacheSerializationError
 
 logger = logging.getLogger("optimus")
 
 from enum import IntEnum
+
 
 class CacheTTL(IntEnum):
     

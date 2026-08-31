@@ -1,8 +1,10 @@
 from typing import List, Optional
+
 from sqlalchemy.orm import Session
-from app.services import method_service
-from app.models import Method
+
 from app.core.error_handlers import handle_controller_errors
+from app.models import Method
+from app.services import method_service
 
 
 class MethodController:

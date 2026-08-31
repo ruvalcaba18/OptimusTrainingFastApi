@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import final
- 
+
+
 @final
 class ExcersicePattern(str, Enum):
     DOMINANTE_RODILLA = "Dominante Rodilla"

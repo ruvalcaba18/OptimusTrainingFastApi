@@ -1,6 +1,6 @@
 from app.controllers.auth.exceptions.auth_exceptions import (
-    InvalidCredentialsError,
     InactiveAccountError,
+    InvalidCredentialsError,
     InvalidRefreshTokenError,
     InvalidResetTokenError,
 )

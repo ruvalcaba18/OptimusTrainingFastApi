@@ -1,7 +1,7 @@
 from app.core.exceptions import (
-    UnauthorizedError,
-    ForbiddenError,
     BadRequestError,
+    ForbiddenError,
+    UnauthorizedError,
 )
 
 

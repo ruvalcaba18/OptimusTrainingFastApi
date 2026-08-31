@@ -1,8 +1,8 @@
 import httpx
-from jose import jwt, JWTError
 from fastapi import HTTPException, status
-from app.core.config import settings
+from jose import JWTError, jwt
 
+from app.core.config import settings
 
 APPLE_KEYS_URL = "https://appleid.apple.com/auth/keys"
 APPLE_ISSUER = "https://appleid.apple.com"

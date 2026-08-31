@@ -3,19 +3,19 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
-from app.database import get_db
 from app.api.deps import get_current_user
-from app.models import User
 from app.controllers.events.event_controller import event_controller
+from app.database import get_db
+from app.models import User
+from app.schemas.common.response import MessageResponse
 from app.schemas.events import (
     EventCreate,
-    EventUpdate,
+    EventParticipantResponse,
     EventResponse,
+    EventUpdate,
     JoinEventRequest,
     LeaveEventRequest,
-    EventParticipantResponse,
 )
-from app.schemas.common.response import MessageResponse
 
 router = APIRouter()
 

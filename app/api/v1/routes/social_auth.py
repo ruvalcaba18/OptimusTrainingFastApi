@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from app.controllers.auth.social_auth_controller import social_auth_controller
 from app.database import get_db
 from app.schemas.users import Token
 from app.schemas.users.social_auth_request import SocialAuthRequest
-from app.controllers.auth.social_auth_controller import social_auth_controller
 
 router = APIRouter()
 

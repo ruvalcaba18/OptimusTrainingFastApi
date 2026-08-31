@@ -1,6 +1,9 @@
-from pydantic import BaseModel
 from typing import List, final
+
+from pydantic import BaseModel
+
 from .equipment_category_item_schema import EquipmentCategoryItem
+
 
 @final
 class EquipmentCategoriesResponse(BaseModel):

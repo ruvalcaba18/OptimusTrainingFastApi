@@ -1,6 +1,8 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
-from sqlalchemy.sql import func 
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.sql import func
+
 from app.database import Base
+
 
 class PromptLog(Base):
     __tablename__ = "prompt_logs"

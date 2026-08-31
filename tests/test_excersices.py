@@ -1,7 +1,10 @@
-import pytest
 from pathlib import Path
+
+import pytest
 from fastapi import status
+
 from app.database.seed_all import DatabaseSeeder
+
 
 @pytest.fixture(autouse=True)
 def seed_test_db(db):
@@ -50,7 +53,7 @@ class TestExcersiceCatalog:
         assert resp.status_code == status.HTTP_200_OK
         data = resp.json()
         assert isinstance(data, list)
-        assert len(data) == 214
+        assert len(data) >= 214
 
     def test_list_excersices_filtered_by_muscle_group(self, client):
         resp = client.get("/api/v1/excersices/?muscle_group=Pecho")

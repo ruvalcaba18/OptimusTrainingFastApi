@@ -1,41 +1,61 @@
 from typing import List, Optional
+
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
-from app.api import deps
-from app.controllers.excersices.level_controller import level_controller
-from app.controllers.excersices.goal_controller import goal_controller
-from app.controllers.excersices.condition_controller import condition_controller
-from app.controllers.excersices.method_controller import method_controller
-from app.controllers.excersices.excersice_controller import excersice_controller
-from app.controllers.excersices.equipment_controller import equipment_controller
-from app.controllers.excersices.session_duration_controller import session_duration_controller
-from app.controllers.excersices.workout_place_controller import workout_place_controller
-from app.controllers.excersices.everyday_item_controller import everyday_item_controller
-from app.controllers.excersices.workout_hybrid_places_controller import workou_hybrid_places_controller
-from app.controllers.excersices.gym_equipment_controller import gym_equipment_controller
-from app.controllers.excersices.home_equipment_controller import home_equipment_controller
-from app.controllers.excersices.outdoor_equipment_controller import outdoor_equipment_controller
-from app.controllers.excersices.leisure_activity_controller import leisure_activity_controller
-from app.schemas.training.leisure_activity_schema import LeisureActivitySchema
-from app.controllers.excersices.health_question_controller import health_question_controller
-from app.schemas.training.health_question_schema import HealthQuestionSchema
 
+from app.api import deps
+from app.controllers.excersices.condition_controller import condition_controller
+from app.controllers.excersices.equipment_controller import equipment_controller
+from app.controllers.excersices.everyday_item_controller import everyday_item_controller
+from app.controllers.excersices.excersice_controller import excersice_controller
+from app.controllers.excersices.goal_controller import goal_controller
+from app.controllers.excersices.gym_equipment_controller import gym_equipment_controller
+from app.controllers.excersices.health_question_controller import (
+    health_question_controller,
+)
+from app.controllers.excersices.home_equipment_controller import (
+    home_equipment_controller,
+)
+from app.controllers.excersices.leisure_activity_controller import (
+    leisure_activity_controller,
+)
+from app.controllers.excersices.level_controller import level_controller
+from app.controllers.excersices.method_controller import method_controller
+from app.controllers.excersices.outdoor_equipment_controller import (
+    outdoor_equipment_controller,
+)
+from app.controllers.excersices.session_duration_controller import (
+    session_duration_controller,
+)
+from app.controllers.excersices.workout_hybrid_places_controller import (
+    workou_hybrid_places_controller,
+)
+from app.controllers.excersices.workout_place_controller import workout_place_controller
+from app.models import BodyPart, Equipment, ExerciseType, Muscle
+from app.schemas.exercises import (
+    BodyPartResponse,
+    EquipmentCatalogResponse,
+    ExerciseTypeResponse,
+    MuscleResponse,
+)
 from app.schemas.training import (
-    LevelSchema,
-    GoalSchema,
     ConditionSchema,
-    MethodSchema,
-    ExcersiceResponse,
-    EquipmentSchema,
     EquipmentCategoriesResponse,
-    SessionDurationSchema, 
-    WorkoutPlacementSchema,
+    EquipmentSchema,
     EveryDayItemSchema,
-    WorkOutHybridPalcesSchema,
+    ExcersiceResponse,
+    GoalSchema,
     GymEquipmentSchema,
     HomeEquipmentSchema,
-    OutdoorEquipmentSchema
+    LevelSchema,
+    MethodSchema,
+    OutdoorEquipmentSchema,
+    SessionDurationSchema,
+    WorkOutHybridPalcesSchema,
+    WorkoutPlacementSchema,
 )
+from app.schemas.training.health_question_schema import HealthQuestionSchema
+from app.schemas.training.leisure_activity_schema import LeisureActivitySchema
 
 router = APIRouter()
 
@@ -65,12 +85,13 @@ def get_methods(
     return method_controller.list_methods(db, category=category)
 
 @router.get(
-"/", 
-response_model=List[ExcersiceResponse],
-summary="Listar y filtrar ejercicios (motor de decisión)"
+    "",
+    response_model=List[ExcersiceResponse],
+    summary="Listar y buscar ejercicios por nombre, grupo muscular o patología"
 )
 def get_excersices(
-    muscle_group: Optional[str] = Query(None, description="Filtrar por grupo muscular (ej: 'Pierna')"),
+    name: Optional[str] = Query(None, description="Buscar por nombre o término (ej: 'Bench Press', 'Push-up')"),
+    muscle_group: Optional[str] = Query(None, description="Filtrar por grupo muscular (ej: 'Pecho', 'Pierna')"),
     pattern: Optional[str] = Query(None, description="Filtrar por patrón de movimiento"),
     level: Optional[str] = Query(None, description="Filtrar por nivel sugerido (ej: 'Intermedio')"),
     goal_code: Optional[str] = Query(None, description="Filtrar por código de objetivo (ej: 'PG')"),
@@ -80,6 +101,7 @@ def get_excersices(
    
     return excersice_controller.list_excersices(
         db,
+        name=name,
         muscle_group=muscle_group,
         pattern=pattern,
         level=level,
@@ -182,4 +204,42 @@ def get_leisure_activities(db: Session = Depends(deps.get_db)) -> List[LeisureAc
 )
 def get_health_questions(db: Session = Depends(deps.get_db)) -> List[HealthQuestionSchema]:
     return health_question_controller.list_health_questions(db)
+
+
+# MARK: - Anatomical & ExerciseDB Catalogs
+
+@router.get(
+    "/body-parts",
+    response_model=List[BodyPartResponse],
+    summary="Listar partes del cuerpo con imágenes CDN (Español / Inglés)"
+)
+def get_body_parts(db: Session = Depends(deps.get_db)) -> List[BodyPartResponse]:
+    return db.query(BodyPart).order_by(BodyPart.id).all()
+
+
+@router.get(
+    "/exercise-types",
+    response_model=List[ExerciseTypeResponse],
+    summary="Listar tipos/disciplinas de ejercicio con imágenes CDN (Español / Inglés)"
+)
+def get_exercise_types(db: Session = Depends(deps.get_db)) -> List[ExerciseTypeResponse]:
+    return db.query(ExerciseType).order_by(ExerciseType.id).all()
+
+
+@router.get(
+    "/muscles",
+    response_model=List[MuscleResponse],
+    summary="Listar músculos anatómicos (Latín / Español)"
+)
+def get_muscles(db: Session = Depends(deps.get_db)) -> List[MuscleResponse]:
+    return db.query(Muscle).order_by(Muscle.id).all()
+
+
+@router.get(
+    "/equipments/catalog",
+    response_model=List[EquipmentCatalogResponse],
+    summary="Listar catálogo completo de equipamiento con imágenes CDN (Español / Inglés)"
+)
+def get_equipments_catalog(db: Session = Depends(deps.get_db)) -> List[EquipmentCatalogResponse]:
+    return db.query(Equipment).filter(Equipment.image_url.isnot(None)).order_by(Equipment.id).all()
      

@@ -1,8 +1,11 @@
 from typing import List, final
+
 from sqlalchemy.orm import Session
-from app.services.excersice.session_duration_service import session_duration_service
-from app.models.excersice.session_duration import SessionDuration
+
 from app.core.error_handlers import handle_controller_errors
+from app.models.excersice.session_duration import SessionDuration
+from app.services.excersice.session_duration_service import session_duration_service
+
 
 @final 
 class SessionDurationController:

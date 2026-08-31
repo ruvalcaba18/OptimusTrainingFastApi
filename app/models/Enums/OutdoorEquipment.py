@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import final
 
+
 @final
 class OutdoorEquipment(str, Enum):
     TRACK = "Pista Atlética"

@@ -1,9 +1,12 @@
-from sqlalchemy import Column, Integer, ForeignKey, DateTime, Enum
+from typing import final
+
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from typing import final
+
 from app.database import Base
 from app.models.Enums.PlanStatus import PlanStatus
+
 
 @final
 class TrainingPlan(Base):

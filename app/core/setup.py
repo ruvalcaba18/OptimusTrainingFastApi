@@ -1,22 +1,23 @@
 import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
 from app.api.v1.router import api_router
+from app.api.v1.routes.health import router as health_router
+from app.core.cache import cache_service
 from app.core.config import settings
 from app.core.error_handlers import register_exception_handlers
 from app.core.logging_config import setup_logging
 from app.core.middleware import MiddlewareConfigurator
-from app.core.cache import cache_service
-from app.database.session.session import engine, Base, SessionLocal
-from app.models import Goal
-from app.database.seed_all import DatabaseSeeder
 from app.core.rate_limiter import limiter
-from app.api.v1.routes.health import router as health_router
+from app.database.seed_all import DatabaseSeeder
+from app.database.session.session import Base, SessionLocal, engine
+from app.models import Goal
 
 logger = logging.getLogger("optimus")
 

@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, event
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
+
 from app.core.config import settings
 
 _is_sqlite = settings.SQLALCHEMY_DATABASE_URI.startswith("sqlite")

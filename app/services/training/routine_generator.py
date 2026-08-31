@@ -1,10 +1,13 @@
 import random
-from typing import Dict, Any, List, Optional, final
+from typing import Any, Dict, List, Optional, final
+
 from sqlalchemy.orm import Session
-from app.models import User, UserRoutine, ProgrammingMatrix
+
+from app.models import ProgrammingMatrix, User, UserRoutine
 from app.models.Enums.UserTier import UserTier
-from app.services.training.exercise_selector import exercise_selector
 from app.schemas.training.user_routine_schema import UserRoutineUpdateSchema
+from app.services.training.exercise_selector import exercise_selector
+
 
 @final
 class RoutineGenerator:
@@ -27,7 +30,7 @@ class RoutineGenerator:
 
         selected_sample = RoutineGenerator._sample_exercises(user.id, viable_exercises, sample_size, day)
 
-        routine_exercises = RoutineGenerator._format_selected_exercises(selected_sample)
+        routine_exercises = RoutineGenerator._format_selected_exercises(selected_sample, matrix_reps=rules["reps"])
 
         return {
             "goal": user.goal.name if user.goal else "N/A",
@@ -92,17 +95,43 @@ class RoutineGenerator:
         return random.sample(exercises, count)
 
     @staticmethod
-    def _format_selected_exercises(selected_sample: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _format_selected_exercises(selected_sample: List[Dict[str, Any]], matrix_reps: str = "12 reps") -> List[Dict[str, Any]]:
         routine_exercises = []
+        
+        # Ejercicios continuos por tiempo o distancia
+        cardio_distance_exercises = {"Caminar", "Trotar", "Correr", "Sprint"}
+        cardio_time_exercises = {"Saltar la cuerda", "Jumping Jacks", "High Knees", "Butt Kicks", "Mountain Climbers", "Fast Feet"}
+        isometric_exercises = {"Plancha Rodillas", "Plank Shoulder Taps", "Hollow Body Hold", "Superman Estático", "Boat Pose"}
+        
         for item in selected_sample:
             ex = item["exercise"]
+            ex_name = ex.name
+            
+            # Determinar tipo de prescripción
+            if ex_name in cardio_distance_exercises:
+                presc_type = "DISTANCE_TIME"
+                custom_reps = "20-30 min / 3-5 km" if ex_name == "Correr" else ("15-20 min / 2-3 km" if ex_name == "Trotar" else "30-45 min")
+            elif ex_name in cardio_time_exercises:
+                presc_type = "TIME"
+                custom_reps = "45-60 seg"
+            elif ex_name in isometric_exercises or "Plancha" in ex_name or "Hold" in ex_name:
+                presc_type = "ISOMETRIC"
+                custom_reps = "30-45 seg"
+            else:
+                presc_type = "REPS"
+                custom_reps = matrix_reps
+
             routine_exercises.append({
                 "id": ex.id,
                 "code": ex.code,
+                "exercise_id": getattr(ex, "exercise_id", None),
                 "name": ex.name,
+                "image_url": getattr(ex, "image_url", None),
                 "muscle_group": ex.muscle_group,
                 "pattern": ex.pattern.value if hasattr(ex.pattern, "value") else str(ex.pattern),
                 "complexity": ex.complexity,
+                "prescription_type": presc_type,
+                "reps": custom_reps,
                 "caution_warnings": item["caution_warnings"],
                 "has_caution": item["has_caution"]
             })

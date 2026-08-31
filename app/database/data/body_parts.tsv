@@ -1,0 +1,19 @@
+code	name_en	name_es	image_url
+BP001	BACK	Espalda	https://cdn.exercisedb.dev/bodyparts/back.webp
+BP002	CALVES	Pantorrillas	https://cdn.exercisedb.dev/bodyparts/calves.webp
+BP003	CHEST	Pecho	https://cdn.exercisedb.dev/bodyparts/chest.webp
+BP004	FOREARMS	Antebrazos	https://cdn.exercisedb.dev/bodyparts/forearms.webp
+BP005	HIPS	Caderas	https://cdn.exercisedb.dev/bodyparts/hips.webp
+BP006	NECK	Cuello	https://cdn.exercisedb.dev/bodyparts/neck.webp
+BP007	SHOULDERS	Hombros	https://cdn.exercisedb.dev/bodyparts/shoulders.webp
+BP008	THIGHS	Muslos	https://cdn.exercisedb.dev/bodyparts/thighs.webp
+BP009	WAIST	Cintura / Core	https://cdn.exercisedb.dev/bodyparts/waist.webp
+BP010	HANDS	Manos	https://cdn.exercisedb.dev/bodyparts/hands.webp
+BP011	FEET	Pies	https://cdn.exercisedb.dev/bodyparts/feet.webp
+BP012	FACE	Rostro	https://cdn.exercisedb.dev/bodyparts/face.webp
+BP013	FULL BODY	Cuerpo Completo	https://cdn.exercisedb.dev/bodyparts/fullbody.webp
+BP014	BICEPS	Bíceps	https://cdn.exercisedb.dev/bodyparts/biceps.webp
+BP015	UPPER ARMS	Brazos Superiores	https://cdn.exercisedb.dev/bodyparts/biceps.webp
+BP016	TRICEPS	Tríceps	https://cdn.exercisedb.dev/bodyparts/triceps.webp
+BP017	HAMSTRINGS	Isquiotibiales	https://cdn.exercisedb.dev/bodyparts/hamstrings.webp
+BP018	QUADRICEPS	Cuádriceps	https://cdn.exercisedb.dev/bodyparts/quadriceps.webp

@@ -1,26 +1,26 @@
 from datetime import timedelta
 from typing import final
+
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
 
-from app.models import User
-from app.schemas.users import (
-    UserCreate, 
-    UserUpdate, 
-    UserResponse, 
-    UserRegistrationResponse, 
-    Token,
+from app.controllers.users.exceptions import (
+    UserAlreadyExistsError,
+    UserNotFoundError,
 )
-from app.services import user_service
-from app.services import save_profile_picture, delete_profile_picture
 from app.core import security
 from app.core.config import settings
-from app.controllers.users.exceptions import (
-    UserNotFoundError,
-    UserAlreadyExistsError,
-)
-from app.core.exceptions import ForbiddenError
 from app.core.error_handlers import handle_controller_errors
+from app.core.exceptions import ForbiddenError
+from app.models import User
+from app.schemas.users import (
+    Token,
+    UserCreate,
+    UserRegistrationResponse,
+    UserResponse,
+    UserUpdate,
+)
+from app.services import delete_profile_picture, save_profile_picture, user_service
 
 
 @final

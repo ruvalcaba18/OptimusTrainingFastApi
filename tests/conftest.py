@@ -3,9 +3,9 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.main import app
-from app.database import Base, get_db
 from app.core.security import get_password_hash
+from app.database import Base, get_db
+from app.main import app
 from app.models import User
 
 TEST_DATABASE_URL = "sqlite:///:memory:"
@@ -28,7 +28,8 @@ def db():
     session = TestingSessionLocal(bind=connection)
     yield session
     session.close()
-    transaction.rollback()
+    if transaction.is_active:
+        transaction.rollback()
     connection.close()
 
 

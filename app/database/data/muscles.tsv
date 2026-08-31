@@ -1,0 +1,46 @@
+code	name	common_name	body_part
+MUS001	ADDUCTOR LONGUS	Aductor Largo	Lower Body
+MUS002	ADDUCTOR BREVIS	Aductor Corto	Lower Body
+MUS003	ADDUCTOR MAGNUS	Aductor Mayor	Lower Body
+MUS004	BICEPS BRACHII	Bíceps Braquial	Upper Body
+MUS005	BRACHIALIS	Braquial Anterior	Upper Body
+MUS006	BRACHIORADIALIS	Braquiorradial	Upper Body
+MUS007	DEEP HIP EXTERNAL ROTATORS	Rotadores Externos Cadera	Lower Body
+MUS008	ANTERIOR DELTOID	Deltoides Anterior	Upper Body
+MUS009	LATERAL DELTOID	Deltoides Lateral	Upper Body
+MUS010	POSTERIOR DELTOID	Deltoides Posterior	Upper Body
+MUS011	ERECTOR SPINAE	Erectores Espinales	Core
+MUS012	GASTROCNEMIUS	Gemelos / Gastrocnemio	Lower Body
+MUS013	GLUTEUS MAXIMUS	Glúteo Mayor	Lower Body
+MUS014	GLUTEUS MEDIUS	Glúteo Medio	Lower Body
+MUS015	GLUTEUS MINIMUS	Glúteo Menor	Lower Body
+MUS016	GRACILIS	Grácil	Lower Body
+MUS017	HAMSTRINGS	Isquiosurales / Femorales	Lower Body
+MUS018	ILIOPSOAS	Psoas Ilíaco	Core
+MUS019	INFRASPINATUS	Infraespinoso	Upper Body
+MUS020	LATISSIMUS DORSI	Dorsal Ancho	Upper Body
+MUS021	LEVATOR SCAPULAE	Elevador de la Escápula	Upper Body
+MUS022	OBLIQUES	Oblicuos	Core
+MUS023	PECTINEUS	Pectíneo	Lower Body
+MUS024	PECTORALIS MAJOR CLAVICULAR HEAD	Pectoral Mayor (Clavicular)	Upper Body
+MUS025	PECTORALIS MAJOR STERNAL HEAD	Pectoral Mayor (Esternal)	Upper Body
+MUS026	POPLITEUS	Poplíteo	Lower Body
+MUS027	QUADRICEPS	Cuádriceps	Lower Body
+MUS028	RECTUS ABDOMINIS	Recto Abdominal	Core
+MUS029	SARTORIUS	Sartorio	Lower Body
+MUS030	SERRATUS ANTERIOR	Serrato Anterior	Core
+MUS031	SOLEUS	Sóleo	Lower Body
+MUS032	SPLENIUS	Esplenio	Upper Body
+MUS033	STERNOCLEIDOMASTOID	Esternocleidomastoideo	Upper Body
+MUS034	SUBSCAPULARIS	Subescapular	Upper Body
+MUS035	TENSOR FASCIAE LATAE	Tensor de la Fascia Lata	Lower Body
+MUS036	TERES MAJOR	Redondo Mayor	Upper Body
+MUS037	TERES MINOR	Redondo Menor	Upper Body
+MUS038	TIBIALIS ANTERIOR	Tibial Anterior	Lower Body
+MUS039	TRANSVERSUS ABDOMINIS	Transverso del Abdomen	Core
+MUS040	TRAPEZIUS LOWER FIBERS	Trapecio Inferior	Upper Body
+MUS041	TRAPEZIUS MIDDLE FIBERS	Trapecio Medio	Upper Body
+MUS042	TRAPEZIUS UPPER FIBERS	Trapecio Superior	Upper Body
+MUS043	TRICEPS BRACHII	Tríceps Braquial	Upper Body
+MUS044	WRIST EXTENSORS	Extensores de Muñeca	Upper Body
+MUS045	WRIST FLEXORS	Flexores de Muñeca	Upper Body

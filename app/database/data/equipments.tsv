@@ -1,0 +1,29 @@
+code	name_en	name_es	image_url
+EQ001	ASSISTED	Asistido / Máquina Asistida	https://cdn.exercisedb.dev/equipments/equipment-assisted.webp
+EQ002	BAND	Banda Elástica	https://cdn.exercisedb.dev/equipments/equipment-band.webp
+EQ003	BARBELL	Barra	https://cdn.exercisedb.dev/equipments/equipment-barbell.webp
+EQ004	BATTLING ROPE	Cuerda de Batalla	https://cdn.exercisedb.dev/equipments/equipment-Battling-Rope.webp
+EQ005	BODY WEIGHT	Propio Peso	https://cdn.exercisedb.dev/equipments/equipment-Body-weight.webp
+EQ006	BOSU BALL	Bosu Ball	https://cdn.exercisedb.dev/equipments/equipment-Bosu-ball.webp
+EQ007	CABLE	Polea / Cable	https://cdn.exercisedb.dev/equipments/equipment-Cable-1.webp
+EQ008	DUMBBELL	Mancuernas	https://cdn.exercisedb.dev/equipments/equipment-Dumbbell.webp
+EQ009	EZ BARBELL	Barra Z / EZ	https://cdn.exercisedb.dev/equipments/equipment-EZ-Barbell.webp
+EQ010	HAMMER	Martillo / Maza	https://cdn.exercisedb.dev/equipments/equipment-hammer.webp
+EQ011	KETTLEBELL	Pesa Rusa / Kettlebell	https://cdn.exercisedb.dev/equipments/equipment-Kettlebell.webp
+EQ012	LEVERAGE MACHINE	Máquina de Palanca	https://cdn.exercisedb.dev/equipments/equipment-Leverage-machine.webp
+EQ013	MEDICINE BALL	Balón Medicinal	https://cdn.exercisedb.dev/equipments/equipment-Medicine-Ball.webp
+EQ014	OLYMPIC BARBELL	Barra Olímpica	https://cdn.exercisedb.dev/equipments/equipment-Olympic-barbell.webp
+EQ015	POWER SLED	Trineo de Empuje	https://cdn.exercisedb.dev/equipments/equipment-Power-Sled.webp
+EQ016	RESISTANCE BAND	Banda de Resistencia	https://cdn.exercisedb.dev/equipments/equipment-Resistance-Band.webp
+EQ017	ROLL	Rodillo de Masaje / Foam Roller	https://cdn.exercisedb.dev/equipments/equipment-Massage-Roller.webp
+EQ018	ROLLBALL	Pelota de Masaje	https://cdn.exercisedb.dev/equipments/equipment-Roll-Ball.webp
+EQ019	ROPE	Cuerda para Saltar	https://cdn.exercisedb.dev/equipments/equipment-Jump-Rope.webp
+EQ020	SLED MACHINE	Máquina de Trineo	https://cdn.exercisedb.dev/equipments/equipment-Sled-machine.webp
+EQ021	SMITH MACHINE	Máquina Smith	https://cdn.exercisedb.dev/equipments/equipment-Smith-machine.webp
+EQ022	STABILITY BALL	Pelota de Estabilidad / Fitball	https://cdn.exercisedb.dev/equipments/equipment-Stability-ball.webp
+EQ023	STICK	Pica / Bastón	https://cdn.exercisedb.dev/equipments/equipment-Stick.webp
+EQ024	SUSPENSION	Suspensión / TRX	https://cdn.exercisedb.dev/equipments/equipment-Suspension.webp
+EQ025	TRAP BAR	Barra Hexagonal / Trap Bar	https://cdn.exercisedb.dev/equipments/equipment-Trap-bar.webp
+EQ026	VIBRATE PLATE	Plataforma Vibratoria	https://cdn.exercisedb.dev/equipments/equipment-Vibrate-Plate.webp
+EQ027	WEIGHTED	Lastrado / Con Peso	https://cdn.exercisedb.dev/equipments/equipment-Weighted.webp
+EQ028	WHEEL ROLLER	Rueda Abdominal	https://cdn.exercisedb.dev/equipments/equipment-Wheel-Roller.webp

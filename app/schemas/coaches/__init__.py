@@ -1,16 +1,16 @@
-from .coach_enums import CoachSpecialty, BookingStatus, SessionType
+from .booking_schemas import (
+    BookingCreate,
+    BookingResponse,
+    BookingStatusUpdate,
+    ReviewCreate,
+)
+from .coach_enums import BookingStatus, CoachSpecialty, SessionType
 from .coach_schemas import (
     CoachBase,
     CoachCreate,
-    CoachUpdate,
-    CoachResponse,
     CoachNearbyResponse,
-)
-from .booking_schemas import (
-    BookingCreate,
-    BookingStatusUpdate,
-    BookingResponse,
-    ReviewCreate,
+    CoachResponse,
+    CoachUpdate,
 )
 
 __all__ = [

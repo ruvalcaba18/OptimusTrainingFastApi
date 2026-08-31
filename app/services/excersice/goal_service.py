@@ -1,6 +1,9 @@
 from typing import List
+
 from sqlalchemy.orm import Session
+
 from app.models import Goal
+
 
 class GoalService:
     def list_goals(self, db: Session) -> List[Goal]:

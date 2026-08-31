@@ -1,7 +1,8 @@
-from datetime import datetime, date
-from typing import Optional, List
-from pydantic import BaseModel, Field
+from datetime import date, datetime
 from enum import Enum
+from typing import List, Optional
+
+from pydantic import BaseModel, Field
 
 
 class PlanStatus(str, Enum):
@@ -45,13 +46,13 @@ class DailyWorkoutBase(BaseModel):
 
 
 class DailyWorkoutCreate(DailyWorkoutBase):
-    exercises: List[ExerciseDetailCreate] = Field(..., max_items=8)
+    exercises: List[ExerciseDetailCreate] = Field(..., max_length=8)
 
 
 class DailyWorkoutUpdate(BaseModel):
     status: Optional[WorkoutStatus] = None
     coach_validated: Optional[bool] = None
-    exercises: Optional[List[ExerciseDetailCreate]] = Field(None, max_items=8)
+    exercises: Optional[List[ExerciseDetailCreate]] = Field(None, max_length=8)
 
 
 class DailyWorkoutResponse(DailyWorkoutBase):

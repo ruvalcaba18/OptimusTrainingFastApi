@@ -1,8 +1,11 @@
-from sqlalchemy import Column, Integer, String, Enum
+from typing import Optional, final
+
+from sqlalchemy import Column, Enum, Integer, String
 from sqlalchemy.orm import relationship
-from typing import final, Optional
-from app.models.Enums.ExcersicePattern import ExcersicePattern
+
 from app.database import Base
+from app.models.Enums.ExcersicePattern import ExcersicePattern
+
 
 @final
 class Excersice(Base):
@@ -10,7 +13,9 @@ class Excersice(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     code = Column(String(50), unique=True, nullable=False, index=True)
+    exercise_id = Column(String(100), unique=True, nullable=True, index=True)
     name = Column(String(200), nullable=False)
+    image_url = Column(String(500), nullable=True)
     muscle_group = Column(String(100), nullable=False)
     pattern = Column(Enum(ExcersicePattern, name="excersice_pattern"), nullable=False)
     location = Column(String(100), nullable=False)
@@ -21,6 +26,7 @@ class Excersice(Base):
     
     conditions_association = relationship("ExcersiceCondition", back_populates="excersice", cascade="all, delete-orphan")
     equipment_association = relationship("ExcersiceEquipment", back_populates="excersice", cascade="all, delete-orphan")
+    muscle_associations = relationship("ExcersiceMuscle", back_populates="excersice", cascade="all, delete-orphan")
     
     goals = relationship("Goal", secondary="excersice_goal", back_populates="excersices")
 

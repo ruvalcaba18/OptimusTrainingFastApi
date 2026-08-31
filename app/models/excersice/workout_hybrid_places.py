@@ -1,6 +1,9 @@
+from typing import final
+
 from sqlalchemy import Column, Integer, String, Text
-from typing import final 
-from app.database import Base 
+
+from app.database import Base
+
 
 @final
 class WorkoutHybridPlaces(Base):

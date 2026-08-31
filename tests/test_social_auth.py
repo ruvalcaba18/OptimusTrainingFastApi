@@ -1,6 +1,6 @@
 from unittest.mock import AsyncMock, patch
-from fastapi import status
 
+from fastapi import status
 
 APPLE_VERIFIED_USER = {
     "email": "apple@test.com",
@@ -73,8 +73,8 @@ class TestSocialAuthApple:
         assert resp.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_apple_deactivated_user_rejected(self, client, db):
-        from app.models import User
         from app.core.security import get_password_hash
+        from app.models import User
         deactivated = User(
             email="deactivated.apple@test.com",
             hashed_password=get_password_hash("x" * 32),
@@ -192,8 +192,8 @@ class TestSocialAuthNameResolution:
                 json={"token": "tok", "first_name": "Body", "last_name": "Priority"},
             )
         assert resp.status_code == status.HTTP_200_OK
-        from app.services import user_service
         from app.database import SessionLocal
+        from app.services import user_service
         with SessionLocal() as s:
             pass
 

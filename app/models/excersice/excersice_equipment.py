@@ -1,7 +1,10 @@
-from sqlalchemy import Column, Integer, ForeignKey, Boolean
-from sqlalchemy.orm import relationship
 from typing import final
+
+from sqlalchemy import Boolean, Column, ForeignKey, Integer
+from sqlalchemy.orm import relationship
+
 from app.database import Base
+
 
 @final
 class ExcersiceEquipment(Base):

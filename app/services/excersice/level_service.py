@@ -1,6 +1,9 @@
 from typing import List
+
 from sqlalchemy.orm import Session
+
 from app.models import Level
+
 
 class LevelService:
     def list_levels(self, db: Session) -> List[Level]:

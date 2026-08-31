@@ -1,5 +1,7 @@
+from typing import List, Optional, final
+
 from pydantic import BaseModel, ConfigDict, field_validator
-from typing import List, final, Optional
+
 
 @final 
 class EveryDayItemSchema(BaseModel):

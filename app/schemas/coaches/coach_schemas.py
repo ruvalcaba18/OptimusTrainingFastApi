@@ -1,7 +1,10 @@
 from datetime import datetime
 from typing import Optional
+
 from pydantic import BaseModel, Field
+
 from .coach_enums import CoachSpecialty
+
 
 class CoachBase(BaseModel):
     bio: Optional[str] = None

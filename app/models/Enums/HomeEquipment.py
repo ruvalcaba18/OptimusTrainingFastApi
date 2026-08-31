@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import final
 
+
 @final
 class HomeEquipment(str, Enum):
     RESISTANCE_BANDS = "Ligas de Resistencia con Agarres"

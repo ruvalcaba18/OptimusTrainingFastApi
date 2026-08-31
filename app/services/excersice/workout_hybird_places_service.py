@@ -1,6 +1,9 @@
 from typing import List, final
-from sqlalchemy.orm import Session 
+
+from sqlalchemy.orm import Session
+
 from app.models.excersice.workout_hybrid_places import WorkoutHybridPlaces
+
 
 @final 
 class WorkoutHybridPlacesService:

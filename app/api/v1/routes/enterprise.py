@@ -3,24 +3,24 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
-from app.core.cache import cache_get, cache_set, cache_delete_pattern, make_key
-from app.database import get_db
 from app.api.deps import get_current_user
-from app.models import User
 from app.controllers.enterprise.enterprise_controller import enterprise_controller
+from app.core.cache import cache_delete_pattern, cache_get, cache_set, make_key
+from app.database import get_db
+from app.models import User
 from app.schemas.enterprise import (
+    ActiveBreakCreate,
+    ActiveBreakLogCreate,
+    ActiveBreakLogResponse,
+    ActiveBreakResponse,
+    ActiveBreakStatsResponse,
+    CodeGenerateRequest,
+    EnterpriseCodeResponse,
     EnterpriseCreate,
+    EnterpriseMemberResponse,
     EnterpriseResponse,
     ValidateCodeRequest,
     ValidateCodeResponse,
-    CodeGenerateRequest,
-    EnterpriseCodeResponse,
-    EnterpriseMemberResponse,
-    ActiveBreakCreate,
-    ActiveBreakResponse,
-    ActiveBreakLogCreate,
-    ActiveBreakLogResponse,
-    ActiveBreakStatsResponse,
 )
 
 router = APIRouter()

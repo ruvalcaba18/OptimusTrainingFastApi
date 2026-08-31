@@ -1,7 +1,10 @@
-from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, final
-from .training_type import TrainingType
+
+from pydantic import BaseModel, EmailStr, Field
+
 from .gender import UserGender
+from .training_type import TrainingType
+
 
 @final
 class UserUpdate(BaseModel):

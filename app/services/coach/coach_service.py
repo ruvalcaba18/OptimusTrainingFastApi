@@ -3,9 +3,9 @@ from typing import List, Optional, Tuple
 from sqlalchemy import func as sa_func
 from sqlalchemy.orm import Session
 
-from app.models import CoachProfile
-from app.models import CoachBooking
-from app.schemas.coaches import CoachCreate, CoachUpdate, BookingCreate
+from app.models import CoachBooking, CoachProfile
+from app.schemas.coaches import BookingCreate, CoachCreate, CoachUpdate
+
 
 class CoachService:
                                                           

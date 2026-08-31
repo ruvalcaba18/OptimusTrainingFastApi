@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class TrainingType(str, Enum):
     CASA = "casa"
     AFUERA = "afuera"

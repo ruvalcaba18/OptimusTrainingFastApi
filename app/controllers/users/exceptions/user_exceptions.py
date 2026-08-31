@@ -1,6 +1,6 @@
 from app.core.exceptions import (
-    NotFoundError,
     ConflictError,
+    NotFoundError,
 )
 
 

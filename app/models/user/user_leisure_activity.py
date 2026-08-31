@@ -1,6 +1,9 @@
-from sqlalchemy import Column, Integer, ForeignKey
 from typing import final
+
+from sqlalchemy import Column, ForeignKey, Integer
+
 from app.database import Base
+
 
 @final
 class UserLeisureActivity(Base):

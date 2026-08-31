@@ -1,6 +1,9 @@
+from typing import List, Optional
+
 from pydantic import BaseModel
-from typing import Optional, List
+
 from app.schemas.training.goal_schema import GoalSchema
+
 
 class MethodSchema(BaseModel):
     id: int

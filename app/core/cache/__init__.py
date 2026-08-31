@@ -1,6 +1,12 @@
 from typing import Any
-from app.core.cache.service import cache_service, CacheTTL
-from app.core.cache.exceptions import CacheError, RedisConnectionError, CacheSerializationError
+
+from app.core.cache.exceptions import (
+    CacheError,
+    CacheSerializationError,
+    RedisConnectionError,
+)
+from app.core.cache.service import CacheTTL, cache_service
+
 
 async def cache_get(key: str):
     return await cache_service.get(key)

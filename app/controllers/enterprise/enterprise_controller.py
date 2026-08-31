@@ -1,33 +1,34 @@
 from datetime import datetime, timezone
 from typing import Optional
+
 from sqlalchemy.orm import Session
 
+from app.controllers.enterprise.exceptions import (
+    ActiveBreakNotFoundError,
+    AlreadyLinkedEnterpriseError,
+    BreakAlreadyCompletedError,
+    EnterpriseCodeAlreadyUsedError,
+    EnterpriseCodeExpiredError,
+    EnterpriseNotFoundError,
+    InvalidEnterpriseCodeError,
+)
+from app.core.error_handlers import handle_controller_errors
 from app.models import User
-from app.services import enterprise_service
 from app.schemas.enterprise import (
+    ActiveBreakCreate,
+    ActiveBreakLogCreate,
+    ActiveBreakLogResponse,
+    ActiveBreakResponse,
+    ActiveBreakStatsResponse,
+    CodeGenerateRequest,
+    EnterpriseCodeResponse,
     EnterpriseCreate,
+    EnterpriseMemberResponse,
     EnterpriseResponse,
     ValidateCodeRequest,
     ValidateCodeResponse,
-    CodeGenerateRequest,
-    EnterpriseCodeResponse,
-    EnterpriseMemberResponse,
-    ActiveBreakCreate,
-    ActiveBreakResponse,
-    ActiveBreakLogCreate,
-    ActiveBreakLogResponse,
-    ActiveBreakStatsResponse,
 )
-from app.controllers.enterprise.exceptions import (
-    EnterpriseNotFoundError,
-    InvalidEnterpriseCodeError,
-    EnterpriseCodeExpiredError,
-    EnterpriseCodeAlreadyUsedError,
-    AlreadyLinkedEnterpriseError,
-    ActiveBreakNotFoundError,
-    BreakAlreadyCompletedError,
-)
-from app.core.error_handlers import handle_controller_errors
+from app.services import enterprise_service
 
 
 class EnterpriseController:

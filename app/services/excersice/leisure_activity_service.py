@@ -1,6 +1,9 @@
-from sqlalchemy.orm import Session
 from typing import List
+
+from sqlalchemy.orm import Session
+
 from app.models.excersice.leisure_activity import LeisureActivityModel
+
 
 class LeisureActivityService:
     def list_leisure_activities(self, db: Session) -> List[LeisureActivityModel]:

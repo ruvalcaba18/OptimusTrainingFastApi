@@ -1,10 +1,12 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+
 from app.api import deps
 from app.models import User, UserRoutine
+from app.schemas.training import UserRoutineResponseSchema, UserRoutineUpdateSchema
 from app.services import routine_generator
-from typing import Optional
-from app.schemas.training import UserRoutineUpdateSchema, UserRoutineResponseSchema
 
 router = APIRouter()
 

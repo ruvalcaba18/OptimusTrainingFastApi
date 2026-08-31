@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from .event_enums import EventType, EventStatus
+from .event_enums import EventStatus, EventType
 
 
 class EventBase(BaseModel):

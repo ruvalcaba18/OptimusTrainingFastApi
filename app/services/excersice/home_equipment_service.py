@@ -1,6 +1,9 @@
 from typing import List, final
+
 from sqlalchemy.orm import Session
+
 from app.models.excersice.home_equipment import HomeEquipmentModel
+
 
 @final
 class HomeEquipmentService:

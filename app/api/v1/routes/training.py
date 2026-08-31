@@ -1,4 +1,5 @@
 from typing import List
+
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
@@ -6,12 +7,12 @@ from app.api import deps
 from app.controllers.training_controller import training_controller
 from app.models import User
 from app.schemas.training import (
-    TrainingPlanCreate,
-    TrainingPlanResponse,
+    CoachAthleteResponse,
     DailyWorkoutCreate,
     DailyWorkoutResponse,
     ExerciseDetailCreate,
-    CoachAthleteResponse
+    TrainingPlanCreate,
+    TrainingPlanResponse,
 )
 
 router = APIRouter()

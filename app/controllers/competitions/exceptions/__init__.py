@@ -1,9 +1,9 @@
 from app.controllers.competitions.exceptions.competition_exceptions import (
-    CompetitionNotFoundError,
-    CompetitionFullError,
+    AlreadyJoinedCompetitionError,
     CompetitionCancelledError,
     CompetitionFinishedError,
-    AlreadyJoinedCompetitionError,
+    CompetitionFullError,
+    CompetitionNotFoundError,
     ParticipantNotFoundError,
 )
 

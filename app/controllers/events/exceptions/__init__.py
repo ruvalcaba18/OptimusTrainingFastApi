@@ -1,8 +1,8 @@
 from app.controllers.events.exceptions.event_exceptions import (
-    EventNotFoundError,
+    AlreadyJoinedEventError,
     EventCancelledError,
     EventFullError,
-    AlreadyJoinedEventError,
+    EventNotFoundError,
     NotJoinedEventError,
 )
 

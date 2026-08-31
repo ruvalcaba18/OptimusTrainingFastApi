@@ -1,6 +1,9 @@
 from typing import List, final
+
 from sqlalchemy.orm import Session
+
 from app.models.excersice.session_duration import SessionDuration
+
 
 @final
 class SessionDurationService:

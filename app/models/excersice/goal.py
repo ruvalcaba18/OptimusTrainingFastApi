@@ -1,7 +1,10 @@
+from typing import final
+
 from sqlalchemy import Column, Integer, String, Text
 from sqlalchemy.orm import relationship
-from typing import final
+
 from app.database import Base
+
 
 @final
 class Goal(Base):

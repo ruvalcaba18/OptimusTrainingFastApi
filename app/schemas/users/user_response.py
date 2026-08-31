@@ -1,8 +1,10 @@
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+
 from pydantic import BaseModel
-from .user_base import UserBase
+
 from .token import Token
+from .user_base import UserBase
 
 
 class UserResponse(UserBase):

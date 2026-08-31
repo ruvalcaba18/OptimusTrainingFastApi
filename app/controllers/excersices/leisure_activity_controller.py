@@ -1,7 +1,10 @@
-from sqlalchemy.orm import Session
 from typing import List
-from app.services.excersice.leisure_activity_service import leisure_activity_service
+
+from sqlalchemy.orm import Session
+
 from app.models.excersice.leisure_activity import LeisureActivityModel
+from app.services.excersice.leisure_activity_service import leisure_activity_service
+
 
 class LeisureActivityController:
     def list_leisure_activities(self, db: Session) -> List[LeisureActivityModel]:

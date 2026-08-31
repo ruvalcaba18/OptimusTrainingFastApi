@@ -1,11 +1,11 @@
-import pytest
 from pathlib import Path
+
+import pytest
 from fastapi import status
-from app.models import Level
-from app.models import Goal
-from app.models import Condition
-from app.models import Equipment
+
 from app.database.seed_all import DatabaseSeeder
+from app.models import Condition, Equipment, Goal, Level
+
 
 @pytest.fixture(autouse=True)
 def seed_test_db(db):

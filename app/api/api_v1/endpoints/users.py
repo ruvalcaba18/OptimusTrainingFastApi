@@ -1,11 +1,13 @@
 from typing import Any
-from sqlalchemy.orm import Session
+
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.core.db import get_db
-from app.services import user_service
-from app.schemas.users import UserCreate, UserResponse, UserUpdate
+from sqlalchemy.orm import Session
+
 from app.api import deps
+from app.core.db import get_db
 from app.models import User
+from app.schemas.users import UserCreate, UserResponse, UserUpdate
+from app.services import user_service
 
 router = APIRouter()
 

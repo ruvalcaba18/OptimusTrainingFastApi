@@ -1,5 +1,7 @@
+from typing import Any, Dict, List, Optional, final
+
 from pydantic import BaseModel
-from typing import List, Dict, Any, Optional, final
+
 
 @final
 class UserRoutineUpdateSchema(BaseModel):

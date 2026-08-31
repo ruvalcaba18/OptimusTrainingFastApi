@@ -1,7 +1,10 @@
-from sqlalchemy.orm import Session
 from typing import List
-from app.services.excersice.health_question_service import health_question_service
+
+from sqlalchemy.orm import Session
+
 from app.models.excersice.health_question import HealthQuestionModel
+from app.services.excersice.health_question_service import health_question_service
+
 
 class HealthQuestionController:
     def list_health_questions(self, db: Session) -> List[HealthQuestionModel]:

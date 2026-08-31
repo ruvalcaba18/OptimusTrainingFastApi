@@ -1,27 +1,28 @@
 from typing import Optional
+
 from sqlalchemy.orm import Session
 
-from app.models import User
-from app.services import competition_service
-from app.schemas.competitions import (
-    CompetitionCreate,
-    CompetitionUpdate,
-    CompetitionResponse,
-    JoinCompetitionRequest,
-    ScoreUpdateRequest,
-    CompetitionParticipantResponse,
-    RankingResponse,
-)
 from app.controllers.competitions.exceptions import (
-    CompetitionNotFoundError,
-    CompetitionFullError,
+    AlreadyJoinedCompetitionError,
     CompetitionCancelledError,
     CompetitionFinishedError,
-    AlreadyJoinedCompetitionError,
+    CompetitionFullError,
+    CompetitionNotFoundError,
     ParticipantNotFoundError,
 )
-from app.core.exceptions import ForbiddenError
 from app.core.error_handlers import handle_controller_errors
+from app.core.exceptions import ForbiddenError
+from app.models import User
+from app.schemas.competitions import (
+    CompetitionCreate,
+    CompetitionParticipantResponse,
+    CompetitionResponse,
+    CompetitionUpdate,
+    JoinCompetitionRequest,
+    RankingResponse,
+    ScoreUpdateRequest,
+)
+from app.services import competition_service
 
 
 class CompetitionController:

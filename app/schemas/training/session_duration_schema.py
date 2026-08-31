@@ -1,5 +1,7 @@
+from typing import Optional, final
+
 from pydantic import BaseModel, ConfigDict
-from typing import final, Optional
+
 
 @final
 class SessionDurationSchema(BaseModel):

@@ -1,12 +1,12 @@
-from .event_enums import EventType, EventStatus
+from .event_enums import EventStatus, EventType
 from .event_schemas import (
     EventBase,
     EventCreate,
-    EventUpdate,
+    EventParticipantResponse,
     EventResponse,
+    EventUpdate,
     JoinEventRequest,
     LeaveEventRequest,
-    EventParticipantResponse,
 )
 
 __all__ = [

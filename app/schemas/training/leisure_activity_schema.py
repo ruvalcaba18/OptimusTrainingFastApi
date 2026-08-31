@@ -1,5 +1,7 @@
-from pydantic import BaseModel
 from typing import Optional, final
+
+from pydantic import BaseModel
+
 
 @final
 class LeisureActivitySchema(BaseModel):

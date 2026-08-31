@@ -1,7 +1,10 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey
-from sqlalchemy.orm import relationship as sqla_relationship
 from typing import final
+
+from sqlalchemy import Column, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import relationship as sqla_relationship
+
 from app.database import Base
+
 
 @final
 class ExcersiceCondition(Base):

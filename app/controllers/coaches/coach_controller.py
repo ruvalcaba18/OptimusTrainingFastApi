@@ -1,28 +1,29 @@
 from typing import Optional
+
 from sqlalchemy.orm import Session
 
-from app.models import User
-from app.services import coach_service
-from app.schemas.coaches import (
-    CoachCreate,
-    CoachUpdate,
-    CoachResponse,
-    CoachNearbyResponse,
-    BookingCreate,
-    BookingStatusUpdate,
-    BookingResponse,
-    ReviewCreate,
-)
 from app.controllers.coaches.exceptions import (
-    CoachNotFoundError,
+    BookingNotFoundError,
     CoachAlreadyExistsError,
+    CoachNotFoundError,
     CoachUnavailableError,
     SelfBookingError,
-    BookingNotFoundError,
     SessionAlreadyReviewedError,
 )
-from app.core.exceptions import ForbiddenError
 from app.core.error_handlers import handle_controller_errors
+from app.core.exceptions import ForbiddenError
+from app.models import User
+from app.schemas.coaches import (
+    BookingCreate,
+    BookingResponse,
+    BookingStatusUpdate,
+    CoachCreate,
+    CoachNearbyResponse,
+    CoachResponse,
+    CoachUpdate,
+    ReviewCreate,
+)
+from app.services import coach_service
 
 
 class CoachController:

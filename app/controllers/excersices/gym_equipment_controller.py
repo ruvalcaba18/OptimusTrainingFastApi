@@ -1,8 +1,11 @@
 from typing import List, final
+
 from sqlalchemy.orm import Session
-from app.services.excersice.gym_equipment_service import gym_equipment_service
-from app.models.excersice.gym_equipment import GymEquipmentModel
+
 from app.core.error_handlers import handle_controller_errors
+from app.models.excersice.gym_equipment import GymEquipmentModel
+from app.services.excersice.gym_equipment_service import gym_equipment_service
+
 
 @final
 class GymEquipmentController:

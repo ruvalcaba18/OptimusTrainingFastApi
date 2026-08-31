@@ -3,19 +3,19 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
-from app.core.cache import cache_get, cache_set, cache_delete_pattern, make_key
-from app.database import get_db
 from app.api.deps import get_current_user
-from app.models import User
 from app.controllers.coaches.coach_controller import coach_controller
+from app.core.cache import cache_delete_pattern, cache_get, cache_set, make_key
+from app.database import get_db
+from app.models import User
 from app.schemas.coaches import (
-    CoachCreate,
-    CoachUpdate,
-    CoachResponse,
-    CoachNearbyResponse,
     BookingCreate,
-    BookingStatusUpdate,
     BookingResponse,
+    BookingStatusUpdate,
+    CoachCreate,
+    CoachNearbyResponse,
+    CoachResponse,
+    CoachUpdate,
     ReviewCreate,
 )
 

@@ -1,9 +1,9 @@
 from app.controllers.coaches.exceptions.coach_exceptions import (
-    CoachNotFoundError,
+    BookingNotFoundError,
     CoachAlreadyExistsError,
+    CoachNotFoundError,
     CoachUnavailableError,
     SelfBookingError,
-    BookingNotFoundError,
     SessionAlreadyReviewedError,
 )
 

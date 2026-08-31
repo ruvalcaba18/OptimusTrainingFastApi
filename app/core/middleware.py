@@ -1,12 +1,14 @@
-import time
 import logging
+import time
+
 from fastapi import FastAPI, Request
+from jose import JWTError, jwt
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.responses import Response
-from jose import jwt, JWTError
-from app.core.config import settings
 from starlette.middleware.cors import CORSMiddleware
-  
+from starlette.responses import Response
+
+from app.core.config import settings
+
 logger = logging.getLogger("optimus.access")
 
 SECURITY_HEADERS = {
