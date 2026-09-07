@@ -10,7 +10,9 @@ from app.database.seeders import (
     CatalogsSeeder,
     EquipmentSeeder,
     ExercisesSeeder,
+    UsersSeeder,
 )
+
 from app.models import (
     BodyPart,
     Condition,
@@ -77,6 +79,10 @@ class DatabaseSeeder:
 
         if include_matrix:
             assessment.seed_programming_matrix()
+
+        # 6. Usuarios seed (equipo + Apple reviewer)
+        users = UsersSeeder(self.session, self.data_dir)
+        users.seed()
 
     def clear_database(self):
         print("Clearing database tables...")

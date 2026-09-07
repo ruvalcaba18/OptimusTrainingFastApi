@@ -204,7 +204,7 @@ class RoutineGenerator:
         return routine
 
     @staticmethod
-    def update_user_routine(db: Session, user: User, day: int, update_data: UserRoutineUpdateSchema) -> UserRoutine:
+    def update_user_routine(db: Session, user: User, day: int, update_data: UserRoutineUpdateSchema, week: Optional[int] = None) -> UserRoutine:
    
         if user.tier != UserTier.PREMIUM:
             from fastapi import HTTPException, status
@@ -213,16 +213,21 @@ class RoutineGenerator:
                 detail="Esta funcionalidad de edición manual de rutinas es exclusiva para usuarios Premium."
             )
             
-        existing = db.query(UserRoutine).filter(
+        query = db.query(UserRoutine).filter(
             UserRoutine.user_id == user.id,
             UserRoutine.day == day
-        ).first()
+        )
+        if week is not None:
+            query = query.filter(UserRoutine.week == week)
+            
+        existing = query.first()
         
         if not existing:
             from fastapi import HTTPException, status
+            detail_msg = f"No se encontró una rutina generada para el día {day}" + (f" de la semana {week}." if week else ".")
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="No se encontró una rutina generada para este día. Debes generarla primero."
+                detail=f"{detail_msg} Debes generarla primero."
             )
             
         if update_data.goal is not None:
@@ -245,6 +250,66 @@ class RoutineGenerator:
         db.commit()
         db.refresh(existing)
         return existing
+
+    @staticmethod
+    def update_or_regenerate_week_routine(
+        db: Session,
+        user: User,
+        week: int,
+        day: Optional[int] = None,
+        update_data: Optional[UserRoutineUpdateSchema] = None
+    ) -> Dict[str, Any]:
+        if user.tier != UserTier.PREMIUM:
+            from fastapi import HTTPException, status
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="La modificación y regeneración semanal de rutinas es exclusiva para usuarios Premium."
+            )
+
+        if not user.goal_id:
+            from fastapi import HTTPException, status
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="El usuario no tiene un perfil configurado."
+            )
+
+        if user.specific_days:
+            try:
+                days = [int(d) for d in user.specific_days.split(",") if d.strip()]
+            except Exception:
+                days = [1, 3, 5]
+        else:
+            days = [1, 3, 5]
+
+        # Si se especifica un día con datos manuales de actualización
+        if day is not None and update_data is not None:
+            updated_routine = RoutineGenerator.update_user_routine(
+                db=db, user=user, day=day, update_data=update_data, week=week
+            )
+            return {
+                "message": f"Rutina de la semana {week}, día {day} modificada correctamente.",
+                "routine": updated_routine
+            }
+
+        # Regenerar la semana completa (o un día específico de esa semana)
+        target_days = [day] if day is not None else days
+        results = []
+        for day_val in target_days:
+            seed_day = (week - 1) * 7 + day_val
+            routine = RoutineGenerator.generate_routine(db, user=user, day=seed_day)
+            RoutineGenerator._save_or_update_routine(db, user.id, week, day_val, routine)
+            results.append({
+                "week": week,
+                "day": day_val,
+                "routine": routine
+            })
+
+        db.commit()
+        return {
+            "message": f"Rutina(s) de la semana {week} regenerada(s) con éxito considerando todos los filtros de tu perfil y nuevos ejercicios.",
+            "week": week,
+            "routines": results
+        }
 
     @staticmethod
     def get_monthly_plan(db: Session, user: User) -> Dict[str, Any]:

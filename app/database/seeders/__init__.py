@@ -4,6 +4,7 @@ from .base_seeder import BaseSeeder
 from .catalogs_seeder import CatalogsSeeder
 from .equipment_seeder import EquipmentSeeder
 from .exercises_seeder import ExercisesSeeder
+from .users_seeder import UsersSeeder
 
 __all__ = [
     "BaseSeeder",
@@ -11,5 +12,6 @@ __all__ = [
     "AnatomySeeder",
     "EquipmentSeeder",
     "ExercisesSeeder",
-    "AssessmentSeeder"
+    "AssessmentSeeder",
+    "UsersSeeder",
 ]

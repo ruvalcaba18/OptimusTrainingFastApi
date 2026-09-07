@@ -64,9 +64,15 @@ class ApplicationBuilder:
         cls.setup_database_schema()
         cls.seed_initial_data()
         await cls.verify_redis_connection()
+
+        # Configurar bus de eventos y suscriptores
+        from app.events import register_event_handlers
+        register_event_handlers()
+
         yield
         await cache_service.close()
         logger.info("App shutdown complete.")
+
 
     @classmethod
     def build(cls) -> FastAPI:

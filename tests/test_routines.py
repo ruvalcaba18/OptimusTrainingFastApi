@@ -78,3 +78,35 @@ def test_generate_routine_excludes_forbidden_conditions(client, db, test_user, a
     
     exercises = data["exercises"]
     assert not any(ex["code"] == "PIE001" for ex in exercises)
+
+def test_update_week_routine_forbidden_for_basic_user(client, db, test_user, auth_headers):
+    goal = db.query(Goal).filter(Goal.code == "PG").first()
+    level = db.query(Level).filter(Level.code == "NIV1").first()
+    test_user.goal_id = goal.id
+    test_user.level_id = level.id
+    test_user.tier = "BASIC"
+    db.commit()
+
+    resp = client.put("/api/v1/routines/week/2", headers=auth_headers)
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
+    assert "Premium" in resp.json()["error"]["message"]
+
+def test_update_week_routine_success_for_premium_user(client, db, test_user, auth_headers):
+    goal = db.query(Goal).filter(Goal.code == "PG").first()
+    level = db.query(Level).filter(Level.code == "NIV1").first()
+    test_user.goal_id = goal.id
+    test_user.level_id = level.id
+    test_user.tier = "PREMIUM"
+    test_user.specific_days = "1,3,5"
+    db.commit()
+
+    resp = client.put("/api/v1/routines/week/2", headers=auth_headers)
+    assert resp.status_code == status.HTTP_200_OK
+    data = resp.json()
+    assert data["week"] == 2
+    assert "routines" in data
+    assert len(data["routines"]) == 3
+    for day_res in data["routines"]:
+        assert day_res["week"] == 2
+        assert len(day_res["routine"]["exercises"]) > 0
+
