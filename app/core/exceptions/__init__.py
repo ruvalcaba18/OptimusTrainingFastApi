@@ -10,12 +10,12 @@ from app.core.exceptions.unprocessable_entity import UnprocessableEntityError
 
 __all__ = [
     "AppException",
-    "NotFoundError",
     "BadRequestError",
-    "UnauthorizedError",
-    "ForbiddenError",
     "ConflictError",
-    "UnprocessableEntityError",
-    "ServiceUnavailableError",
+    "ForbiddenError",
     "InternalServerError",
+    "NotFoundError",
+    "ServiceUnavailableError",
+    "UnauthorizedError",
+    "UnprocessableEntityError",
 ]

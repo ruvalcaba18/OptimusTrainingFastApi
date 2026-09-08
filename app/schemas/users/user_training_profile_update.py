@@ -1,4 +1,3 @@
-from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -6,10 +5,10 @@ from pydantic import BaseModel
 class UserTrainingProfileUpdate(BaseModel):
     goal_code: str
     level_code: str
-    equipment_ids: Optional[List[int]] = None
-    pathology_ids: Optional[List[int]] = None
-    disease_ids: Optional[List[int]] = None
-    custom_equipment: Optional[str] = None
-    session_duration_code: Optional[str] = None
-    specific_days: Optional[List[int]] = None
-    leisure_activity_ids: Optional[List[int]] = None
+    equipment_ids: list[int] | None = None
+    pathology_ids: list[int] | None = None
+    disease_ids: list[int] | None = None
+    custom_equipment: str | None = None
+    session_duration_code: str | None = None
+    specific_days: list[int] | None = None
+    leisure_activity_ids: list[int] | None = None

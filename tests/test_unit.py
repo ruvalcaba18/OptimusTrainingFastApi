@@ -42,7 +42,6 @@ class TestSecurityTokens:
 class TestAppleProviderUnit:
     @pytest.mark.asyncio
     async def test_verify_token_missing_email_raises_401(self):
-        from jose import jwt as jose_jwt
 
         from app.services import AppleProvider
 

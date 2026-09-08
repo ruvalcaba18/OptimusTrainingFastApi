@@ -1,4 +1,3 @@
-from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
@@ -10,15 +9,15 @@ from app.schemas.users import UserCreate, UserUpdate
 class UserService:
                                                                                
     @staticmethod
-    def get_by_email(db: Session, email: str) -> Optional[User]:
+    def get_by_email(db: Session, email: str) -> User | None:
         return db.query(User).filter(User.email == email).first()
 
     @staticmethod
-    def get_by_id(db: Session, user_id: int) -> Optional[User]:
+    def get_by_id(db: Session, user_id: int) -> User | None:
         return db.query(User).filter(User.id == user_id).first()
 
     @staticmethod
-    def get_multi(db: Session, skip: int = 0, limit: int = 100) -> List[User]:
+    def get_multi(db: Session, skip: int = 0, limit: int = 100) -> list[User]:
         return db.query(User).offset(skip).limit(limit).all()
 
                                                                                
@@ -91,7 +90,7 @@ class UserService:
         return db_obj
 
     @staticmethod
-    def delete(db: Session, user_id: int) -> Optional[User]:
+    def delete(db: Session, user_id: int) -> User | None:
         db_user = db.query(User).filter(User.id == user_id).first()
         if db_user:
             db.delete(db_user)

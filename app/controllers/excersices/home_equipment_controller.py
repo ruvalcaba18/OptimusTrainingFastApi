@@ -1,4 +1,4 @@
-from typing import List, final
+from typing import final
 
 from sqlalchemy.orm import Session
 
@@ -11,7 +11,7 @@ from app.services.excersice.home_equipment_service import home_equipment_service
 class HomeEquipmentController:
     @staticmethod
     @handle_controller_errors
-    def list_home_equipment(db: Session) -> List[HomeEquipmentModel]:
+    def list_home_equipment(db: Session) -> list[HomeEquipmentModel]:
         return home_equipment_service.list_home_equipment(db)
 
 home_equipment_controller = HomeEquipmentController()

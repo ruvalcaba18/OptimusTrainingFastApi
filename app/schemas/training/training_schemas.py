@@ -1,6 +1,5 @@
 from datetime import date, datetime
 from enum import Enum
-from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -21,7 +20,7 @@ class WorkoutStatus(str, Enum):
 
 class ExerciseDetailBase(BaseModel):
     name: str = Field(..., max_length=100)
-    description: Optional[str] = None
+    description: str | None = None
     sets: int = Field(0, ge=0)
     reps: int = Field(0, ge=0)
     weight: float = Field(0.0, ge=0)
@@ -46,20 +45,20 @@ class DailyWorkoutBase(BaseModel):
 
 
 class DailyWorkoutCreate(DailyWorkoutBase):
-    exercises: List[ExerciseDetailCreate] = Field(..., max_length=8)
+    exercises: list[ExerciseDetailCreate] = Field(..., max_length=8)
 
 
 class DailyWorkoutUpdate(BaseModel):
-    status: Optional[WorkoutStatus] = None
-    coach_validated: Optional[bool] = None
-    exercises: Optional[List[ExerciseDetailCreate]] = Field(None, max_length=8)
+    status: WorkoutStatus | None = None
+    coach_validated: bool | None = None
+    exercises: list[ExerciseDetailCreate] | None = Field(None, max_length=8)
 
 
 class DailyWorkoutResponse(DailyWorkoutBase):
     id: int
     plan_id: int
-    validation_date: Optional[datetime] = None
-    exercises: List[ExerciseDetailResponse]
+    validation_date: datetime | None = None
+    exercises: list[ExerciseDetailResponse]
 
     model_config = {"from_attributes": True}
 
@@ -75,7 +74,7 @@ class TrainingPlanCreate(TrainingPlanBase):
 
 
 class TrainingPlanUpdate(BaseModel):
-    status: Optional[PlanStatus] = None
+    status: PlanStatus | None = None
 
 
 class TrainingPlanResponse(TrainingPlanBase):
@@ -83,8 +82,8 @@ class TrainingPlanResponse(TrainingPlanBase):
     coach_id: int
     athlete_id: int
     created_at: datetime
-    updated_at: Optional[datetime] = None
-    workouts: List[DailyWorkoutResponse]
+    updated_at: datetime | None = None
+    workouts: list[DailyWorkoutResponse]
 
     model_config = {"from_attributes": True}
 

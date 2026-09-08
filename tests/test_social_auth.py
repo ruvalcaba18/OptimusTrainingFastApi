@@ -193,7 +193,6 @@ class TestSocialAuthNameResolution:
             )
         assert resp.status_code == status.HTTP_200_OK
         from app.database import SessionLocal
-        from app.services import user_service
         with SessionLocal() as s:
             pass
 

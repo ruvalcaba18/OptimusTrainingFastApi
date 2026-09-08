@@ -1,4 +1,3 @@
-from typing import List
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
@@ -34,14 +33,14 @@ def assign_coach(
 
 @router.get(
     "/my-athletes",
-    response_model=List[CoachAthleteResponse],
+    response_model=list[CoachAthleteResponse],
     summary="Listar Atletas del Coach",
     response_description="Lista de atletas actualmente bajo el mando del coach.",
 )
 def get_my_athletes(
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
-) -> List[CoachAthleteResponse]:
+) -> list[CoachAthleteResponse]:
     return training_controller.list_my_athletes(db, current_user)
 
 
@@ -82,7 +81,7 @@ def add_workout_to_plan(
 )
 def modify_workout(
     workout_id: int,
-    exercises: List[ExerciseDetailCreate],
+    exercises: list[ExerciseDetailCreate],
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
 ) -> DailyWorkoutResponse:

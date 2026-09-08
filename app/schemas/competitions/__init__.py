@@ -11,13 +11,13 @@ from .competition_schemas import (
 )
 
 __all__ = [
-    "CompetitionStatus",
     "CompetitionBase",
     "CompetitionCreate",
-    "CompetitionUpdate",
-    "CompetitionResponse",
-    "JoinCompetitionRequest",
-    "ScoreUpdateRequest",
     "CompetitionParticipantResponse",
+    "CompetitionResponse",
+    "CompetitionStatus",
+    "CompetitionUpdate",
+    "JoinCompetitionRequest",
     "RankingResponse",
+    "ScoreUpdateRequest",
 ]

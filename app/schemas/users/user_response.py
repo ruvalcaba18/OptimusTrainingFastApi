@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -10,9 +9,9 @@ from .user_base import UserBase
 class UserResponse(UserBase):
     id: int
     is_active: bool
-    profile_picture_url: Optional[str] = None
+    profile_picture_url: str | None = None
     created_at: datetime
-    updated_at: Optional[datetime] = None
+    updated_at: datetime | None = None
 
     model_config = {"from_attributes": True}
 

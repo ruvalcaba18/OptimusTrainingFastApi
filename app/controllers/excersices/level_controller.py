@@ -1,4 +1,3 @@
-from typing import List
 
 from sqlalchemy.orm import Session
 
@@ -11,7 +10,7 @@ class LevelController:
 
     @staticmethod
     @handle_controller_errors
-    def list_levels(db: Session) -> List[Level]:
+    def list_levels(db: Session) -> list[Level]:
         return level_service.list_levels(db)
 
 

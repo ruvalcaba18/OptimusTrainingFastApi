@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -8,17 +7,17 @@ from .competition_enums import CompetitionStatus
 
 class CompetitionBase(BaseModel):
     title: str = Field(..., min_length=1, max_length=200)
-    description: Optional[str] = None
+    description: str | None = None
     sport_type: str = Field(..., min_length=1, max_length=50)
     location_name: str = Field(..., min_length=1, max_length=300)
-    latitude: Optional[float] = Field(None, ge=-90, le=90)
-    longitude: Optional[float] = Field(None, ge=-180, le=180)
+    latitude: float | None = Field(None, ge=-90, le=90)
+    longitude: float | None = Field(None, ge=-180, le=180)
     start_date: datetime
-    end_date: Optional[datetime] = None
-    max_participants: Optional[int] = Field(None, gt=0)
-    rules: Optional[str] = None
-    prize_description: Optional[str] = None
-    cover_image_url: Optional[str] = None
+    end_date: datetime | None = None
+    max_participants: int | None = Field(None, gt=0)
+    rules: str | None = None
+    prize_description: str | None = None
+    cover_image_url: str | None = None
 
 
 class CompetitionCreate(CompetitionBase):
@@ -26,19 +25,19 @@ class CompetitionCreate(CompetitionBase):
 
 
 class CompetitionUpdate(BaseModel):
-    title: Optional[str] = Field(None, min_length=1, max_length=200)
-    description: Optional[str] = None
-    sport_type: Optional[str] = Field(None, min_length=1, max_length=50)
-    status: Optional[CompetitionStatus] = None
-    location_name: Optional[str] = Field(None, min_length=1, max_length=300)
-    latitude: Optional[float] = Field(None, ge=-90, le=90)
-    longitude: Optional[float] = Field(None, ge=-180, le=180)
-    start_date: Optional[datetime] = None
-    end_date: Optional[datetime] = None
-    max_participants: Optional[int] = Field(None, gt=0)
-    rules: Optional[str] = None
-    prize_description: Optional[str] = None
-    cover_image_url: Optional[str] = None
+    title: str | None = Field(None, min_length=1, max_length=200)
+    description: str | None = None
+    sport_type: str | None = Field(None, min_length=1, max_length=50)
+    status: CompetitionStatus | None = None
+    location_name: str | None = Field(None, min_length=1, max_length=300)
+    latitude: float | None = Field(None, ge=-90, le=90)
+    longitude: float | None = Field(None, ge=-180, le=180)
+    start_date: datetime | None = None
+    end_date: datetime | None = None
+    max_participants: int | None = Field(None, gt=0)
+    rules: str | None = None
+    prize_description: str | None = None
+    cover_image_url: str | None = None
 
 
 class CompetitionResponse(CompetitionBase):
@@ -47,7 +46,7 @@ class CompetitionResponse(CompetitionBase):
     status: str
     participant_count: int = 0
     created_at: datetime
-    updated_at: Optional[datetime] = None
+    updated_at: datetime | None = None
 
     model_config = {"from_attributes": True}
 
@@ -66,8 +65,8 @@ class CompetitionParticipantResponse(BaseModel):
     id: int
     competition_id: int
     user_id: int
-    score: Optional[float] = None
-    position: Optional[int] = None
+    score: float | None = None
+    position: int | None = None
     joined_at: datetime
 
     model_config = {"from_attributes": True}

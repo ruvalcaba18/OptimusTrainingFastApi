@@ -24,14 +24,14 @@ def make_key(*parts):
     return cache_service.make_key(*parts)
 
 __all__ = [
-    "cache_service", 
-    "cache_get", 
-    "cache_set", 
-    "cache_delete", 
-    "cache_delete_pattern", 
-    "make_key",
+    "CacheError",
+    "CacheSerializationError",
     "CacheTTL",
-    "CacheError", 
-    "RedisConnectionError", 
-    "CacheSerializationError"
+    "RedisConnectionError",
+    "cache_delete",
+    "cache_delete_pattern",
+    "cache_get",
+    "cache_service",
+    "cache_set",
+    "make_key"
 ]

@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -7,18 +6,18 @@ from .coach_enums import CoachSpecialty
 
 
 class CoachBase(BaseModel):
-    bio: Optional[str] = None
+    bio: str | None = None
     specialty: CoachSpecialty
     experience_years: int = Field(..., ge=0)
-    certifications: Optional[str] = None
+    certifications: str | None = None
     hourly_rate: float = Field(..., gt=0)
     currency: str = Field(default="MXN", max_length=10)
     latitude: float = Field(..., ge=-90, le=90)
     longitude: float = Field(..., ge=-180, le=180)
-    city: Optional[str] = None
-    state: Optional[str] = None
+    city: str | None = None
+    state: str | None = None
     service_radius_km: float = Field(default=10.0, gt=0)
-    available_hours: Optional[str] = None               
+    available_hours: str | None = None               
     is_searchable: bool = True
 
 class CoachCreate(CoachBase):
@@ -26,20 +25,20 @@ class CoachCreate(CoachBase):
 
 
 class CoachUpdate(BaseModel):
-    bio: Optional[str] = None
-    specialty: Optional[CoachSpecialty] = None
-    experience_years: Optional[int] = Field(None, ge=0)
-    certifications: Optional[str] = None
-    hourly_rate: Optional[float] = Field(None, gt=0)
-    currency: Optional[str] = Field(None, max_length=10)
-    latitude: Optional[float] = Field(None, ge=-90, le=90)
-    longitude: Optional[float] = Field(None, ge=-180, le=180)
-    city: Optional[str] = None
-    state: Optional[str] = None
-    service_radius_km: Optional[float] = Field(None, gt=0)
-    is_available: Optional[bool] = None
-    available_hours: Optional[str] = None
-    is_searchable: Optional[bool] = None
+    bio: str | None = None
+    specialty: CoachSpecialty | None = None
+    experience_years: int | None = Field(None, ge=0)
+    certifications: str | None = None
+    hourly_rate: float | None = Field(None, gt=0)
+    currency: str | None = Field(None, max_length=10)
+    latitude: float | None = Field(None, ge=-90, le=90)
+    longitude: float | None = Field(None, ge=-180, le=180)
+    city: str | None = None
+    state: str | None = None
+    service_radius_km: float | None = Field(None, gt=0)
+    is_available: bool | None = None
+    available_hours: str | None = None
+    is_searchable: bool | None = None
 
 
 class CoachResponse(CoachBase):
@@ -52,7 +51,7 @@ class CoachResponse(CoachBase):
     is_active: bool
     is_searchable: bool
     created_at: datetime
-    updated_at: Optional[datetime] = None
+    updated_at: datetime | None = None
 
     model_config = {"from_attributes": True}
 

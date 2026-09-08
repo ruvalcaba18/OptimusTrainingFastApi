@@ -1,4 +1,3 @@
-from typing import Optional
 
 from sqlalchemy.orm import Session
 
@@ -45,7 +44,7 @@ class CoachController:
     @handle_controller_errors
     def list_coaches(
         db: Session,
-        specialty: Optional[str] = None,
+        specialty: str | None = None,
         skip: int = 0,
         limit: int = 50,
     ) -> list[CoachResponse]:
@@ -98,7 +97,7 @@ class CoachController:
         lat: float,
         lng: float,
         radius_km: float = 10.0,
-        specialty: Optional[str] = None,
+        specialty: str | None = None,
         skip: int = 0,
         limit: int = 20,
     ) -> list[CoachNearbyResponse]:

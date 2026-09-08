@@ -1,4 +1,4 @@
-from typing import List, final
+from typing import final
 
 from sqlalchemy.orm import Session
 
@@ -14,7 +14,7 @@ class WorkOutHybridPlacesController:
     
    @staticmethod
    @handle_controller_errors
-   def list_workout_hybrid_places(db: Session) -> List[WorkoutHybridPlaces]:
+   def list_workout_hybrid_places(db: Session) -> list[WorkoutHybridPlaces]:
        return workout_hybrid_places_service.list_workout_hybrid_places(db)
 
 workou_hybrid_places_controller = WorkOutHybridPlacesController()   

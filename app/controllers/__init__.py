@@ -18,18 +18,18 @@ from app.controllers.excersices.leisure_activity_controller import (
 from app.controllers.users.user_controller import UserController, user_controller
 
 __all__ = [
-    "user_controller",
+    "AuthController",
+    "CoachController",
+    "CompetitionController",
+    "EnterpriseController",
+    "EventController",
     "UserController",
     "auth_controller",
-    "AuthController",
-    "enterprise_controller",
-    "EnterpriseController",
     "coach_controller",
-    "CoachController",
-    "event_controller",
-    "EventController",
     "competition_controller",
-    "CompetitionController",
-    "leisure_activity_controller",
+    "enterprise_controller",
+    "event_controller",
     "health_question_controller",
+    "leisure_activity_controller",
+    "user_controller",
 ]

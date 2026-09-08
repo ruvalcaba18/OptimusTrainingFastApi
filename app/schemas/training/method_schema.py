@@ -1,4 +1,3 @@
-from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -13,8 +12,8 @@ class MethodSchema(BaseModel):
     type: str
     level: str
     complexity: str
-    intensity: Optional[str] = None
-    tempo: Optional[str] = None
-    goals: List[GoalSchema] = []
+    intensity: str | None = None
+    tempo: str | None = None
+    goals: list[GoalSchema] = []
 
     model_config = {"from_attributes": True}

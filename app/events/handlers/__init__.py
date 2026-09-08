@@ -9,9 +9,9 @@ from app.events.handlers.user_handlers import (
 )
 
 __all__ = [
+    "handle_routine_generated",
     "handle_user_registered",
     "handle_user_tier_changed",
-    "handle_routine_generated",
     "handle_workout_completed",
     "log_event_to_audit_trail",
 ]

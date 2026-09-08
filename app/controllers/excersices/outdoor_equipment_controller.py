@@ -1,4 +1,4 @@
-from typing import List, final
+from typing import final
 
 from sqlalchemy.orm import Session
 
@@ -11,7 +11,7 @@ from app.services.excersice.outdoor_equipment_service import outdoor_equipment_s
 class OutdoorEquipmentController:
     @staticmethod
     @handle_controller_errors
-    def list_outdoor_equipment(db: Session) -> List[OutdoorEquipmentModel]:
+    def list_outdoor_equipment(db: Session) -> list[OutdoorEquipmentModel]:
         return outdoor_equipment_service.list_outdoor_equipment(db)
 
 outdoor_equipment_controller = OutdoorEquipmentController()

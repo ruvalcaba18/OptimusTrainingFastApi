@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from fastapi import status
 
@@ -13,7 +13,7 @@ class AppException(Exception):
         message: str,
         status_code: int = status.HTTP_500_INTERNAL_SERVER_ERROR,
         code: str = "INTERNAL_SERVER_ERROR",
-        details: Optional[Any] = None,
+        details: Any | None = None,
     ):
         super().__init__(message)
         self.message = message

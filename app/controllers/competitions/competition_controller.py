@@ -1,4 +1,3 @@
-from typing import Optional
 
 from sqlalchemy.orm import Session
 
@@ -45,8 +44,8 @@ class CompetitionController:
     @handle_controller_errors
     def list_competitions(
         db: Session,
-        sport_type: Optional[str] = None,
-        comp_status: Optional[str] = None,
+        sport_type: str | None = None,
+        comp_status: str | None = None,
         skip: int = 0,
         limit: int = 50,
     ) -> list[CompetitionResponse]:

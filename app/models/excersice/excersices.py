@@ -1,4 +1,4 @@
-from typing import Optional, final
+from typing import final
 
 from sqlalchemy import Column, Enum, Integer, String
 from sqlalchemy.orm import relationship
@@ -38,7 +38,7 @@ class Excersice(Base):
         return "Propio Peso"
 
     @property
-    def secondary_tool(self) -> Optional[str]:
+    def secondary_tool(self) -> str | None:
         for assoc in self.equipment_association:
             if not assoc.is_primary:
                 return assoc.equipment.name

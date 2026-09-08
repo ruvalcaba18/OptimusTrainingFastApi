@@ -1,4 +1,4 @@
-from typing import Optional, final
+from typing import final
 
 from pydantic import BaseModel
 
@@ -8,6 +8,6 @@ class LeisureActivitySchema(BaseModel):
     id: int
     code: str
     name: str
-    description: Optional[str] = None
+    description: str | None = None
 
     model_config = {"from_attributes": True}

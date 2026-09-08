@@ -7,11 +7,11 @@ from .exercises_seeder import ExercisesSeeder
 from .users_seeder import UsersSeeder
 
 __all__ = [
+    "AnatomySeeder",
+    "AssessmentSeeder",
     "BaseSeeder",
     "CatalogsSeeder",
-    "AnatomySeeder",
     "EquipmentSeeder",
     "ExercisesSeeder",
-    "AssessmentSeeder",
     "UsersSeeder",
 ]

@@ -1,4 +1,4 @@
-from typing import List, Optional, final
+from typing import final
 
 from pydantic import BaseModel, ConfigDict, field_validator
 
@@ -6,10 +6,10 @@ from pydantic import BaseModel, ConfigDict, field_validator
 @final 
 class EveryDayItemSchema(BaseModel):
     id: int
-    code: Optional[str] = None
+    code: str | None = None
     name: str
-    description: Optional[str] = None
-    mapping: Optional[List[str]] = None
+    description: str | None = None
+    mapping: list[str] | None = None
 
     @field_validator('mapping', mode='before')
     @classmethod

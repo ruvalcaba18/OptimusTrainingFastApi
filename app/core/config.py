@@ -1,4 +1,3 @@
-from typing import List
 
 from pydantic_settings import BaseSettings
 
@@ -26,7 +25,7 @@ class Settings(BaseSettings):
     SQLALCHEMY_DATABASE_URI: str
 
     MAX_UPLOAD_SIZE_MB: int = 5
-    ALLOWED_IMAGE_EXTENSIONS: List[str] = [".jpg", ".jpeg", ".png", ".webp"]
+    ALLOWED_IMAGE_EXTENSIONS: list[str] = [".jpg", ".jpeg", ".png", ".webp"]
 
     MIN_PASSWORD_LENGTH: int = 8
 
@@ -38,7 +37,7 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6379/0"
     RATE_LIMIT_ENABLED: bool = True
 
-    ALLOWED_ORIGINS: List[str] = ["*"]
+    ALLOWED_ORIGINS: list[str] = ["*"]
 
     model_config = {
         "case_sensitive": True,

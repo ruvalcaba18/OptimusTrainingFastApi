@@ -1,4 +1,4 @@
-from typing import List, final
+from typing import final
 
 from pydantic import BaseModel, field_validator
 
@@ -8,7 +8,7 @@ class OutdoorEquipmentSchema(BaseModel):
     id: int
     code: str
     name: str
-    mapping: List[str]
+    mapping: list[str]
 
     @field_validator('mapping', mode='before')
     @classmethod

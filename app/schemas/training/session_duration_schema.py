@@ -1,4 +1,4 @@
-from typing import Optional, final
+from typing import final
 
 from pydantic import BaseModel, ConfigDict
 
@@ -7,6 +7,6 @@ from pydantic import BaseModel, ConfigDict
 class SessionDurationSchema(BaseModel):
     code: str
     name: str
-    description: Optional[str] = None
+    description: str | None = None
     
     model_config = ConfigDict(from_attributes=True,extra='forbid', str_strip_whitespace=True)

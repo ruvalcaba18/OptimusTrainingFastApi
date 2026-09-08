@@ -1,4 +1,4 @@
-from typing import Optional, final
+from typing import final
 
 from pydantic import BaseModel
 
@@ -8,7 +8,7 @@ class HealthQuestionSchema(BaseModel):
     id: int
     code: str
     title: str
-    subtitle: Optional[str] = None
+    subtitle: str | None = None
     type: str
     category: str
 

@@ -1,9 +1,8 @@
-from typing import List
 
 from sqlalchemy.orm import Session
 
 from app.core.error_handlers import handle_controller_errors
-from app.core.exceptions import BadRequestError, ForbiddenError, NotFoundError
+from app.core.exceptions import ForbiddenError, NotFoundError
 from app.models import User
 from app.schemas.training import (
     CoachAthleteResponse,
@@ -34,7 +33,7 @@ class TrainingController:
 
     @staticmethod
     @handle_controller_errors
-    def list_my_athletes(db: Session, current_user: User) -> List[CoachAthleteResponse]:
+    def list_my_athletes(db: Session, current_user: User) -> list[CoachAthleteResponse]:
         coach = coach_service.get_by_user_id(db, current_user.id)
         if not coach:
             raise NotFoundError("Perfil de coach no encontrado")
@@ -74,7 +73,7 @@ class TrainingController:
     @staticmethod
     @handle_controller_errors
     def modify_workout(
-        db: Session, workout_id: int, exercises: List[ExerciseDetailCreate], current_user: User
+        db: Session, workout_id: int, exercises: list[ExerciseDetailCreate], current_user: User
     ) -> DailyWorkoutResponse:
         workout = training_service.get_workout_by_id(db, workout_id)
         if not workout:

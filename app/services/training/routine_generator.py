@@ -1,5 +1,5 @@
 import random
-from typing import Any, Dict, List, Optional, final
+from typing import Any, final
 
 from sqlalchemy.orm import Session
 
@@ -13,7 +13,7 @@ from app.services.training.exercise_selector import exercise_selector
 class RoutineGenerator:
     
     @staticmethod
-    def generate_routine(db: Session, user: User, day: Optional[int] = None) -> Dict[str, Any]:
+    def generate_routine(db: Session, user: User, day: int | None = None) -> dict[str, Any]:
         
         if not user.goal_id:
             raise ValueError("El usuario no tiene un perfil configurado.")
@@ -45,7 +45,7 @@ class RoutineGenerator:
         }
 
     @staticmethod
-    def _empty_fallback_routine(user: User) -> Dict[str, Any]:
+    def _empty_fallback_routine(user: User) -> dict[str, Any]:
         return {
             "goal": user.goal.name if user.goal else "N/A",
             "level": user.level.name if user.level else "N/A",
@@ -59,7 +59,7 @@ class RoutineGenerator:
         }
 
     @staticmethod
-    def _get_programming_rules(db: Session, user: User) -> Dict[str, Any]:
+    def _get_programming_rules(db: Session, user: User) -> dict[str, Any]:
         goal_code = user.goal.code if user.goal else "PG"
         level_code = user.level.code if user.level else "NIV1"
 
@@ -77,7 +77,7 @@ class RoutineGenerator:
         }
 
     @staticmethod
-    def _determine_exercise_count(duration_code: Optional[str]) -> int:
+    def _determine_exercise_count(duration_code: str | None) -> int:
         code = (duration_code or "").upper()
         if code == "EXPRESS":
             return 3
@@ -88,14 +88,14 @@ class RoutineGenerator:
         return 4
 
     @staticmethod
-    def _sample_exercises(user_id: int, exercises: List[Dict[str, Any]], count: int, day: Optional[int]) -> List[Dict[str, Any]]:
+    def _sample_exercises(user_id: int, exercises: list[dict[str, Any]], count: int, day: int | None) -> list[dict[str, Any]]:
         if day is not None:
             local_random = random.Random(f"{user_id}_{day}")
             return local_random.sample(exercises, count)
         return random.sample(exercises, count)
 
     @staticmethod
-    def _format_selected_exercises(selected_sample: List[Dict[str, Any]], matrix_reps: str = "12 reps") -> List[Dict[str, Any]]:
+    def _format_selected_exercises(selected_sample: list[dict[str, Any]], matrix_reps: str = "12 reps") -> list[dict[str, Any]]:
         routine_exercises = []
         
         # Ejercicios continuos por tiempo o distancia
@@ -138,7 +138,7 @@ class RoutineGenerator:
         return routine_exercises
 
     @staticmethod
-    def _save_or_update_routine(db: Session, user_id: int, week: int, day: int, routine: Dict[str, Any]) -> None:
+    def _save_or_update_routine(db: Session, user_id: int, week: int, day: int, routine: dict[str, Any]) -> None:
         
         existing = db.query(UserRoutine).filter(
             UserRoutine.user_id == user_id,
@@ -172,7 +172,7 @@ class RoutineGenerator:
             db.add(new_routine)
 
     @staticmethod
-    def generate_and_save_monthly_routine(db: Session, user: User) -> Dict[str, Any]:
+    def generate_and_save_monthly_routine(db: Session, user: User) -> dict[str, Any]:
  
         if user.specific_days:
             try:
@@ -196,7 +196,7 @@ class RoutineGenerator:
         return first_routine
 
     @staticmethod
-    def generate_and_save_daily_routine(db: Session, user: User, day: int) -> Dict[str, Any]:
+    def generate_and_save_daily_routine(db: Session, user: User, day: int) -> dict[str, Any]:
    
         routine = RoutineGenerator.generate_routine(db, user=user, day=day)
         RoutineGenerator._save_or_update_routine(db, user.id, 1, day, routine)
@@ -204,7 +204,7 @@ class RoutineGenerator:
         return routine
 
     @staticmethod
-    def update_user_routine(db: Session, user: User, day: int, update_data: UserRoutineUpdateSchema, week: Optional[int] = None) -> UserRoutine:
+    def update_user_routine(db: Session, user: User, day: int, update_data: UserRoutineUpdateSchema, week: int | None = None) -> UserRoutine:
    
         if user.tier != UserTier.PREMIUM:
             from fastapi import HTTPException, status
@@ -256,9 +256,9 @@ class RoutineGenerator:
         db: Session,
         user: User,
         week: int,
-        day: Optional[int] = None,
-        update_data: Optional[UserRoutineUpdateSchema] = None
-    ) -> Dict[str, Any]:
+        day: int | None = None,
+        update_data: UserRoutineUpdateSchema | None = None
+    ) -> dict[str, Any]:
         if user.tier != UserTier.PREMIUM:
             from fastapi import HTTPException, status
             raise HTTPException(
@@ -312,12 +312,12 @@ class RoutineGenerator:
         }
 
     @staticmethod
-    def get_monthly_plan(db: Session, user: User) -> Dict[str, Any]:
+    def get_monthly_plan(db: Session, user: User) -> dict[str, Any]:
         routines = db.query(UserRoutine).filter(
             UserRoutine.user_id == user.id
         ).order_by(UserRoutine.week, UserRoutine.day).all()
 
-        weeks_map: Dict[int, list] = {}
+        weeks_map: dict[int, list] = {}
         for routine in routines:
             weeks_map.setdefault(routine.week, []).append(routine.day)
 

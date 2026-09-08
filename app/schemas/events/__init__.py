@@ -10,13 +10,13 @@ from .event_schemas import (
 )
 
 __all__ = [
-    "EventType",
-    "EventStatus",
     "EventBase",
     "EventCreate",
-    "EventUpdate",
+    "EventParticipantResponse",
     "EventResponse",
+    "EventStatus",
+    "EventType",
+    "EventUpdate",
     "JoinEventRequest",
     "LeaveEventRequest",
-    "EventParticipantResponse",
 ]

@@ -1,9 +1,7 @@
 import secrets
 import string
 from datetime import datetime, timedelta, timezone
-from typing import List, Optional
 
-from sqlalchemy import func as sa_func
 from sqlalchemy.orm import Session
 
 from app.models import (
@@ -15,7 +13,6 @@ from app.models import (
 )
 from app.schemas.enterprise import (
     ActiveBreakCreate,
-    ActiveBreakUpdate,
     EnterpriseCreate,
 )
 
@@ -36,13 +33,13 @@ class EnterpriseService:
         return db_enterprise
 
     @staticmethod
-    def get_enterprise_by_id(db: Session, enterprise_id: int) -> Optional[Enterprise]:
+    def get_enterprise_by_id(db: Session, enterprise_id: int) -> Enterprise | None:
         return db.query(Enterprise).filter(Enterprise.id == enterprise_id).first()
 
     @staticmethod
     def get_all_enterprises(
         db: Session, skip: int = 0, limit: int = 100
-    ) -> List[Enterprise]:
+    ) -> list[Enterprise]:
         return db.query(Enterprise).offset(skip).limit(limit).all()
 
                                                                          
@@ -59,9 +56,9 @@ class EnterpriseService:
         enterprise_id: int,
         quantity: int,
         expire_in_days: int = 7,
-    ) -> List[EnterpriseCode]:
+    ) -> list[EnterpriseCode]:
         expires_at = datetime.now(timezone.utc) + timedelta(days=expire_in_days)
-        codes: List[EnterpriseCode] = []
+        codes: list[EnterpriseCode] = []
 
         for _ in range(quantity):
                                                          
@@ -92,7 +89,7 @@ class EnterpriseService:
         return codes
 
     @staticmethod
-    def get_code_by_value(db: Session, code: str) -> Optional[EnterpriseCode]:
+    def get_code_by_value(db: Session, code: str) -> EnterpriseCode | None:
         return (
             db.query(EnterpriseCode)
             .filter(EnterpriseCode.code == code.upper().strip())
@@ -103,7 +100,7 @@ class EnterpriseService:
     @staticmethod
     def get_codes_by_enterprise(
         db: Session, enterprise_id: int, skip: int = 0, limit: int = 100
-    ) -> List[EnterpriseCode]:
+    ) -> list[EnterpriseCode]:
         return (
             db.query(EnterpriseCode)
             .filter(EnterpriseCode.enterprise_id == enterprise_id)
@@ -129,7 +126,7 @@ class EnterpriseService:
     @staticmethod
     def get_membership(
         db: Session, user_id: int, enterprise_id: int
-    ) -> Optional[EnterpriseMember]:
+    ) -> EnterpriseMember | None:
         return (
             db.query(EnterpriseMember)
             .filter(
@@ -142,7 +139,7 @@ class EnterpriseService:
     @staticmethod
     def get_user_memberships(
         db: Session, user_id: int
-    ) -> List[EnterpriseMember]:
+    ) -> list[EnterpriseMember]:
         return (
             db.query(EnterpriseMember)
             .filter(EnterpriseMember.user_id == user_id, EnterpriseMember.is_active == True)
@@ -165,7 +162,7 @@ class EnterpriseService:
     @staticmethod
     def get_enterprise_members(
         db: Session, enterprise_id: int, skip: int = 0, limit: int = 100
-    ) -> List[EnterpriseMember]:
+    ) -> list[EnterpriseMember]:
         return (
             db.query(EnterpriseMember)
             .filter(
@@ -199,7 +196,7 @@ class EnterpriseService:
     @staticmethod
     def get_active_break_by_id(
         db: Session, break_id: int
-    ) -> Optional[ActiveBreakSession]:
+    ) -> ActiveBreakSession | None:
         return (
             db.query(ActiveBreakSession)
             .filter(ActiveBreakSession.id == break_id, ActiveBreakSession.is_active == True)
@@ -209,11 +206,11 @@ class EnterpriseService:
     @staticmethod
     def get_active_breaks(
         db: Session,
-        duration: Optional[int] = None,
-        category: Optional[str] = None,
+        duration: int | None = None,
+        category: str | None = None,
         skip: int = 0,
         limit: int = 50,
-    ) -> List[ActiveBreakSession]:
+    ) -> list[ActiveBreakSession]:
         query = db.query(ActiveBreakSession).filter(ActiveBreakSession.is_active == True)
         if duration:
             query = query.filter(ActiveBreakSession.duration_minutes == duration)
@@ -227,7 +224,7 @@ class EnterpriseService:
         db: Session,
         session_id: int,
         user_id: int,
-        enterprise_id: Optional[int] = None,
+        enterprise_id: int | None = None,
     ) -> ActiveBreakLog:
         log = ActiveBreakLog(
             session_id=session_id,
@@ -251,7 +248,7 @@ class EnterpriseService:
     @staticmethod
     def get_break_log_by_id(
         db: Session, log_id: int, user_id: int
-    ) -> Optional[ActiveBreakLog]:
+    ) -> ActiveBreakLog | None:
         return (
             db.query(ActiveBreakLog)
             .filter(ActiveBreakLog.id == log_id, ActiveBreakLog.user_id == user_id)

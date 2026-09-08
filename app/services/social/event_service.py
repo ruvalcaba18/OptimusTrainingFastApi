@@ -1,4 +1,3 @@
-from typing import List, Optional
 
 from sqlalchemy import func as sa_func
 from sqlalchemy.orm import Session
@@ -33,11 +32,11 @@ class EventService:
         return db_event
 
     @staticmethod
-    def get_by_id(db: Session, event_id: int) -> Optional[Event]:
+    def get_by_id(db: Session, event_id: int) -> Event | None:
         return db.query(Event).filter(Event.id == event_id).first()
 
     @staticmethod
-    def get_by_id_for_update(db: Session, event_id: int) -> Optional[Event]:
+    def get_by_id_for_update(db: Session, event_id: int) -> Event | None:
         return (
             db.query(Event)
             .filter(Event.id == event_id)
@@ -48,11 +47,11 @@ class EventService:
     @staticmethod
     def get_multi(
         db: Session,
-        event_type: Optional[str] = None,
-        status: Optional[str] = None,
+        event_type: str | None = None,
+        status: str | None = None,
         skip: int = 0,
         limit: int = 50,
-    ) -> List[Event]:
+    ) -> list[Event]:
         query = db.query(Event).filter(Event.is_public == True)
         if event_type:
             query = query.filter(Event.event_type == event_type)
@@ -95,7 +94,7 @@ class EventService:
     @staticmethod
     def get_participant(
         db: Session, event_id: int, user_id: int
-    ) -> Optional[EventParticipant]:
+    ) -> EventParticipant | None:
         return (
             db.query(EventParticipant)
             .filter(
@@ -129,7 +128,7 @@ class EventService:
     @staticmethod
     def remove_participant(
         db: Session, event_id: int, user_id: int
-    ) -> Optional[EventParticipant]:
+    ) -> EventParticipant | None:
         participant = (
             db.query(EventParticipant)
             .filter(
@@ -146,7 +145,7 @@ class EventService:
     @staticmethod
     def get_participants(
         db: Session, event_id: int, skip: int = 0, limit: int = 100
-    ) -> List[EventParticipant]:
+    ) -> list[EventParticipant]:
         return (
             db.query(EventParticipant)
             .filter(EventParticipant.event_id == event_id)

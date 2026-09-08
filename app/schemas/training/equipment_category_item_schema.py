@@ -1,13 +1,13 @@
-from typing import List, Union, final
+from typing import final
 
 from pydantic import BaseModel, field_validator
 
 
 @final
 class EquipmentCategoryItem(BaseModel):
-    code: Union[str, None] = None
+    code: str | None = None
     name: str
-    mapping: List[str]
+    mapping: list[str]
 
     @field_validator('mapping', mode='before')
     @classmethod

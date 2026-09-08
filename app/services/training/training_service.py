@@ -1,12 +1,9 @@
-from datetime import date, datetime, timedelta
-from typing import List, Optional
+from datetime import date, datetime
 
-from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.models import (
     CoachAthlete,
-    CoachProfile,
     DailyWorkout,
     ExerciseDetail,
     TrainingPlan,
@@ -51,7 +48,7 @@ class TrainingService:
         return db_rel
 
     @staticmethod
-    def list_coach_athletes(db: Session, coach_id: int) -> List[CoachAthlete]:
+    def list_coach_athletes(db: Session, coach_id: int) -> list[CoachAthlete]:
         return db.query(CoachAthlete).filter(
             CoachAthlete.coach_id == coach_id,
             CoachAthlete.is_active == True
@@ -84,7 +81,7 @@ class TrainingService:
         return db_plan
 
     @staticmethod
-    def get_plan_by_id(db: Session, plan_id: int) -> Optional[TrainingPlan]:
+    def get_plan_by_id(db: Session, plan_id: int) -> TrainingPlan | None:
         return db.query(TrainingPlan).filter(TrainingPlan.id == plan_id).first()
 
     @staticmethod
@@ -123,12 +120,12 @@ class TrainingService:
         return db_workout
 
     @staticmethod
-    def get_workout_by_id(db: Session, workout_id: int) -> Optional[DailyWorkout]:
+    def get_workout_by_id(db: Session, workout_id: int) -> DailyWorkout | None:
         return db.query(DailyWorkout).filter(DailyWorkout.id == workout_id).first()
 
     @staticmethod
     def update_workout_exercises(
-        db: Session, workout_id: int, exercises_in: List[ExerciseDetailCreate]
+        db: Session, workout_id: int, exercises_in: list[ExerciseDetailCreate]
     ) -> DailyWorkout:
         db_workout = db.query(DailyWorkout).filter(DailyWorkout.id == workout_id).first()
         if not db_workout:

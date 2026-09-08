@@ -12,7 +12,6 @@ from app.database.seeders import (
     ExercisesSeeder,
     UsersSeeder,
 )
-
 from app.models import (
     BodyPart,
     Condition,

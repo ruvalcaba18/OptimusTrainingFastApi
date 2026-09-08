@@ -1,4 +1,4 @@
-from typing import List, final
+from typing import final
 
 from sqlalchemy.orm import Session
 
@@ -12,7 +12,7 @@ class SessionDurationController:
     
     @staticmethod
     @handle_controller_errors
-    def list_session_duration(db: Session) -> List[SessionDuration]:
+    def list_session_duration(db: Session) -> list[SessionDuration]:
         return session_duration_service.list_session_duration(db)
     
 session_duration_controller = SessionDurationController()

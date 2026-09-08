@@ -1,4 +1,3 @@
-from typing import Optional
 
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
@@ -44,7 +43,7 @@ def register_coach(
     summary="Listar coaches",
 )
 def list_coaches(
-    specialty: Optional[str] = Query(None, description="Filtrar por especialidad"),
+    specialty: str | None = Query(None, description="Filtrar por especialidad"),
     skip: int = 0,
     limit: int = 50,
     db: Session = Depends(get_db),
@@ -64,7 +63,7 @@ async def get_nearby_coaches(
     lat: float = Query(..., ge=-90, le=90, description="Latitud del atleta"),
     lng: float = Query(..., ge=-180, le=180, description="Longitud del atleta"),
     radius_km: float = Query(10.0, gt=0, description="Radio de búsqueda en km"),
-    specialty: Optional[str] = Query(None, description="Filtrar por especialidad"),
+    specialty: str | None = Query(None, description="Filtrar por especialidad"),
     skip: int = 0,
     limit: int = 20,
     db: Session = Depends(get_db),

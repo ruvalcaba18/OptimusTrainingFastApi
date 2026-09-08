@@ -1,4 +1,3 @@
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -8,7 +7,7 @@ class ConditionSchema(BaseModel):
     code: str
     name: str
     type: str  
-    category: Optional[str] = None
-    warning_message: Optional[str] = None
+    category: str | None = None
+    warning_message: str | None = None
 
     model_config = {"from_attributes": True}

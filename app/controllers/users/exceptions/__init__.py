@@ -4,6 +4,6 @@ from app.controllers.users.exceptions.user_exceptions import (
 )
 
 __all__ = [
-    "UserNotFoundError",
     "UserAlreadyExistsError",
+    "UserNotFoundError",
 ]

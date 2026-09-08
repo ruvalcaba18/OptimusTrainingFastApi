@@ -1,6 +1,6 @@
 from typing import final
 
-from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy import Column, Integer, String
 
 from app.database import Base
 

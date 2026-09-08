@@ -8,10 +8,10 @@ from app.controllers.competitions.exceptions.competition_exceptions import (
 )
 
 __all__ = [
-    "CompetitionNotFoundError",
-    "CompetitionFullError",
+    "AlreadyJoinedCompetitionError",
     "CompetitionCancelledError",
     "CompetitionFinishedError",
-    "AlreadyJoinedCompetitionError",
+    "CompetitionFullError",
+    "CompetitionNotFoundError",
     "ParticipantNotFoundError",
 ]

@@ -1,4 +1,3 @@
-from typing import List, Optional
 
 from sqlalchemy import func as sa_func
 from sqlalchemy.orm import Session
@@ -35,11 +34,11 @@ class CompetitionService:
         return db_comp
 
     @staticmethod
-    def get_by_id(db: Session, comp_id: int) -> Optional[Competition]:
+    def get_by_id(db: Session, comp_id: int) -> Competition | None:
         return db.query(Competition).filter(Competition.id == comp_id).first()
 
     @staticmethod
-    def get_by_id_for_update(db: Session, comp_id: int) -> Optional[Competition]:
+    def get_by_id_for_update(db: Session, comp_id: int) -> Competition | None:
         return (
             db.query(Competition)
             .filter(Competition.id == comp_id)
@@ -50,11 +49,11 @@ class CompetitionService:
     @staticmethod
     def get_multi(
         db: Session,
-        sport_type: Optional[str] = None,
-        status: Optional[str] = None,
+        sport_type: str | None = None,
+        status: str | None = None,
         skip: int = 0,
         limit: int = 50,
-    ) -> List[Competition]:
+    ) -> list[Competition]:
         query = db.query(Competition)
         if sport_type:
             query = query.filter(Competition.sport_type == sport_type)
@@ -89,7 +88,7 @@ class CompetitionService:
     @staticmethod
     def get_participant(
         db: Session, comp_id: int, user_id: int
-    ) -> Optional[CompetitionParticipant]:
+    ) -> CompetitionParticipant | None:
         return (
             db.query(CompetitionParticipant)
             .filter(
@@ -102,7 +101,7 @@ class CompetitionService:
     @staticmethod
     def get_participant_for_update(
         db: Session, comp_id: int, user_id: int
-    ) -> Optional[CompetitionParticipant]:
+    ) -> CompetitionParticipant | None:
         return (
             db.query(CompetitionParticipant)
             .filter(
@@ -163,7 +162,7 @@ class CompetitionService:
     @staticmethod
     def get_ranking(
         db: Session, comp_id: int
-    ) -> List[CompetitionParticipant]:
+    ) -> list[CompetitionParticipant]:
         return (
             db.query(CompetitionParticipant)
             .filter(CompetitionParticipant.competition_id == comp_id)
@@ -177,7 +176,7 @@ class CompetitionService:
     @staticmethod
     def get_participants(
         db: Session, comp_id: int, skip: int = 0, limit: int = 100
-    ) -> List[CompetitionParticipant]:
+    ) -> list[CompetitionParticipant]:
         return (
             db.query(CompetitionParticipant)
             .filter(CompetitionParticipant.competition_id == comp_id)

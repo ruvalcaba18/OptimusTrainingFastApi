@@ -24,6 +24,5 @@ class EmailService:
         logger.info(f"CONTENIDO:\n{message_content}")
         
                                                                       
-        pass
 
 email_service = EmailService()

@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, final
+from typing import Any, final
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
@@ -21,14 +21,14 @@ class UserBase(BaseModel):
     height: float = Field(default=None, gt=0)
     exercise_frequency: str
     training_type: TrainingType = Field(default=TrainingType.CASA)
-    gender: Optional[UserGender] = None
-    goal_code: Optional[str] = None
-    level_code: Optional[str] = None
-    custom_equipment: Optional[str] = None
-    session_duration_code: Optional[str] = None
-    specific_days: Optional[List[int]] = None
-    leisure_activities: Optional[List[LeisureActivitySchema]] = None
-    tier: Optional[UserTier] = UserTier.BASIC
+    gender: UserGender | None = None
+    goal_code: str | None = None
+    level_code: str | None = None
+    custom_equipment: str | None = None
+    session_duration_code: str | None = None
+    specific_days: list[int] | None = None
+    leisure_activities: list[LeisureActivitySchema] | None = None
+    tier: UserTier | None = UserTier.BASIC
 
     @field_validator("phone")
     @classmethod
@@ -44,7 +44,7 @@ class UserBase(BaseModel):
 
     @field_validator("specific_days", mode="before")
     @classmethod
-    def parse_specific_days(cls, v: Any) -> Optional[List[int]]:
+    def parse_specific_days(cls, v: Any) -> list[int] | None:
         if isinstance(v, str):
             if not v.strip():
                 return []

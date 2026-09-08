@@ -5,7 +5,7 @@ from .muscle_schema import MuscleResponse
 
 __all__ = [
     "BodyPartResponse",
+    "EquipmentCatalogResponse",
     "ExerciseTypeResponse",
-    "MuscleResponse",
-    "EquipmentCatalogResponse"
+    "MuscleResponse"
 ]

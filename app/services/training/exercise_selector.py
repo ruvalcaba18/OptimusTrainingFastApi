@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -17,7 +17,7 @@ from app.services.Enum import ExerciseLevel
 
 class ExerciseSelector:
     
-    def select_exercises(self, db: Session, user: User) -> List[Dict[str, Any]]:
+    def select_exercises(self, db: Session, user: User) -> list[dict[str, Any]]:
         if db.bind.dialect.name == "postgresql":
             try:
                 with db.begin_nested():
@@ -76,11 +76,11 @@ class ExerciseSelector:
 
         return selected_exercises
 
-    def _fallback_all_exercises(self, db: Session) -> List[Dict[str, Any]]:
+    def _fallback_all_exercises(self, db: Session) -> list[dict[str, Any]]:
         exercises = db.query(Excersice).all()
         return [{"exercise": ex, "caution_warnings": [], "has_caution": False} for ex in exercises]
 
-    def _get_exercises_by_goal(self, db: Session, goal_id: Optional[int]) -> List[Excersice]:
+    def _get_exercises_by_goal(self, db: Session, goal_id: int | None) -> list[Excersice]:
         query = db.query(Excersice)
         if goal_id:
             query = query.join(Excersice.goals).filter(Goal.id == goal_id)
@@ -91,8 +91,8 @@ class ExerciseSelector:
         return ex_level_value <= user_level_value
 
     def _evaluate_health_restrictions(
-        self, db: Session, ex_id: int, user_condition_ids: List[int]
-    ) -> Tuple[bool, List[str]]:
+        self, db: Session, ex_id: int, user_condition_ids: list[int]
+    ) -> tuple[bool, list[str]]:
         relations = db.query(ExcersiceCondition).filter(
             ExcersiceCondition.excersice_id == ex_id
         ).all()

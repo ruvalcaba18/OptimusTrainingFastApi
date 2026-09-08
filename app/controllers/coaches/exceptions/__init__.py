@@ -8,10 +8,10 @@ from app.controllers.coaches.exceptions.coach_exceptions import (
 )
 
 __all__ = [
-    "CoachNotFoundError",
+    "BookingNotFoundError",
     "CoachAlreadyExistsError",
+    "CoachNotFoundError",
     "CoachUnavailableError",
     "SelfBookingError",
-    "BookingNotFoundError",
     "SessionAlreadyReviewedError",
 ]

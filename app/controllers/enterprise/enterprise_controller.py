@@ -1,5 +1,4 @@
 from datetime import datetime, timezone
-from typing import Optional
 
 from sqlalchemy.orm import Session
 
@@ -154,8 +153,8 @@ class EnterpriseController:
     @handle_controller_errors
     def list_active_breaks(
         db: Session,
-        duration: Optional[int] = None,
-        category: Optional[str] = None,
+        duration: int | None = None,
+        category: str | None = None,
         skip: int = 0,
         limit: int = 50,
     ) -> list[ActiveBreakResponse]:

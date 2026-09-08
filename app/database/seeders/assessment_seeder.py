@@ -1,6 +1,4 @@
-from pathlib import Path
 
-from sqlalchemy.orm import Session
 
 from app.database.seeders.base_seeder import BaseSeeder
 from app.models import (

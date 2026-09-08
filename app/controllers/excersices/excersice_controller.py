@@ -1,4 +1,3 @@
-from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
@@ -13,13 +12,14 @@ class ExcersiceController:
     @handle_controller_errors
     def list_excersices(
         db: Session,
-        name: Optional[str] = None,
-        muscle_group: Optional[str] = None,
-        pattern: Optional[str] = None,
-        level: Optional[str] = None,
-        goal_code: Optional[str] = None,
-        exclude_condition_codes: Optional[List[str]] = None,
-    ) -> List[Excersice]:
+        name: str | None = None,
+        muscle_group: str | None = None,
+        pattern: str | None = None,
+        level: str | None = None,
+        goal_code: str | None = None,
+        exclude_condition_codes: list[str] | None = None,
+    ) -> list[Excersice]:
+
         return excersice_service.list_excersices(
             db,
             name=name,

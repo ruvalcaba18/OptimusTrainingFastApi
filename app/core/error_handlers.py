@@ -65,7 +65,7 @@ def handle_controller_errors(func):
                 if db:
                     db.rollback()
                 raise ForbiddenError(str(e))
-            except Exception as e:
+            except Exception:
                 db = _extract_db_session(*args, **kwargs)
                 if db:
                     db.rollback()
@@ -92,7 +92,7 @@ def handle_controller_errors(func):
                 if db:
                     db.rollback()
                 raise ForbiddenError(str(e))
-            except Exception as e:
+            except Exception:
                 db = _extract_db_session(*args, **kwargs)
                 if db:
                     db.rollback()

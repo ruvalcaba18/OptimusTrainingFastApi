@@ -1,4 +1,3 @@
-from typing import Optional
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -15,7 +14,7 @@ router = APIRouter()
 @router.post("/generate", summary="Generar una rutina de entrenamiento personalizada", status_code=status.HTTP_200_OK)
 def generate_my_routine(
     background_tasks: BackgroundTasks,
-    day: Optional[int] = None,
+    day: int | None = None,
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> dict:
@@ -52,7 +51,7 @@ def generate_my_routine(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error interno al generar rutina: {str(e)}"
+            detail=f"Error interno al generar rutina: {e!s}"
         )
 
 
@@ -84,8 +83,8 @@ def update_my_routine(
 @router.put("/week/{week}", summary="Modificar o regenerar rutina de una semana específica (Solo Premium)", status_code=status.HTTP_200_OK)
 def update_or_regenerate_week_routine(
     week: int,
-    day: Optional[int] = None,
-    profile_in: Optional[UserRoutineUpdateSchema] = None,
+    day: int | None = None,
+    profile_in: UserRoutineUpdateSchema | None = None,
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> dict:

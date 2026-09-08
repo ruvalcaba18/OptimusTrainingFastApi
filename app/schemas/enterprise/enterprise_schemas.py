@@ -1,12 +1,11 @@
 from datetime import datetime
-from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr, Field
 
 
 class EnterpriseBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=200)
-    description: Optional[str] = None
+    description: str | None = None
     contact_email: EmailStr
 
 
@@ -16,10 +15,10 @@ class EnterpriseCreate(EnterpriseBase):
 
 class EnterpriseResponse(EnterpriseBase):
     id: int
-    logo_url: Optional[str] = None
+    logo_url: str | None = None
     is_active: bool
     created_at: datetime
-    updated_at: Optional[datetime] = None
+    updated_at: datetime | None = None
 
     model_config = {"from_attributes": True}
 
@@ -41,8 +40,8 @@ class EnterpriseCodeResponse(BaseModel):
     id: int
     code: str
     is_used: bool
-    used_by_user_id: Optional[int] = None
-    used_at: Optional[datetime] = None
+    used_by_user_id: int | None = None
+    used_at: datetime | None = None
     expires_at: datetime
     created_at: datetime
 

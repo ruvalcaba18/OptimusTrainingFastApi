@@ -41,7 +41,7 @@ def create_user(
         
         return result
     except Exception as e:
-        logger.error(f"Error registering user {user_in.email}: {str(e)}")
+        logger.error(f"Error registering user {user_in.email}: {e!s}")
         raise e
 
 

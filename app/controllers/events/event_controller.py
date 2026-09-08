@@ -1,4 +1,3 @@
-from typing import Optional
 
 from sqlalchemy.orm import Session
 
@@ -43,8 +42,8 @@ class EventController:
     @handle_controller_errors
     def list_events(
         db: Session,
-        event_type: Optional[str] = None,
-        event_status: Optional[str] = None,
+        event_type: str | None = None,
+        event_status: str | None = None,
         skip: int = 0,
         limit: int = 50,
     ) -> list[EventResponse]:

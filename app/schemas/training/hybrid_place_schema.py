@@ -1,4 +1,4 @@
-from typing import Optional, final
+from typing import final
 
 from pydantic import BaseModel, ConfigDict
 
@@ -8,7 +8,7 @@ class WorkOutHybridPalcesSchema(BaseModel):
     id: int
     code: str
     name: str
-    description: Optional[str] = None
+    description: str | None = None
 
     model_config = ConfigDict(from_attributes=True,extra="forbid", str_strip_whitespace=True)
     

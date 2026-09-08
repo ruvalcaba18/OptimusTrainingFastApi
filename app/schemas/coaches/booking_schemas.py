@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -10,15 +9,15 @@ class BookingCreate(BaseModel):
     coach_id: int = Field(..., description="ID del perfil de coach")
     scheduled_date: datetime
     duration_minutes: int = Field(..., gt=0, description="Duración en minutos")
-    session_type: Optional[SessionType] = None
-    location_name: Optional[str] = None
-    latitude: Optional[float] = Field(None, ge=-90, le=90)
-    longitude: Optional[float] = Field(None, ge=-180, le=180)
-    athlete_notes: Optional[str] = None
+    session_type: SessionType | None = None
+    location_name: str | None = None
+    latitude: float | None = Field(None, ge=-90, le=90)
+    longitude: float | None = Field(None, ge=-180, le=180)
+    athlete_notes: str | None = None
 
 class BookingStatusUpdate(BaseModel):
     status: BookingStatus
-    coach_notes: Optional[str] = None
+    coach_notes: str | None = None
 
 class BookingResponse(BaseModel):
     id: int
@@ -26,23 +25,23 @@ class BookingResponse(BaseModel):
     athlete_id: int
     scheduled_date: datetime
     duration_minutes: int
-    session_type: Optional[str] = None
-    location_name: Optional[str] = None
-    latitude: Optional[float] = None
-    longitude: Optional[float] = None
+    session_type: str | None = None
+    location_name: str | None = None
+    latitude: float | None = None
+    longitude: float | None = None
     status: str
     total_price: float
     currency: str
-    athlete_notes: Optional[str] = None
-    coach_notes: Optional[str] = None
-    athlete_rating: Optional[float] = None
-    athlete_review: Optional[str] = None
+    athlete_notes: str | None = None
+    coach_notes: str | None = None
+    athlete_rating: float | None = None
+    athlete_review: str | None = None
     created_at: datetime
-    updated_at: Optional[datetime] = None
+    updated_at: datetime | None = None
 
     model_config = {"from_attributes": True}
 
 class ReviewCreate(BaseModel):
     booking_id: int = Field(..., description="ID de la reservación a calificar")
     rating: float = Field(..., ge=1.0, le=5.0, description="Calificación 1.0 - 5.0")
-    review: Optional[str] = None
+    review: str | None = None

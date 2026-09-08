@@ -1,4 +1,3 @@
-from typing import List
 
 from sqlalchemy.orm import Session
 
@@ -11,7 +10,7 @@ class EquipmentController:
 
     @staticmethod
     @handle_controller_errors
-    def list_equipments(db: Session) -> List[Equipment]:
+    def list_equipments(db: Session) -> list[Equipment]:
         return equipment_service.list_equipments(db)
 
     @staticmethod

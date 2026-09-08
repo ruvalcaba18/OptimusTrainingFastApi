@@ -6,8 +6,8 @@ from app.controllers.auth.exceptions.auth_exceptions import (
 )
 
 __all__ = [
-    "InvalidCredentialsError",
     "InactiveAccountError",
+    "InvalidCredentialsError",
     "InvalidRefreshTokenError",
     "InvalidResetTokenError",
 ]

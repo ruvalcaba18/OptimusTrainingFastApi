@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -8,12 +7,12 @@ from .enterprise_enums import BreakCategory, BreakDuration
 
 class ActiveBreakBase(BaseModel):
     title: str = Field(..., min_length=1, max_length=200)
-    description: Optional[str] = None
+    description: str | None = None
     category: BreakCategory
     duration_minutes: BreakDuration
-    instructions: Optional[str] = None
-    video_url: Optional[str] = None
-    image_url: Optional[str] = None
+    instructions: str | None = None
+    video_url: str | None = None
+    image_url: str | None = None
 
 
 class ActiveBreakCreate(ActiveBreakBase):
@@ -21,20 +20,20 @@ class ActiveBreakCreate(ActiveBreakBase):
 
 
 class ActiveBreakUpdate(BaseModel):
-    title: Optional[str] = Field(None, min_length=1, max_length=200)
-    description: Optional[str] = None
-    category: Optional[BreakCategory] = None
-    duration_minutes: Optional[BreakDuration] = None
-    instructions: Optional[str] = None
-    video_url: Optional[str] = None
-    image_url: Optional[str] = None
+    title: str | None = Field(None, min_length=1, max_length=200)
+    description: str | None = None
+    category: BreakCategory | None = None
+    duration_minutes: BreakDuration | None = None
+    instructions: str | None = None
+    video_url: str | None = None
+    image_url: str | None = None
 
 
 class ActiveBreakResponse(ActiveBreakBase):
     id: int
     is_active: bool
     created_at: datetime
-    updated_at: Optional[datetime] = None
+    updated_at: datetime | None = None
 
     model_config = {"from_attributes": True}
 
@@ -47,10 +46,10 @@ class ActiveBreakLogResponse(BaseModel):
     id: int
     session_id: int
     user_id: int
-    enterprise_id: Optional[int] = None
+    enterprise_id: int | None = None
     started_at: datetime
     completed: bool
-    completed_at: Optional[datetime] = None
+    completed_at: datetime | None = None
 
     model_config = {"from_attributes": True}
 

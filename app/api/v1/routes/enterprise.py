@@ -1,4 +1,3 @@
-from typing import Optional
 
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
@@ -137,8 +136,8 @@ async def create_active_break(
     summary="Listar pausas activas",
 )
 async def list_active_breaks(
-    duration: Optional[int] = Query(None, description="Filtrar por duración: 10, 20 o 30"),
-    category: Optional[str] = Query(None, description="Filtrar por categoría"),
+    duration: int | None = Query(None, description="Filtrar por duración: 10, 20 o 30"),
+    category: str | None = Query(None, description="Filtrar por categoría"),
     skip: int = 0,
     limit: int = 50,
     db: Session = Depends(get_db),

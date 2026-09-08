@@ -9,11 +9,11 @@ from app.controllers.enterprise.exceptions.enterprise_exceptions import (
 )
 
 __all__ = [
+    "ActiveBreakNotFoundError",
+    "AlreadyLinkedEnterpriseError",
+    "BreakAlreadyCompletedError",
+    "EnterpriseCodeAlreadyUsedError",
+    "EnterpriseCodeExpiredError",
     "EnterpriseNotFoundError",
     "InvalidEnterpriseCodeError",
-    "EnterpriseCodeExpiredError",
-    "EnterpriseCodeAlreadyUsedError",
-    "AlreadyLinkedEnterpriseError",
-    "ActiveBreakNotFoundError",
-    "BreakAlreadyCompletedError",
 ]

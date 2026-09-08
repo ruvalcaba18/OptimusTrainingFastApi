@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Any, List, Optional
+from typing import Any
 
 import redis.asyncio as aioredis
 
@@ -24,7 +24,7 @@ class CacheTTL(IntEnum):
 
 class RedisCacheService:
     def __init__(self):
-        self._redis_client: Optional[aioredis.Redis] = None
+        self._redis_client: aioredis.Redis | None = None
 
     async def get_client(self) -> aioredis.Redis:
         if self._redis_client is None:
@@ -46,7 +46,7 @@ class RedisCacheService:
             await self._redis_client.aclose()
             self._redis_client = None
 
-    async def get(self, key: str) -> Optional[Any]:
+    async def get(self, key: str) -> Any | None:
         try:
             client = await self.get_client()
             raw = await client.get(key)

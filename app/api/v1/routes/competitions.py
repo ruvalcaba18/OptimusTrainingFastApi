@@ -1,4 +1,3 @@
-from typing import Optional
 
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
@@ -41,8 +40,8 @@ def create_competition(
     summary="Listar competencias",
 )
 def list_competitions(
-    sport_type: Optional[str] = Query(None, description="Filtrar por tipo de deporte"),
-    comp_status: Optional[str] = Query(None, alias="status", description="Filtrar por estado"),
+    sport_type: str | None = Query(None, description="Filtrar por tipo de deporte"),
+    comp_status: str | None = Query(None, alias="status", description="Filtrar por estado"),
     skip: int = 0,
     limit: int = 50,
     db: Session = Depends(get_db),

@@ -1,4 +1,3 @@
-from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
@@ -11,7 +10,7 @@ class ConditionController:
 
     @staticmethod
     @handle_controller_errors
-    def list_conditions(db: Session, type: Optional[str] = None) -> List[Condition]:
+    def list_conditions(db: Session, type: str | None = None) -> list[Condition]:
         return condition_service.list_conditions(db, type=type)
 
 

@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional
 
 from app.events.domain.base_event import BaseEvent
 
@@ -9,5 +8,5 @@ class RoutineGeneratedEvent(BaseEvent):
     user_id: int
     weeks_count: int
     trigger_source: str
-    week: Optional[int] = None
-    day: Optional[int] = None
+    week: int | None = None
+    day: int | None = None

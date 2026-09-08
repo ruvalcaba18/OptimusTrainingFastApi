@@ -1,4 +1,3 @@
-from typing import List, Optional, Tuple
 
 from sqlalchemy import func as sa_func
 from sqlalchemy.orm import Session
@@ -10,7 +9,7 @@ from app.schemas.coaches import BookingCreate, CoachCreate, CoachUpdate
 class CoachService:
                                                           
     @staticmethod
-    def get_by_user_id(db: Session, user_id: int) -> Optional[CoachProfile]:
+    def get_by_user_id(db: Session, user_id: int) -> CoachProfile | None:
         return (
             db.query(CoachProfile)
             .filter(CoachProfile.user_id == user_id)
@@ -18,7 +17,7 @@ class CoachService:
         )
 
     @staticmethod
-    def get_by_id(db: Session, coach_id: int) -> Optional[CoachProfile]:
+    def get_by_id(db: Session, coach_id: int) -> CoachProfile | None:
         return (
             db.query(CoachProfile)
             .filter(CoachProfile.id == coach_id)
@@ -28,10 +27,10 @@ class CoachService:
     @staticmethod
     def get_multi(
         db: Session,
-        specialty: Optional[str] = None,
+        specialty: str | None = None,
         skip: int = 0,
         limit: int = 50,
-    ) -> List[CoachProfile]:
+    ) -> list[CoachProfile]:
         query = db.query(CoachProfile).filter(CoachProfile.is_active == True)
         if specialty:
             query = query.filter(CoachProfile.specialty == specialty)
@@ -98,10 +97,10 @@ class CoachService:
         lat: float,
         lng: float,
         radius_km: float = 10.0,
-        specialty: Optional[str] = None,
+        specialty: str | None = None,
         skip: int = 0,
         limit: int = 20,
-    ) -> List[Tuple[CoachProfile, float]]:
+    ) -> list[tuple[CoachProfile, float]]:
         earth_radius_km = 6371.0
 
         dlat = sa_func.radians(CoachProfile.latitude - lat)
@@ -140,7 +139,7 @@ class CoachService:
 
                                                                        
     @staticmethod
-    def get_by_id_for_update(db: Session, coach_id: int) -> Optional[CoachProfile]:
+    def get_by_id_for_update(db: Session, coach_id: int) -> CoachProfile | None:
         return (
             db.query(CoachProfile)
             .filter(CoachProfile.id == coach_id)
@@ -151,7 +150,7 @@ class CoachService:
     @staticmethod
     def get_booking_by_id_for_update(
         db: Session, booking_id: int
-    ) -> Optional[CoachBooking]:
+    ) -> CoachBooking | None:
         return (
             db.query(CoachBooking)
             .filter(CoachBooking.id == booking_id)
@@ -190,7 +189,7 @@ class CoachService:
         return db_booking
 
     @staticmethod
-    def get_booking_by_id(db: Session, booking_id: int) -> Optional[CoachBooking]:
+    def get_booking_by_id(db: Session, booking_id: int) -> CoachBooking | None:
         return (
             db.query(CoachBooking)
             .filter(CoachBooking.id == booking_id)
@@ -200,7 +199,7 @@ class CoachService:
     @staticmethod
     def get_bookings_by_athlete(
         db: Session, athlete_id: int, skip: int = 0, limit: int = 50
-    ) -> List[CoachBooking]:
+    ) -> list[CoachBooking]:
         return (
             db.query(CoachBooking)
             .filter(CoachBooking.athlete_id == athlete_id)
@@ -213,7 +212,7 @@ class CoachService:
     @staticmethod
     def get_bookings_by_coach(
         db: Session, coach_id: int, skip: int = 0, limit: int = 50
-    ) -> List[CoachBooking]:
+    ) -> list[CoachBooking]:
         return (
             db.query(CoachBooking)
             .filter(CoachBooking.coach_id == coach_id)
@@ -228,7 +227,7 @@ class CoachService:
         db: Session,
         booking: CoachBooking,
         new_status: str,
-        coach_notes: Optional[str] = None,
+        coach_notes: str | None = None,
     ) -> CoachBooking:
         booking.status = new_status
         if coach_notes is not None:
@@ -244,7 +243,7 @@ class CoachService:
         db: Session,
         booking: CoachBooking,
         rating: float,
-        review: Optional[str],
+        review: str | None,
     ) -> CoachBooking:
         booking.athlete_rating = rating
         booking.athlete_review = review

@@ -1,4 +1,3 @@
-from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
@@ -11,7 +10,7 @@ class MethodController:
 
     @staticmethod
     @handle_controller_errors
-    def list_methods(db: Session, category: Optional[str] = None) -> List[Method]:
+    def list_methods(db: Session, category: str | None = None) -> list[Method]:
         return method_service.list_methods(db, category=category)
 
 

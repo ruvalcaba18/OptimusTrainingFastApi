@@ -7,9 +7,9 @@ from app.controllers.events.exceptions.event_exceptions import (
 )
 
 __all__ = [
-    "EventNotFoundError",
+    "AlreadyJoinedEventError",
     "EventCancelledError",
     "EventFullError",
-    "AlreadyJoinedEventError",
+    "EventNotFoundError",
     "NotJoinedEventError",
 ]

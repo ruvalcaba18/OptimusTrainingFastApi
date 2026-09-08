@@ -1,4 +1,3 @@
-from typing import List
 
 from sqlalchemy.orm import Session
 
@@ -11,7 +10,7 @@ class GoalController:
 
     @staticmethod
     @handle_controller_errors
-    def list_goals(db: Session) -> List[Goal]:
+    def list_goals(db: Session) -> list[Goal]:
         return goal_service.list_goals(db)
 
 

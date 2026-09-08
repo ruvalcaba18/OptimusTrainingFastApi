@@ -1,4 +1,3 @@
-from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -16,19 +15,19 @@ class ExcersiceConditionResponse(BaseModel):
 class ExcersiceResponse(BaseModel):
     id: int
     code: str
-    exercise_id: Optional[str] = None
+    exercise_id: str | None = None
     name: str
-    image_url: Optional[str] = None
+    image_url: str | None = None
     muscle_group: str
     pattern: ExcersicePattern
     primary_tool: str
-    secondary_tool: Optional[str] = None
+    secondary_tool: str | None = None
     location: str
     complexity: str
     level: str
     fatigue: str
     category: str
-    goals: List[GoalSchema] = []
-    conditions_association: List[ExcersiceConditionResponse] = Field(default=[], alias="conditions_association")
+    goals: list[GoalSchema] = []
+    conditions_association: list[ExcersiceConditionResponse] = Field(default=[], alias="conditions_association")
 
     model_config = {"from_attributes": True, "populate_by_name": True}
