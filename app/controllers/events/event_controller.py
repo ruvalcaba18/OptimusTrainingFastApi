@@ -1,4 +1,3 @@
-
 from sqlalchemy.orm import Session
 
 from app.controllers.events.exceptions import (
@@ -23,15 +22,12 @@ from app.services import event_service
 
 
 class EventController:
-
     @staticmethod
     @handle_controller_errors
     def create_event(
         db: Session, event_in: EventCreate, current_user: User
     ) -> EventResponse:
-        event = event_service.create(
-            db, creator_id=current_user.id, event_in=event_in
-        )
+        event = event_service.create(db, creator_id=current_user.id, event_in=event_in)
         db.commit()
         count = event_service.count_participants(db, event.id)
         response = EventResponse.model_validate(event)
@@ -89,9 +85,7 @@ class EventController:
 
     @staticmethod
     @handle_controller_errors
-    def cancel_event(
-        db: Session, event_id: int, current_user: User
-    ) -> EventResponse:
+    def cancel_event(db: Session, event_id: int, current_user: User) -> EventResponse:
         event = event_service.get_by_id(db, event_id)
         if not event:
             raise EventNotFoundError()

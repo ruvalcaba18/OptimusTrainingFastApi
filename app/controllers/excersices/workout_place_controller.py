@@ -8,11 +8,11 @@ from app.services.excersice.workout_place_service import workout_place_service
 
 
 @final
-class WorkoutController: 
-    
+class WorkoutController:
     @staticmethod
     @handle_controller_errors
     def list_workout_place(db: Session) -> list[WorkoutPlace]:
         return workout_place_service.list_workout_place(db)
 
-workout_place_controller = WorkoutController()    
+
+workout_place_controller = WorkoutController()

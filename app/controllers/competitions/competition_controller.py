@@ -1,4 +1,3 @@
-
 from sqlalchemy.orm import Session
 
 from app.controllers.competitions.exceptions import (
@@ -25,7 +24,6 @@ from app.services import competition_service
 
 
 class CompetitionController:
-
     @staticmethod
     @handle_controller_errors
     def create_competition(
@@ -146,9 +144,7 @@ class CompetitionController:
 
     @staticmethod
     @handle_controller_errors
-    def get_ranking(
-        db: Session, competition_id: int
-    ) -> RankingResponse:
+    def get_ranking(db: Session, competition_id: int) -> RankingResponse:
         comp = competition_service.get_by_id(db, competition_id)
         if not comp:
             raise CompetitionNotFoundError()

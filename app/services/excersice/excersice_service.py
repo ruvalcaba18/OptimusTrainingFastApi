@@ -1,4 +1,3 @@
-
 from sqlalchemy.orm import Session
 
 from app.models import Condition, Excersice, ExcersiceCondition, Goal
@@ -33,17 +32,17 @@ class ExcersiceService:
             query = query.join(Excersice.goals).filter(Goal.code == goal_code)
 
         if exclude_condition_codes:
-            
             forbidden_subquery = (
                 db.query(ExcersiceCondition.excersice_id)
                 .join(Condition)
                 .filter(
                     Condition.code.in_(exclude_condition_codes),
-                    ExcersiceCondition.relationship == "FORBIDDEN"
+                    ExcersiceCondition.relationship == "FORBIDDEN",
                 )
             )
             query = query.filter(~Excersice.id.in_(forbidden_subquery))
 
         return query.order_by(Excersice.code).all()
+
 
 excersice_service = ExcersiceService()

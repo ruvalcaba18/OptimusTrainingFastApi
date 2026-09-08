@@ -7,12 +7,10 @@ FACEBOOK_GRAPH_URL = "https://graph.facebook.com"
 
 
 class FacebookProvider:
-
     @staticmethod
     async def verify_token(token: str) -> dict:
         await FacebookProvider._debug_token(token)
         return await FacebookProvider._fetch_user_info(token)
-
 
     @staticmethod
     async def _debug_token(token: str) -> None:

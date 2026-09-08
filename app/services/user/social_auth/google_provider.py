@@ -7,7 +7,6 @@ GOOGLE_TOKEN_INFO_URL = "https://oauth2.googleapis.com/tokeninfo"
 
 
 class GoogleProvider:
-
     @staticmethod
     async def verify_token(token: str) -> dict:
         payload = await GoogleProvider._call_tokeninfo(token)
@@ -37,7 +36,6 @@ class GoogleProvider:
             "name": payload.get("name"),
             "provider_id": payload.get("sub"),
         }
-
 
     @staticmethod
     async def _call_tokeninfo(token: str) -> dict:

@@ -1,4 +1,3 @@
-
 from sqlalchemy import func as sa_func
 from sqlalchemy.orm import Session
 
@@ -7,8 +6,6 @@ from app.schemas.events import EventCreate, EventUpdate
 
 
 class EventService:
-
-                                                                       
     @staticmethod
     def create(db: Session, creator_id: int, event_in: EventCreate) -> Event:
         db_event = Event(
@@ -37,12 +34,7 @@ class EventService:
 
     @staticmethod
     def get_by_id_for_update(db: Session, event_id: int) -> Event | None:
-        return (
-            db.query(Event)
-            .filter(Event.id == event_id)
-            .with_for_update()
-            .first()
-        )
+        return db.query(Event).filter(Event.id == event_id).with_for_update().first()
 
     @staticmethod
     def get_multi(
@@ -57,12 +49,7 @@ class EventService:
             query = query.filter(Event.event_type == event_type)
         if status:
             query = query.filter(Event.status == status)
-        return (
-            query.order_by(Event.start_date.desc())
-            .offset(skip)
-            .limit(limit)
-            .all()
-        )
+        return query.order_by(Event.start_date.desc()).offset(skip).limit(limit).all()
 
     @staticmethod
     def update(db: Session, db_obj: Event, event_in: EventUpdate) -> Event:
@@ -90,7 +77,6 @@ class EventService:
         db.refresh(db_obj)
         return db_obj
 
-                                                                       
     @staticmethod
     def get_participant(
         db: Session, event_id: int, user_id: int
@@ -113,9 +99,7 @@ class EventService:
         )
 
     @staticmethod
-    def add_participant(
-        db: Session, event_id: int, user_id: int
-    ) -> EventParticipant:
+    def add_participant(db: Session, event_id: int, user_id: int) -> EventParticipant:
         participant = EventParticipant(
             event_id=event_id,
             user_id=user_id,

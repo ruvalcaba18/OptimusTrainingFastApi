@@ -5,6 +5,7 @@ from app.core.config import settings
 
 router = APIRouter()
 
+
 @router.get("/", tags=["Health"], summary="Health check")
 async def root():
     redis_ok = await cache_service.health_check()

@@ -12,13 +12,10 @@ class ExerciseLevel(IntEnum):
         values = {
             "NIV1": cls.BASIC,
             "Básico": cls.BASIC,
-
             "NIV2": cls.INTERMEDIATE,
             "Intermedio": cls.INTERMEDIATE,
-
             "NIV3": cls.ADVANCED,
             "Avanzado": cls.ADVANCED,
-
             "NIV4": cls.HIGH_PERFORMANCE,
             "Alto Rendimiento": cls.HIGH_PERFORMANCE,
         }

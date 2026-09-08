@@ -10,7 +10,7 @@ from app.models.Enums.ExcersicePattern import ExcersicePattern
 @final
 class Excersice(Base):
     __tablename__ = "excersices"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     code = Column(String(50), unique=True, nullable=False, index=True)
     exercise_id = Column(String(100), unique=True, nullable=True, index=True)
@@ -23,12 +23,20 @@ class Excersice(Base):
     level = Column(String(100), nullable=False)
     fatigue = Column(String(50), nullable=False)
     category = Column(String(100), nullable=False)
-    
-    conditions_association = relationship("ExcersiceCondition", back_populates="excersice", cascade="all, delete-orphan")
-    equipment_association = relationship("ExcersiceEquipment", back_populates="excersice", cascade="all, delete-orphan")
-    muscle_associations = relationship("ExcersiceMuscle", back_populates="excersice", cascade="all, delete-orphan")
-    
-    goals = relationship("Goal", secondary="excersice_goal", back_populates="excersices")
+
+    conditions_association = relationship(
+        "ExcersiceCondition", back_populates="excersice", cascade="all, delete-orphan"
+    )
+    equipment_association = relationship(
+        "ExcersiceEquipment", back_populates="excersice", cascade="all, delete-orphan"
+    )
+    muscle_associations = relationship(
+        "ExcersiceMuscle", back_populates="excersice", cascade="all, delete-orphan"
+    )
+
+    goals = relationship(
+        "Goal", secondary="excersice_goal", back_populates="excersices"
+    )
 
     @property
     def primary_tool(self) -> str:

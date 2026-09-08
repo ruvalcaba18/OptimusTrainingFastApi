@@ -67,14 +67,22 @@ class CatalogsSeeder(BaseSeeder):
                 cols = line_str.split("	")
                 code = cols[0].strip()
                 name = cols[1].strip()
-                category = cols[2].strip() if len(cols) > 2 and cols[2].strip() else None
+                category = (
+                    cols[2].strip() if len(cols) > 2 and cols[2].strip() else None
+                )
                 cond_type = cols[3].strip() if len(cols) > 3 else "PATHOLOGY"
                 warning_msg = None
                 if code in spine_codes:
                     warning_msg = "Hemos detectado sensibilidad en tu columna; adaptaremos tu plan con alternativas seguras y limitaremos cargas axiales directas."
                 elif code in disease_codes or code in joint_codes:
                     warning_msg = "Adaptaremos tu plan para que sea de bajo impacto, protegiendo tus articulaciones y sistema cardiovascular."
-                cond = Condition(code=code, name=name, type=cond_type, category=category, warning_message=warning_msg)
+                cond = Condition(
+                    code=code,
+                    name=name,
+                    type=cond_type,
+                    category=category,
+                    warning_message=warning_msg,
+                )
                 self.session.add(cond)
                 self.conditions_map[code] = cond
         self.session.commit()
@@ -94,12 +102,22 @@ class CatalogsSeeder(BaseSeeder):
                 type_name = cols[3].strip()
                 level_str = cols[4].strip()
                 complexity = cols[5].strip()
-                intensity = cols[6].strip() if len(cols) > 6 and cols[6].strip() else None
+                intensity = (
+                    cols[6].strip() if len(cols) > 6 and cols[6].strip() else None
+                )
                 tempo = cols[7].strip() if len(cols) > 7 and cols[7].strip() else None
-                goals_str = cols[8].strip() if len(cols) > 8 and cols[8].strip() else None
+                goals_str = (
+                    cols[8].strip() if len(cols) > 8 and cols[8].strip() else None
+                )
                 method = Method(
-                    code=code, name=name, category=category, type=type_name,
-                    level=level_str, complexity=complexity, intensity=intensity, tempo=tempo
+                    code=code,
+                    name=name,
+                    category=category,
+                    type=type_name,
+                    level=level_str,
+                    complexity=complexity,
+                    intensity=intensity,
+                    tempo=tempo,
                 )
                 if goals_str:
                     g_codes = [g.strip() for g in goals_str.split(",") if g.strip()]

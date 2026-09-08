@@ -5,24 +5,27 @@ Revises: add346a713ab
 Create Date: 2026-08-19 18:51:12.989136
 
 """
-from typing import Sequence, Union
 
-from alembic import op
+from collections.abc import Sequence
+
 import sqlalchemy as sa
-
+from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = '0212d4c5d457'
-down_revision: Union[str, Sequence[str], None] = 'bca73ed19b76'
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+revision: str = "0212d4c5d457"
+down_revision: str | Sequence[str] | None = "bca73ed19b76"
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 from pathlib import Path
 
+
 def upgrade() -> None:
     """Upgrade schema."""
-    sql_file = Path(__file__).parent.parent / "sql" / "create_fn_get_viable_exercises.sql"
+    sql_file = (
+        Path(__file__).parent.parent / "sql" / "create_fn_get_viable_exercises.sql"
+    )
     with open(sql_file, "r", encoding="utf-8") as f:
         sql = f.read()
     op.execute(sa.text(sql))

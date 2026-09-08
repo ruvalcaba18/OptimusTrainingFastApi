@@ -9,7 +9,7 @@ class EquipmentCategoryItem(BaseModel):
     name: str
     mapping: list[str]
 
-    @field_validator('mapping', mode='before')
+    @field_validator("mapping", mode="before")
     @classmethod
     def split_mapping(cls, v):
         if isinstance(v, str):

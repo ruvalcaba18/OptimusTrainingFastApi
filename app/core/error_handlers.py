@@ -20,7 +20,9 @@ from app.core.exceptions import (
 logger = logging.getLogger("optimus.errors")
 
 
-def _error_response(status_code: int, code: str, message: str, details=None) -> JSONResponse:
+def _error_response(
+    status_code: int, code: str, message: str, details=None
+) -> JSONResponse:
     body = {"error": {"code": code, "message": message}}
     if details:
         body["error"]["details"] = details
@@ -46,6 +48,7 @@ def handle_controller_errors(func):
     4. Catches unexpected exceptions, logs traceback, calls rollback, and raises InternalServerError safely.
     """
     if inspect.iscoroutinefunction(func):
+
         @functools.wraps(func)
         async def async_wrapper(*args, **kwargs):
             try:
@@ -69,10 +72,18 @@ def handle_controller_errors(func):
                 db = _extract_db_session(*args, **kwargs)
                 if db:
                     db.rollback()
-                logger.error("Unhandled error in controller function '%s':\n%s", func.__name__, traceback.format_exc())
-                raise InternalServerError("Ocurrió un error interno al procesar la solicitud.")
+                logger.error(
+                    "Unhandled error in controller function '%s':\n%s",
+                    func.__name__,
+                    traceback.format_exc(),
+                )
+                raise InternalServerError(
+                    "Ocurrió un error interno al procesar la solicitud."
+                )
+
         return async_wrapper
     else:
+
         @functools.wraps(func)
         def sync_wrapper(*args, **kwargs):
             try:
@@ -96,8 +107,15 @@ def handle_controller_errors(func):
                 db = _extract_db_session(*args, **kwargs)
                 if db:
                     db.rollback()
-                logger.error("Unhandled error in controller function '%s':\n%s", func.__name__, traceback.format_exc())
-                raise InternalServerError("Ocurrió un error interno al procesar la solicitud.")
+                logger.error(
+                    "Unhandled error in controller function '%s':\n%s",
+                    func.__name__,
+                    traceback.format_exc(),
+                )
+                raise InternalServerError(
+                    "Ocurrió un error interno al procesar la solicitud."
+                )
+
         return sync_wrapper
 
 
@@ -105,7 +123,13 @@ def register_exception_handlers(app: FastAPI) -> None:
 
     @app.exception_handler(AppException)
     async def app_exception_handler(request: Request, exc: AppException):
-        logger.warning("AppException %s %s → %s: %s", exc.status_code, request.url.path, exc.code, exc.message)
+        logger.warning(
+            "AppException %s %s → %s: %s",
+            exc.status_code,
+            request.url.path,
+            exc.code,
+            exc.message,
+        )
         return _error_response(exc.status_code, exc.code, exc.message, exc.details)
 
     @app.exception_handler(StarletteHTTPException)
@@ -128,15 +152,21 @@ def register_exception_handlers(app: FastAPI) -> None:
             503: "SERVICE_UNAVAILABLE",
         }
         code = code_map.get(exc.status_code, "HTTP_ERROR")
-        logger.warning("HTTP %s %s → %s: %s", exc.status_code, request.url.path, code, exc.detail)
+        logger.warning(
+            "HTTP %s %s → %s: %s", exc.status_code, request.url.path, code, exc.detail
+        )
         return _error_response(exc.status_code, code, str(exc.detail))
 
     @app.exception_handler(RequestValidationError)
-    async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    async def validation_exception_handler(
+        request: Request, exc: RequestValidationError
+    ):
         field_errors = []
         for error in exc.errors():
             loc = " → ".join(str(l) for l in error["loc"] if l != "body")
-            field_errors.append({"field": loc, "message": error["msg"], "type": error["type"]})
+            field_errors.append(
+                {"field": loc, "message": error["msg"], "type": error["type"]}
+            )
         logger.info("Validation error on %s: %s", request.url.path, field_errors)
         return _error_response(
             status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -146,7 +176,9 @@ def register_exception_handlers(app: FastAPI) -> None:
         )
 
     @app.exception_handler(ResponseValidationError)
-    async def response_validation_handler(request: Request, exc: ResponseValidationError):
+    async def response_validation_handler(
+        request: Request, exc: ResponseValidationError
+    ):
         logger.error("Response validation error on %s: %s", request.url.path, exc)
         return _error_response(
             status.HTTP_500_INTERNAL_SERVER_ERROR,

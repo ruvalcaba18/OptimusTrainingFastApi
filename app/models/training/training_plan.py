@@ -18,9 +18,13 @@ class TrainingPlan(Base):
     month = Column(Integer, nullable=False)
     year = Column(Integer, nullable=False)
     status = Column(Enum(PlanStatus), default=PlanStatus.DRAFT, nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    created_at = Column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     coach = relationship("CoachProfile", backref="training_plans")
     athlete = relationship("User", backref="training_plans")
-    workouts = relationship("DailyWorkout", back_populates="plan", cascade="all, delete-orphan")
+    workouts = relationship(
+        "DailyWorkout", back_populates="plan", cascade="all, delete-orphan"
+    )

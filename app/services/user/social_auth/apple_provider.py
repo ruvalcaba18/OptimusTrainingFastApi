@@ -9,7 +9,6 @@ APPLE_ISSUER = "https://appleid.apple.com"
 
 
 class AppleProvider:
-
     @staticmethod
     async def verify_token(token: str) -> dict:
         keys = await AppleProvider._fetch_apple_public_keys()
@@ -58,7 +57,6 @@ class AppleProvider:
             "name": None,
             "provider_id": payload.get("sub"),
         }
-
 
     @staticmethod
     async def _fetch_apple_public_keys() -> list:

@@ -13,5 +13,5 @@ class HealthQuestionModel(Base):
     code = Column(String(50), unique=True, nullable=False, index=True)
     title = Column(String(250), nullable=False)
     subtitle = Column(String(250), nullable=True)
-    type = Column(String(50), nullable=False) # e.g., multiple, single
-    category = Column(String(50), nullable=False) # e.g., PATHOLOGY, DISEASE
+    type = Column(String(50), nullable=False)  # e.g., multiple, single
+    category = Column(String(50), nullable=False)  # e.g., PATHOLOGY, DISEASE

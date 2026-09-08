@@ -5,13 +5,14 @@ from app.core.config import settings
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class EmailService:
     @staticmethod
     def send_password_reset_email(email_to: str, token: str) -> None:
         project_name = settings.PROJECT_NAME
-                                                                         
+
         reset_link = f"http://localhost:8000/reset-password?token={token}"
-        
+
         message_content = (
             f"Hola,\n\n"
             f"Has solicitado restablecer tu contraseña en {project_name}.\n"
@@ -19,10 +20,9 @@ class EmailService:
             f"{reset_link}\n\n"
             f"Si no solicitaste este cambio, puedes ignorar este correo.\n"
         )
-                         
+
         logger.info(f"ENVIANDO CORREO DE RECUPERACIÓN A: {email_to}")
         logger.info(f"CONTENIDO:\n{message_content}")
-        
-                                                                      
+
 
 email_service = EmailService()

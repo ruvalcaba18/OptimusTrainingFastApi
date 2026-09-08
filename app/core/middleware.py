@@ -20,6 +20,7 @@ SECURITY_HEADERS = {
     "Cache-Control": "no-store",
 }
 
+
 class SecurityMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next) -> Response:
         start_time = time.time()
@@ -55,6 +56,7 @@ class SecurityMiddleware(BaseHTTPMiddleware):
 
 
 AuthMiddleware = SecurityMiddleware
+
 
 class MiddlewareConfigurator:
     """

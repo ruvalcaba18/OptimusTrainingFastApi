@@ -3,7 +3,7 @@ from pathlib import Path
 
 from fastapi import HTTPException, UploadFile, status
 
-BASE_DIR = Path(__file__).resolve().parent.parent 
+BASE_DIR = Path(__file__).resolve().parent.parent
 UPLOAD_DIR = BASE_DIR / "uploads" / "profile_pictures"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 

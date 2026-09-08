@@ -15,9 +15,11 @@ class BookingCreate(BaseModel):
     longitude: float | None = Field(None, ge=-180, le=180)
     athlete_notes: str | None = None
 
+
 class BookingStatusUpdate(BaseModel):
     status: BookingStatus
     coach_notes: str | None = None
+
 
 class BookingResponse(BaseModel):
     id: int
@@ -40,6 +42,7 @@ class BookingResponse(BaseModel):
     updated_at: datetime | None = None
 
     model_config = {"from_attributes": True}
+
 
 class ReviewCreate(BaseModel):
     booking_id: int = Field(..., description="ID de la reservación a calificar")

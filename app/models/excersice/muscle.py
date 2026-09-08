@@ -16,4 +16,6 @@ class Muscle(Base):
     common_name = Column(String(100), nullable=True)
     body_part = Column(String(50), nullable=False)  # Upper Body, Lower Body, Core
 
-    excersice_associations = relationship("ExcersiceMuscle", back_populates="muscle", cascade="all, delete-orphan")
+    excersice_associations = relationship(
+        "ExcersiceMuscle", back_populates="muscle", cascade="all, delete-orphan"
+    )

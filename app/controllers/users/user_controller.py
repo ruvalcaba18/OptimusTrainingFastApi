@@ -25,7 +25,6 @@ from app.services import delete_profile_picture, save_profile_picture, user_serv
 
 @final
 class UserController:
-
     @staticmethod
     @handle_controller_errors
     def list_users(db: Session, skip: int = 0, limit: int = 100) -> list[UserResponse]:
@@ -58,12 +57,16 @@ class UserController:
         )
 
         db.commit()
-        
-        return UserRegistrationResponse(user=UserResponse.model_validate(user), token=token)
+
+        return UserRegistrationResponse(
+            user=UserResponse.model_validate(user), token=token
+        )
 
     @staticmethod
     @handle_controller_errors
-    def update_user(db: Session, user_id: int, user_in: UserUpdate, current_user: User) -> UserResponse:
+    def update_user(
+        db: Session, user_id: int, user_in: UserUpdate, current_user: User
+    ) -> UserResponse:
         user = user_service.get_by_id(db, user_id=user_id)
         if not user:
             raise UserNotFoundError()
@@ -73,7 +76,7 @@ class UserController:
 
         updated_user = user_service.update(db, db_obj=user, user_in=user_in)
         db.commit()
-        
+
         return updated_user
 
     @staticmethod
@@ -90,7 +93,7 @@ class UserController:
         url = await save_profile_picture(user_id=user_id, file=file)
         updated_user = user_service.update_profile_picture(db, db_obj=user, url=url)
         db.commit()
-        
+
         return updated_user
 
     @staticmethod
@@ -105,13 +108,15 @@ class UserController:
         delete_profile_picture(user_id=user_id)
         deleted_user = user_service.delete(db, user_id=user_id)
         db.commit()
-        
+
         return deleted_user
 
     @staticmethod
     @handle_controller_errors
     def update_training_profile(db: Session, profile_in, current_user: User):
-        updated_user = user_service.update_training_profile(db, db_obj=current_user, profile_in=profile_in)
+        updated_user = user_service.update_training_profile(
+            db, db_obj=current_user, profile_in=profile_in
+        )
         db.commit()
         return updated_user
 

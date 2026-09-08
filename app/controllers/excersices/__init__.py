@@ -13,5 +13,5 @@ __all__ = [
     "excersice_controller",
     "goal_controller",
     "level_controller",
-    "method_controller"
+    "method_controller",
 ]

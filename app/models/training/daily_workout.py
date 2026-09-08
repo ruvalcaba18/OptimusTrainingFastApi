@@ -12,11 +12,15 @@ class DailyWorkout(Base):
     __tablename__ = "daily_workouts"
 
     id = Column(Integer, primary_key=True, index=True)
-    plan_id = Column(Integer, ForeignKey("training_plans.id", ondelete="CASCADE"), nullable=False)
+    plan_id = Column(
+        Integer, ForeignKey("training_plans.id", ondelete="CASCADE"), nullable=False
+    )
     date = Column(Date, nullable=False)
     status = Column(Enum(WorkoutStatus), default=WorkoutStatus.PENDING, nullable=False)
     coach_validated = Column(Boolean, default=False, nullable=False)
     validation_date = Column(DateTime(timezone=True), nullable=True)
-    
+
     plan = relationship("TrainingPlan", back_populates="workouts")
-    exercises = relationship("ExerciseDetail", back_populates="workout", cascade="all, delete-orphan")
+    exercises = relationship(
+        "ExerciseDetail", back_populates="workout", cascade="all, delete-orphan"
+    )

@@ -13,7 +13,6 @@ from app.services import AppleProvider, FacebookProvider, GoogleProvider, user_s
 
 
 class SocialAuthController:
-
     @staticmethod
     @handle_controller_errors
     async def login_with_apple(db: Session, body: SocialAuthRequest) -> Token:
@@ -105,9 +104,7 @@ class SocialAuthController:
         name_parts = provider_name.split(" ", 1)
 
         resolved_first_name = (
-            first_name
-            or (name_parts[0] if name_parts else None)
-            or email.split("@")[0]
+            first_name or (name_parts[0] if name_parts else None) or email.split("@")[0]
         )
         resolved_last_name = (
             last_name

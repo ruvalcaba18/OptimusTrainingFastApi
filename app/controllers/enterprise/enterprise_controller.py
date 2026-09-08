@@ -31,7 +31,6 @@ from app.services import enterprise_service
 
 
 class EnterpriseController:
-
     @staticmethod
     @handle_controller_errors
     def create_enterprise(
@@ -75,9 +74,7 @@ class EnterpriseController:
         enterprise_service.create_membership(
             db, enterprise_id=db_code.enterprise_id, user_id=current_user.id
         )
-        enterprise = enterprise_service.get_enterprise_by_id(
-            db, db_code.enterprise_id
-        )
+        enterprise = enterprise_service.get_enterprise_by_id(db, db_code.enterprise_id)
 
         db.commit()
         return ValidateCodeResponse(
@@ -117,12 +114,14 @@ class EnterpriseController:
 
     @staticmethod
     @handle_controller_errors
-    def get_my_enterprise(
-        db: Session, current_user: User
-    ) -> EnterpriseResponse:
-        memberships = enterprise_service.get_user_memberships(db, user_id=current_user.id)
+    def get_my_enterprise(db: Session, current_user: User) -> EnterpriseResponse:
+        memberships = enterprise_service.get_user_memberships(
+            db, user_id=current_user.id
+        )
         if not memberships:
-            raise EnterpriseNotFoundError("No estás vinculado a ninguna empresa. Valida tu código primero.")
+            raise EnterpriseNotFoundError(
+                "No estás vinculado a ninguna empresa. Valida tu código primero."
+            )
         enterprise = enterprise_service.get_enterprise_by_id(
             db, memberships[0].enterprise_id
         )
@@ -179,7 +178,9 @@ class EnterpriseController:
         if not active_break:
             raise ActiveBreakNotFoundError()
 
-        memberships = enterprise_service.get_user_memberships(db, user_id=current_user.id)
+        memberships = enterprise_service.get_user_memberships(
+            db, user_id=current_user.id
+        )
         enterprise_id = memberships[0].enterprise_id if memberships else None
 
         log = enterprise_service.start_break_log(
@@ -210,9 +211,7 @@ class EnterpriseController:
 
     @staticmethod
     @handle_controller_errors
-    def get_my_stats(
-        db: Session, current_user: User
-    ) -> ActiveBreakStatsResponse:
+    def get_my_stats(db: Session, current_user: User) -> ActiveBreakStatsResponse:
         stats = enterprise_service.get_user_break_stats(db, user_id=current_user.id)
         return ActiveBreakStatsResponse(**stats)
 

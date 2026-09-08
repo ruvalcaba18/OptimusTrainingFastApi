@@ -22,7 +22,11 @@ class AnatomySeeder(BaseSeeder):
         with open(file_path, "r", encoding="utf-8") as f:
             for line in f:
                 line_str = line.strip()
-                if not line_str or "\t" not in line_str or line_str.startswith("code\t"):
+                if (
+                    not line_str
+                    or "\t" not in line_str
+                    or line_str.startswith("code\t")
+                ):
                     continue
                 cols = [c.strip() for c in line_str.split("\t")]
                 code = cols[0]
@@ -30,7 +34,9 @@ class AnatomySeeder(BaseSeeder):
                 name_es = cols[2] if len(cols) > 2 else name_en
                 image_url = cols[3] if len(cols) > 3 else None
 
-                bp = BodyPart(code=code, name_en=name_en, name_es=name_es, image_url=image_url)
+                bp = BodyPart(
+                    code=code, name_en=name_en, name_es=name_es, image_url=image_url
+                )
                 self.session.add(bp)
         self.session.commit()
         print("Seeded body parts successfully from TSV.")
@@ -41,7 +47,11 @@ class AnatomySeeder(BaseSeeder):
         with open(file_path, "r", encoding="utf-8") as f:
             for line in f:
                 line_str = line.strip()
-                if not line_str or "\t" not in line_str or line_str.startswith("code\t"):
+                if (
+                    not line_str
+                    or "\t" not in line_str
+                    or line_str.startswith("code\t")
+                ):
                     continue
                 cols = [c.strip() for c in line_str.split("\t")]
                 code = cols[0]
@@ -49,7 +59,9 @@ class AnatomySeeder(BaseSeeder):
                 name_es = cols[2] if len(cols) > 2 else name_en
                 image_url = cols[3] if len(cols) > 3 else None
 
-                et = ExerciseType(code=code, name_en=name_en, name_es=name_es, image_url=image_url)
+                et = ExerciseType(
+                    code=code, name_en=name_en, name_es=name_es, image_url=image_url
+                )
                 self.session.add(et)
         self.session.commit()
         print("Seeded exercise types successfully from TSV.")
@@ -60,7 +72,11 @@ class AnatomySeeder(BaseSeeder):
         with open(file_path, "r", encoding="utf-8") as f:
             for line in f:
                 line_str = line.strip()
-                if not line_str or "\t" not in line_str or line_str.startswith("code\t"):
+                if (
+                    not line_str
+                    or "\t" not in line_str
+                    or line_str.startswith("code\t")
+                ):
                     continue
                 cols = [c.strip() for c in line_str.split("\t")]
                 code = cols[0]
@@ -68,7 +84,9 @@ class AnatomySeeder(BaseSeeder):
                 common_name = cols[2] if len(cols) > 2 else None
                 body_part = cols[3] if len(cols) > 3 else "Other"
 
-                muscle = Muscle(code=code, name=name, common_name=common_name, body_part=body_part)
+                muscle = Muscle(
+                    code=code, name=name, common_name=common_name, body_part=body_part
+                )
                 self.session.add(muscle)
                 self.muscles_map[name] = muscle
         self.session.commit()

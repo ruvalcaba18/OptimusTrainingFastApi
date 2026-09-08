@@ -1,4 +1,3 @@
-
 from sqlalchemy.orm import Session
 
 from app.core.security import get_password_hash
@@ -7,7 +6,6 @@ from app.schemas.users import UserCreate, UserUpdate
 
 
 class UserService:
-                                                                               
     @staticmethod
     def get_by_email(db: Session, email: str) -> User | None:
         return db.query(User).filter(User.email == email).first()
@@ -20,10 +18,9 @@ class UserService:
     def get_multi(db: Session, skip: int = 0, limit: int = 100) -> list[User]:
         return db.query(User).offset(skip).limit(limit).all()
 
-                                                                               
     @staticmethod
     def create(db: Session, user_in: UserCreate) -> User:
-        
+
         db_user = User(
             email=user_in.email,
             hashed_password=get_password_hash(user_in.password),
@@ -38,7 +35,7 @@ class UserService:
             gender=user_in.gender.value if user_in.gender else None,
             is_active=True,
         )
-        
+
         db.add(db_user)
         db.flush()
         db.refresh(db_user)
@@ -63,7 +60,9 @@ class UserService:
         update_data = user_in.model_dump(exclude_unset=True)
 
         if "password" in update_data:
-            update_data["hashed_password"] = get_password_hash(update_data.pop("password"))
+            update_data["hashed_password"] = get_password_hash(
+                update_data.pop("password")
+            )
 
         if "training_type" in update_data and update_data["training_type"] is not None:
             update_data["training_type"] = update_data["training_type"].value
@@ -78,7 +77,7 @@ class UserService:
         db.add(db_obj)
         db.flush()
         db.refresh(db_obj)
-        
+
         return db_obj
 
     @staticmethod
@@ -100,7 +99,7 @@ class UserService:
     @staticmethod
     def update_training_profile(db: Session, db_obj: User, profile_in) -> User:
         from app.models import Condition, Equipment, Goal, Level
-        
+
         goal = db.query(Goal).filter(Goal.code == profile_in.goal_code).first()
         if goal:
             db_obj.goal_id = goal.id
@@ -110,43 +109,71 @@ class UserService:
             db_obj.level_id = level.id
 
         if profile_in.equipment_ids is not None:
-            equipments = db.query(Equipment).filter(Equipment.id.in_(profile_in.equipment_ids)).all()
+            equipments = (
+                db.query(Equipment)
+                .filter(Equipment.id.in_(profile_in.equipment_ids))
+                .all()
+            )
             db_obj.equipments = equipments
 
         if profile_in.pathology_ids is not None:
-            pathologies = db.query(Condition).filter(
-                Condition.id.in_(profile_in.pathology_ids),
-                Condition.type == "PATHOLOGY"
-            ).all()
+            pathologies = (
+                db.query(Condition)
+                .filter(
+                    Condition.id.in_(profile_in.pathology_ids),
+                    Condition.type == "PATHOLOGY",
+                )
+                .all()
+            )
             db_obj.pathologies = pathologies
 
         if profile_in.disease_ids is not None:
-            diseases = db.query(Condition).filter(
-                Condition.id.in_(profile_in.disease_ids),
-                Condition.type == "DISEASE"
-            ).all()
+            diseases = (
+                db.query(Condition)
+                .filter(
+                    Condition.id.in_(profile_in.disease_ids),
+                    Condition.type == "DISEASE",
+                )
+                .all()
+            )
             db_obj.diseases = diseases
 
-        if hasattr(profile_in, "custom_equipment") and profile_in.custom_equipment is not None:
+        if (
+            hasattr(profile_in, "custom_equipment")
+            and profile_in.custom_equipment is not None
+        ):
             db_obj.custom_equipment = profile_in.custom_equipment
 
-        if hasattr(profile_in, "session_duration_code") and profile_in.session_duration_code is not None:
+        if (
+            hasattr(profile_in, "session_duration_code")
+            and profile_in.session_duration_code is not None
+        ):
             db_obj.session_duration_code = profile_in.session_duration_code
 
-        if hasattr(profile_in, "specific_days") and profile_in.specific_days is not None:
+        if (
+            hasattr(profile_in, "specific_days")
+            and profile_in.specific_days is not None
+        ):
             db_obj.specific_days = ",".join(str(d) for d in profile_in.specific_days)
 
-        if hasattr(profile_in, "leisure_activity_ids") and profile_in.leisure_activity_ids is not None:
+        if (
+            hasattr(profile_in, "leisure_activity_ids")
+            and profile_in.leisure_activity_ids is not None
+        ):
             from app.models import LeisureActivityModel
-            leisure_activities = db.query(LeisureActivityModel).filter(LeisureActivityModel.id.in_(profile_in.leisure_activity_ids)).all()
+
+            leisure_activities = (
+                db.query(LeisureActivityModel)
+                .filter(LeisureActivityModel.id.in_(profile_in.leisure_activity_ids))
+                .all()
+            )
             db_obj.leisure_activities = leisure_activities
 
         db.add(db_obj)
         db.flush()
         db.refresh(db_obj)
-        
-        return db_obj
 
+        return db_obj
 
 
 user_service = UserService()

@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
@@ -70,16 +69,26 @@ async def get_nearby_coaches(
     current_user: User = Depends(get_current_user),
 ) -> list[CoachNearbyResponse]:
     cache_key = make_key(
-        "coaches", "nearby",
-        round(lat, 2), round(lng, 2),
-        radius_km, specialty, skip, limit,
+        "coaches",
+        "nearby",
+        round(lat, 2),
+        round(lng, 2),
+        radius_km,
+        specialty,
+        skip,
+        limit,
     )
     cached = await cache_get(cache_key)
     if cached is not None:
         return cached
     result = coach_controller.get_nearby_coaches(
-        db, lat=lat, lng=lng, radius_km=radius_km,
-        specialty=specialty, skip=skip, limit=limit,
+        db,
+        lat=lat,
+        lng=lng,
+        radius_km=radius_km,
+        specialty=specialty,
+        skip=skip,
+        limit=limit,
     )
     serialized = [r.model_dump() for r in result]
     await cache_set(cache_key, serialized, ttl=180)

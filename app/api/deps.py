@@ -20,7 +20,9 @@ def get_current_user(
     token: str = Depends(reusable_oauth2),
 ) -> User:
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        payload = jwt.decode(
+            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+        )
         token_data = TokenPayload(**payload)
     except (JWTError, ValidationError):
         raise HTTPException(
@@ -29,7 +31,11 @@ def get_current_user(
         )
     user = user_service.get_by_email(db, email=token_data.sub)
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado"
+        )
     if not user.is_active:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cuenta inactiva")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Cuenta inactiva"
+        )
     return user

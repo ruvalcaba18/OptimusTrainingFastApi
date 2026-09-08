@@ -1,4 +1,3 @@
-
 from sqlalchemy.orm import Session
 
 from app.core.error_handlers import handle_controller_errors
@@ -17,7 +16,6 @@ from app.services import coach_service, training_service
 
 
 class TrainingController:
-
     @staticmethod
     @handle_controller_errors
     def assign_athlete_to_coach(
@@ -73,7 +71,10 @@ class TrainingController:
     @staticmethod
     @handle_controller_errors
     def modify_workout(
-        db: Session, workout_id: int, exercises: list[ExerciseDetailCreate], current_user: User
+        db: Session,
+        workout_id: int,
+        exercises: list[ExerciseDetailCreate],
+        current_user: User,
     ) -> DailyWorkoutResponse:
         workout = training_service.get_workout_by_id(db, workout_id)
         if not workout:
@@ -90,7 +91,9 @@ class TrainingController:
 
     @staticmethod
     @handle_controller_errors
-    def athlete_accept_plan(db: Session, plan_id: int, current_user: User) -> TrainingPlanResponse:
+    def athlete_accept_plan(
+        db: Session, plan_id: int, current_user: User
+    ) -> TrainingPlanResponse:
         plan = training_service.get_plan_by_id(db, plan_id)
         if not plan:
             raise NotFoundError("Plan no encontrado")
@@ -122,13 +125,17 @@ class TrainingController:
     @staticmethod
     @handle_controller_errors
     def check_payment_status(db: Session, coach_id: int, month: int, year: int) -> dict:
-        is_eligible = training_service.check_coach_payment_eligibility(db, coach_id, month, year)
+        is_eligible = training_service.check_coach_payment_eligibility(
+            db, coach_id, month, year
+        )
         return {
             "coach_id": coach_id,
             "month": month,
             "year": year,
             "eligible_for_payment": is_eligible,
-            "reason": "Debe validar al menos 15 días de entrenamiento" if not is_eligible else "OK",
+            "reason": "Debe validar al menos 15 días de entrenamiento"
+            if not is_eligible
+            else "OK",
         }
 
 

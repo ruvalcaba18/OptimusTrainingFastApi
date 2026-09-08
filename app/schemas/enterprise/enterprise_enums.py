@@ -8,9 +8,9 @@ class BreakDuration(int, Enum):
 
 
 class BreakCategory(str, Enum):
-    STRETCHING = "stretching"                      
-    BREATHING = "breathing"                      
-    MOBILITY = "mobility"                                
-    RELAXATION = "relaxation"                   
-    EYE_CARE = "eye_care"                           
+    STRETCHING = "stretching"
+    BREATHING = "breathing"
+    MOBILITY = "mobility"
+    RELAXATION = "relaxation"
+    EYE_CARE = "eye_care"
     POSTURE = "posture"

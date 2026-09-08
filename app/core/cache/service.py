@@ -13,7 +13,6 @@ from enum import IntEnum
 
 
 class CacheTTL(IntEnum):
-    
     MINUTE = 60
     SHORT = 300
     MEDIUM = 1800
@@ -21,6 +20,7 @@ class CacheTTL(IntEnum):
     HOUR = 3600
     DAY = 86400
     WEEK = 604800
+
 
 class RedisCacheService:
     def __init__(self):
@@ -38,7 +38,9 @@ class RedisCacheService:
                 )
             except Exception as e:
                 logger.error(f"Failed to connect to Redis: {e}")
-                raise RedisConnectionError(f"Could not connect to Redis at {settings.REDIS_URL}")
+                raise RedisConnectionError(
+                    f"Could not connect to Redis at {settings.REDIS_URL}"
+                )
         return self._redis_client
 
     async def close(self):
@@ -106,5 +108,6 @@ class RedisCacheService:
     @staticmethod
     def make_key(*parts) -> str:
         return ":".join(str(p) for p in parts if p is not None)
+
 
 cache_service = RedisCacheService()

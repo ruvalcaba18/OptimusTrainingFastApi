@@ -16,7 +16,9 @@ class EventCancelledError(BadRequestError):
 
 
 class EventFullError(BadRequestError):
-    def __init__(self, message: str = "El evento ha alcanzado el máximo de participantes"):
+    def __init__(
+        self, message: str = "El evento ha alcanzado el máximo de participantes"
+    ):
         super().__init__(message=message)
 
 

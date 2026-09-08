@@ -68,7 +68,7 @@ class DatabaseSeeder:
             goals_map=catalogs.goals_map,
             conditions_map=catalogs.conditions_map,
             equip_map=equipment.equip_map,
-            muscles_map=anatomy.muscles_map
+            muscles_map=anatomy.muscles_map,
         )
         exercises.seed()
 
@@ -111,11 +111,12 @@ class DatabaseSeeder:
         self.session.query(HealthQuestionModel).delete()
         self.session.commit()
 
+
 def seed_database():
     data_dir = Path(__file__).parent / "data"
     if not data_dir.exists():
         raise FileNotFoundError(f"Data directory not found at: {data_dir}")
-        
+
     session = SessionLocal()
     try:
         seeder = DatabaseSeeder(session, data_dir)
@@ -127,6 +128,7 @@ def seed_database():
         raise e
     finally:
         session.close()
+
 
 if __name__ == "__main__":
     seed_database()

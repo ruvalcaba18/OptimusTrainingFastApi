@@ -17,8 +17,9 @@ class CoachBase(BaseModel):
     city: str | None = None
     state: str | None = None
     service_radius_km: float = Field(default=10.0, gt=0)
-    available_hours: str | None = None               
+    available_hours: str | None = None
     is_searchable: bool = True
+
 
 class CoachCreate(CoachBase):
     pass

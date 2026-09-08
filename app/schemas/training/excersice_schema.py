@@ -1,4 +1,3 @@
-
 from pydantic import BaseModel, Field
 
 from app.models.Enums.ExcersicePattern import ExcersicePattern
@@ -11,6 +10,7 @@ class ExcersiceConditionResponse(BaseModel):
     relationship: str
 
     model_config = {"from_attributes": True}
+
 
 class ExcersiceResponse(BaseModel):
     id: int
@@ -28,6 +28,8 @@ class ExcersiceResponse(BaseModel):
     fatigue: str
     category: str
     goals: list[GoalSchema] = []
-    conditions_association: list[ExcersiceConditionResponse] = Field(default=[], alias="conditions_association")
+    conditions_association: list[ExcersiceConditionResponse] = Field(
+        default=[], alias="conditions_association"
+    )
 
     model_config = {"from_attributes": True, "populate_by_name": True}

@@ -1,4 +1,3 @@
-
 from sqlalchemy.orm import Session
 
 from app.controllers.coaches.exceptions import (
@@ -26,7 +25,6 @@ from app.services import coach_service
 
 
 class CoachController:
-
     @staticmethod
     @handle_controller_errors
     def register_coach(
@@ -48,9 +46,7 @@ class CoachController:
         skip: int = 0,
         limit: int = 50,
     ) -> list[CoachResponse]:
-        return coach_service.get_multi(
-            db, specialty=specialty, skip=skip, limit=limit
-        )
+        return coach_service.get_multi(db, specialty=specialty, skip=skip, limit=limit)
 
     @staticmethod
     @handle_controller_errors
@@ -172,7 +168,9 @@ class CoachController:
 
         coach = coach_service.get_by_id(db, booking.coach_id)
         if not coach or coach.user_id != current_user.id:
-            raise ForbiddenError("Solo el coach puede cambiar el estado de la reservación")
+            raise ForbiddenError(
+                "Solo el coach puede cambiar el estado de la reservación"
+            )
 
         updated = coach_service.update_booking_status(
             db,

@@ -74,7 +74,7 @@ class ExcersicePattern(str, Enum):
     MOVILIDAD_CORE = "Movilidad Core"
 
     ESTABILIZACION = "Estabilización"
-    
+
     AEROBICO = "Aeróbico"
     ANAEROBICO = "Anaeróbico"
     MIXTO = "Mixto"

@@ -5,10 +5,10 @@ from sqlalchemy.orm import Session
 from app.models.excersice.workout_place import WorkoutPlace
 
 
-@final 
-class WorkoutPlaceService: 
-    
-    def list_workout_place(self, db: Session)-> list[WorkoutPlace]:
+@final
+class WorkoutPlaceService:
+    def list_workout_place(self, db: Session) -> list[WorkoutPlace]:
         return db.query(WorkoutPlace).order_by(WorkoutPlace.id).all()
- 
-workout_place_service = WorkoutPlaceService()   
+
+
+workout_place_service = WorkoutPlaceService()

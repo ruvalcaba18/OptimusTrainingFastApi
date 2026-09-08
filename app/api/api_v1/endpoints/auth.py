@@ -13,19 +13,21 @@ from app.services import user_service
 
 router = APIRouter()
 
+
 @router.post("/login/access-token", response_model=Token)
 def login_access_token(
-    db: Session = Depends(get_db),
-    form_data: OAuth2PasswordRequestForm = Depends()
+    db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()
 ) -> Any:
     user = user_service.get_by_email(db, email=form_data.username)
-    
-    if not user or not security.verify_password(form_data.password, user.hashed_password):
+
+    if not user or not security.verify_password(
+        form_data.password, user.hashed_password
+    ):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect email or password"
+            detail="Incorrect email or password",
         )
-    
+
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     return {
         "access_token": security.create_access_token(
@@ -34,27 +36,17 @@ def login_access_token(
         "token_type": "bearer",
     }
 
-@router.post("/login", response_model=Token)
-def login(
-    db: Session = Depends(get_db),
-    user_in: UserLogin = Depends()
-) -> Any:
-                                                                   
-                                                                      
-    pass
 
 @router.post("/login", response_model=Token)
-def login(
-    user_in: UserLogin,
-    db: Session = Depends(get_db)
-) -> Any:
+
+def login(user_in: UserLogin, db: Session = Depends(get_db)) -> Any:
     user = user_service.get_by_email(db, email=user_in.email)
     if not user or not security.verify_password(user_in.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect email or password"
+            detail="Incorrect email or password",
         )
-    
+
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     return {
         "access_token": security.create_access_token(

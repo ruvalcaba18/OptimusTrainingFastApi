@@ -12,8 +12,8 @@ def seed_test_db(db):
     seeder = DatabaseSeeder(db, data_dir)
     seeder.seed_all(include_matrix=False)
 
-class TestExcersiceCatalog:
 
+class TestExcersiceCatalog:
     def test_list_levels(self, client):
         resp = client.get("/api/v1/excersices/levels")
         assert resp.status_code == status.HTTP_200_OK
@@ -75,7 +75,7 @@ class TestExcersiceCatalog:
         # Sentadilla Trasera (PIE001) has PAT002 (Hernia Discal) as FORBIDDEN.
         # Let's verify that PIE001 is present when not excluding conditions,
         # but is absent when excluding PAT002.
-        
+
         # 1. Without exclusions
         resp1 = client.get("/api/v1/excersices/")
         data1 = resp1.json()

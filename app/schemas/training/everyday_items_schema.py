@@ -3,7 +3,7 @@ from typing import final
 from pydantic import BaseModel, ConfigDict, field_validator
 
 
-@final 
+@final
 class EveryDayItemSchema(BaseModel):
     id: int
     code: str | None = None
@@ -11,7 +11,7 @@ class EveryDayItemSchema(BaseModel):
     description: str | None = None
     mapping: list[str] | None = None
 
-    @field_validator('mapping', mode='before')
+    @field_validator("mapping", mode="before")
     @classmethod
     def split_mapping(cls, v):
         if isinstance(v, str):
@@ -19,6 +19,7 @@ class EveryDayItemSchema(BaseModel):
         if v is None:
             return []
         return v
-    
-    model_config = ConfigDict(from_attributes=True, extra="ignore", str_strip_whitespace=True)
-    
+
+    model_config = ConfigDict(
+        from_attributes=True, extra="ignore", str_strip_whitespace=True
+    )

@@ -19,4 +19,3 @@ class UserUpdate(BaseModel):
     training_type: TrainingType | None = None
     gender: UserGender | None = None
     password: str | None = Field(None, min_length=8)
-

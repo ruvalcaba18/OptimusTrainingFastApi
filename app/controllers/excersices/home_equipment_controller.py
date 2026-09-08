@@ -14,4 +14,5 @@ class HomeEquipmentController:
     def list_home_equipment(db: Session) -> list[HomeEquipmentModel]:
         return home_equipment_service.list_home_equipment(db)
 
+
 home_equipment_controller = HomeEquipmentController()

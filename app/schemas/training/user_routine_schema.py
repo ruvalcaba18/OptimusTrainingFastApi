@@ -14,6 +14,7 @@ class UserRoutineUpdateSchema(BaseModel):
     method_name: str | None = None
     exercises: list[dict[str, Any]] | None = None
 
+
 @final
 class UserRoutineResponseSchema(BaseModel):
     id: int

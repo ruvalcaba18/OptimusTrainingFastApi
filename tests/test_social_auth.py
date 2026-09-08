@@ -30,7 +30,11 @@ class TestSocialAuthApple:
         ):
             resp = client.post(
                 "/api/v1/auth/social/apple",
-                json={"token": "fake.apple.token", "first_name": "Tim", "last_name": "Apple"},
+                json={
+                    "token": "fake.apple.token",
+                    "first_name": "Tim",
+                    "last_name": "Apple",
+                },
             )
         assert resp.status_code == status.HTTP_200_OK
         data = resp.json()
@@ -61,6 +65,7 @@ class TestSocialAuthApple:
 
     def test_apple_invalid_token_rejected(self, client):
         from fastapi import HTTPException
+
         with patch(
             "app.services.user.social_auth.apple_provider.AppleProvider.verify_token",
             new_callable=AsyncMock,
@@ -75,6 +80,7 @@ class TestSocialAuthApple:
     def test_apple_deactivated_user_rejected(self, client, db):
         from app.core.security import get_password_hash
         from app.models import User
+
         deactivated = User(
             email="deactivated.apple@test.com",
             hashed_password=get_password_hash("x" * 32),
@@ -94,7 +100,11 @@ class TestSocialAuthApple:
         with patch(
             "app.services.user.social_auth.apple_provider.AppleProvider.verify_token",
             new_callable=AsyncMock,
-            return_value={"email": "deactivated.apple@test.com", "name": None, "provider_id": "x"},
+            return_value={
+                "email": "deactivated.apple@test.com",
+                "name": None,
+                "provider_id": "x",
+            },
         ):
             resp = client.post(
                 "/api/v1/auth/social/apple",
@@ -121,7 +131,11 @@ class TestSocialAuthGoogle:
         with patch(
             "app.services.user.social_auth.google_provider.GoogleProvider.verify_token",
             new_callable=AsyncMock,
-            return_value={"email": test_user.email, "name": "Test", "provider_id": "g.sub"},
+            return_value={
+                "email": test_user.email,
+                "name": "Test",
+                "provider_id": "g.sub",
+            },
         ):
             resp = client.post(
                 "/api/v1/auth/social/google",
@@ -167,7 +181,11 @@ class TestSocialAuthFacebook:
         with patch(
             "app.services.user.social_auth.facebook_provider.FacebookProvider.verify_token",
             new_callable=AsyncMock,
-            return_value={"email": test_user.email, "name": "FB", "provider_id": "fb.id"},
+            return_value={
+                "email": test_user.email,
+                "name": "FB",
+                "provider_id": "fb.id",
+            },
         ):
             resp = client.post(
                 "/api/v1/auth/social/facebook",
@@ -193,6 +211,7 @@ class TestSocialAuthNameResolution:
             )
         assert resp.status_code == status.HTTP_200_OK
         from app.database import SessionLocal
+
         with SessionLocal() as s:
             pass
 

@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
@@ -18,6 +17,7 @@ from app.schemas.events import (
 
 router = APIRouter()
 
+
 @router.post(
     "/",
     response_model=EventResponse,
@@ -33,6 +33,7 @@ def create_event(
         db, event_in=event_in, current_user=current_user
     )
 
+
 @router.get(
     "/",
     response_model=list[EventResponse],
@@ -40,7 +41,9 @@ def create_event(
 )
 def list_events(
     event_type: str | None = Query(None, description="Filtrar por tipo de evento"),
-    event_status: str | None = Query(None, alias="status", description="Filtrar por estado"),
+    event_status: str | None = Query(
+        None, alias="status", description="Filtrar por estado"
+    ),
     skip: int = 0,
     limit: int = 50,
     db: Session = Depends(get_db),
@@ -49,6 +52,7 @@ def list_events(
     return event_controller.list_events(
         db, event_type=event_type, event_status=event_status, skip=skip, limit=limit
     )
+
 
 @router.get(
     "/{event_id}",
@@ -61,6 +65,7 @@ def get_event(
     current_user: User = Depends(get_current_user),
 ) -> EventResponse:
     return event_controller.get_event(db, event_id=event_id)
+
 
 @router.put(
     "/{event_id}",
@@ -77,6 +82,7 @@ def update_event(
         db, event_id=event_id, event_in=event_in, current_user=current_user
     )
 
+
 @router.delete(
     "/{event_id}",
     response_model=EventResponse,
@@ -91,6 +97,7 @@ def cancel_event(
         db, event_id=event_id, current_user=current_user
     )
 
+
 @router.post(
     "/participants",
     response_model=EventParticipantResponse,
@@ -102,9 +109,8 @@ def join_event(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> EventParticipantResponse:
-    return event_controller.join_event(
-        db, join_in=join_in, current_user=current_user
-    )
+    return event_controller.join_event(db, join_in=join_in, current_user=current_user)
+
 
 @router.delete(
     "/participants",
@@ -119,6 +125,7 @@ def leave_event(
     return event_controller.leave_event(
         db, leave_in=leave_in, current_user=current_user
     )
+
 
 @router.get(
     "/participants/list",

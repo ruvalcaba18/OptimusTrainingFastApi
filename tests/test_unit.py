@@ -48,9 +48,22 @@ class TestAppleProviderUnit:
         mock_keys = [{"kid": "key1", "kty": "RSA"}]
         mock_payload = {"sub": "apple.user.123"}
 
-        with patch.object(AppleProvider, "_fetch_apple_public_keys", new_callable=AsyncMock, return_value=mock_keys), \
-             patch("app.services.user.social_auth.apple_provider.jwt.get_unverified_header", return_value={"kid": "key1"}), \
-             patch("app.services.user.social_auth.apple_provider.jwt.decode", return_value=mock_payload):
+        with (
+            patch.object(
+                AppleProvider,
+                "_fetch_apple_public_keys",
+                new_callable=AsyncMock,
+                return_value=mock_keys,
+            ),
+            patch(
+                "app.services.user.social_auth.apple_provider.jwt.get_unverified_header",
+                return_value={"kid": "key1"},
+            ),
+            patch(
+                "app.services.user.social_auth.apple_provider.jwt.decode",
+                return_value=mock_payload,
+            ),
+        ):
             with pytest.raises(HTTPException) as exc_info:
                 await AppleProvider.verify_token("fake.token")
             assert exc_info.value.status_code == 401
@@ -58,7 +71,10 @@ class TestAppleProviderUnit:
     @pytest.mark.asyncio
     async def test_fetch_keys_http_error_raises_503(self):
         from app.services import AppleProvider
-        with patch("app.services.user.social_auth.apple_provider.httpx.AsyncClient") as mock_client:
+
+        with patch(
+            "app.services.user.social_auth.apple_provider.httpx.AsyncClient"
+        ) as mock_client:
             mock_client.return_value.__aenter__.side_effect = Exception("network error")
             with pytest.raises(HTTPException) as exc_info:
                 await AppleProvider._fetch_apple_public_keys()
@@ -69,8 +85,18 @@ class TestGoogleProviderUnit:
     @pytest.mark.asyncio
     async def test_wrong_audience_raises_401(self):
         from app.services import GoogleProvider
-        mock_payload = {"aud": "other-app-client-id", "email": "u@g.com", "email_verified": True}
-        with patch.object(GoogleProvider, "_call_tokeninfo", new_callable=AsyncMock, return_value=mock_payload):
+
+        mock_payload = {
+            "aud": "other-app-client-id",
+            "email": "u@g.com",
+            "email_verified": True,
+        }
+        with patch.object(
+            GoogleProvider,
+            "_call_tokeninfo",
+            new_callable=AsyncMock,
+            return_value=mock_payload,
+        ):
             with pytest.raises(HTTPException) as exc_info:
                 await GoogleProvider.verify_token("fake.google.token")
             assert exc_info.value.status_code == 401
@@ -79,12 +105,18 @@ class TestGoogleProviderUnit:
     async def test_unverified_email_raises_401(self):
         from app.core.config import settings
         from app.services import GoogleProvider
+
         mock_payload = {
             "aud": settings.GOOGLE_CLIENT_ID,
             "email": "unverified@g.com",
             "email_verified": False,
         }
-        with patch.object(GoogleProvider, "_call_tokeninfo", new_callable=AsyncMock, return_value=mock_payload):
+        with patch.object(
+            GoogleProvider,
+            "_call_tokeninfo",
+            new_callable=AsyncMock,
+            return_value=mock_payload,
+        ):
             with pytest.raises(HTTPException) as exc_info:
                 await GoogleProvider.verify_token("fake.google.token")
             assert exc_info.value.status_code == 401
@@ -92,9 +124,12 @@ class TestGoogleProviderUnit:
     @pytest.mark.asyncio
     async def test_tokeninfo_non_200_raises_401(self):
         from app.services import GoogleProvider
+
         mock_response = MagicMock()
         mock_response.status_code = 400
-        with patch("app.services.user.social_auth.google_provider.httpx.AsyncClient") as mock_client:
+        with patch(
+            "app.services.user.social_auth.google_provider.httpx.AsyncClient"
+        ) as mock_client:
             mock_instance = AsyncMock()
             mock_client.return_value.__aenter__.return_value = mock_instance
             mock_instance.get = AsyncMock(return_value=mock_response)
@@ -107,10 +142,13 @@ class TestFacebookProviderUnit:
     @pytest.mark.asyncio
     async def test_invalid_token_raises_401(self):
         from app.services import FacebookProvider
+
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {"data": {"is_valid": False, "app_id": "123"}}
-        with patch("app.services.user.social_auth.facebook_provider.httpx.AsyncClient") as mock_client:
+        with patch(
+            "app.services.user.social_auth.facebook_provider.httpx.AsyncClient"
+        ) as mock_client:
             mock_instance = AsyncMock()
             mock_client.return_value.__aenter__.return_value = mock_instance
             mock_instance.get = AsyncMock(return_value=mock_response)
@@ -121,10 +159,15 @@ class TestFacebookProviderUnit:
     @pytest.mark.asyncio
     async def test_wrong_app_id_raises_401(self):
         from app.services import FacebookProvider
+
         mock_response = MagicMock()
         mock_response.status_code = 200
-        mock_response.json.return_value = {"data": {"is_valid": True, "app_id": "wrong_app_id"}}
-        with patch("app.services.user.social_auth.facebook_provider.httpx.AsyncClient") as mock_client:
+        mock_response.json.return_value = {
+            "data": {"is_valid": True, "app_id": "wrong_app_id"}
+        }
+        with patch(
+            "app.services.user.social_auth.facebook_provider.httpx.AsyncClient"
+        ) as mock_client:
             mock_instance = AsyncMock()
             mock_client.return_value.__aenter__.return_value = mock_instance
             mock_instance.get = AsyncMock(return_value=mock_response)
@@ -135,10 +178,13 @@ class TestFacebookProviderUnit:
     @pytest.mark.asyncio
     async def test_missing_email_in_profile_raises_401(self):
         from app.services import FacebookProvider
+
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {"id": "fb123", "name": "No Email"}
-        with patch("app.services.user.social_auth.facebook_provider.httpx.AsyncClient") as mock_client:
+        with patch(
+            "app.services.user.social_auth.facebook_provider.httpx.AsyncClient"
+        ) as mock_client:
             mock_instance = AsyncMock()
             mock_client.return_value.__aenter__.return_value = mock_instance
             mock_instance.get = AsyncMock(return_value=mock_response)

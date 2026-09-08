@@ -32,7 +32,9 @@ class TestCreateUser:
         assert resp.status_code == status.HTTP_409_CONFLICT
 
     def test_create_invalid_email(self, client):
-        resp = client.post("/api/v1/users/", json={**USER_PAYLOAD, "email": "not-an-email"})
+        resp = client.post(
+            "/api/v1/users/", json={**USER_PAYLOAD, "email": "not-an-email"}
+        )
         assert resp.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
     def test_create_short_password(self, client):
@@ -87,6 +89,7 @@ class TestUpdateUser:
     def test_cannot_update_other_user(self, client, db, auth_headers):
         from app.core.security import get_password_hash
         from app.models import User
+
         other = User(
             email="other@optimus.com",
             hashed_password=get_password_hash("Passw0rd!"),
@@ -115,6 +118,7 @@ class TestDeleteUser:
     def test_delete_own_user(self, client, db):
         from app.core.security import get_password_hash
         from app.models import User
+
         user = User(
             email="todelete@optimus.com",
             hashed_password=get_password_hash("Passw0rd!"),
@@ -164,6 +168,7 @@ class TestProfilePicture:
     def test_upload_other_user_photo_forbidden(self, client, db, auth_headers):
         from app.core.security import get_password_hash
         from app.models import User
+
         other = User(
             email="photo_other@optimus.com",
             hashed_password=get_password_hash("Passw0rd!"),

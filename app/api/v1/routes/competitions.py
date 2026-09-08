@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
@@ -19,6 +18,7 @@ from app.schemas.competitions import (
 
 router = APIRouter()
 
+
 @router.post(
     "/",
     response_model=CompetitionResponse,
@@ -34,6 +34,7 @@ def create_competition(
         db, comp_in=comp_in, current_user=current_user
     )
 
+
 @router.get(
     "/",
     response_model=list[CompetitionResponse],
@@ -41,7 +42,9 @@ def create_competition(
 )
 def list_competitions(
     sport_type: str | None = Query(None, description="Filtrar por tipo de deporte"),
-    comp_status: str | None = Query(None, alias="status", description="Filtrar por estado"),
+    comp_status: str | None = Query(
+        None, alias="status", description="Filtrar por estado"
+    ),
     skip: int = 0,
     limit: int = 50,
     db: Session = Depends(get_db),
@@ -50,6 +53,7 @@ def list_competitions(
     return competition_controller.list_competitions(
         db, sport_type=sport_type, comp_status=comp_status, skip=skip, limit=limit
     )
+
 
 @router.get(
     "/{competition_id}",
@@ -62,6 +66,7 @@ def get_competition(
     current_user: User = Depends(get_current_user),
 ) -> CompetitionResponse:
     return competition_controller.get_competition(db, comp_id=competition_id)
+
 
 @router.put(
     "/{competition_id}",
@@ -78,6 +83,7 @@ def update_competition(
         db, comp_id=competition_id, comp_in=comp_in, current_user=current_user
     )
 
+
 @router.post(
     "/participants",
     response_model=CompetitionParticipantResponse,
@@ -92,6 +98,7 @@ def join_competition(
     return competition_controller.join_competition(
         db, join_in=join_in, current_user=current_user
     )
+
 
 @router.put(
     "/scores",
@@ -108,6 +115,7 @@ async def update_score(
     )
     await cache_delete(make_key("ranking", score_in.competition_id))
     return result
+
 
 @router.get(
     "/ranking",

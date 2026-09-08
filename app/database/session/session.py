@@ -11,11 +11,13 @@ engine_kwargs = {
 }
 
 if not _is_sqlite:
-    engine_kwargs.update({
-        "pool_size": 20,
-        "max_overflow": 40,
-        "pool_timeout": 30,
-    })
+    engine_kwargs.update(
+        {
+            "pool_size": 20,
+            "max_overflow": 40,
+            "pool_timeout": 30,
+        }
+    )
 else:
     engine_kwargs["connect_args"] = {"check_same_thread": False}
 

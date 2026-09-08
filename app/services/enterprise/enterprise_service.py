@@ -18,8 +18,6 @@ from app.schemas.enterprise import (
 
 
 class EnterpriseService:
-
-                                                                         
     @staticmethod
     def create_enterprise(db: Session, enterprise_in: EnterpriseCreate) -> Enterprise:
         db_enterprise = Enterprise(
@@ -42,12 +40,11 @@ class EnterpriseService:
     ) -> list[Enterprise]:
         return db.query(Enterprise).offset(skip).limit(limit).all()
 
-                                                                         
     @staticmethod
     def _generate_unique_code(length: int = 8) -> str:
         chars = string.ascii_uppercase + string.digits
         raw = "".join(secrets.choice(chars) for _ in range(length))
-                                            
+
         return f"{raw[:4]}-{raw[4:]}"
 
     @staticmethod
@@ -61,7 +58,6 @@ class EnterpriseService:
         codes: list[EnterpriseCode] = []
 
         for _ in range(quantity):
-                                                         
             for _attempt in range(5):
                 code_str = EnterpriseService._generate_unique_code()
                 exists = (
@@ -72,7 +68,6 @@ class EnterpriseService:
                 if not exists:
                     break
             else:
-                                                                   
                 code_str = EnterpriseService._generate_unique_code(length=12)
 
             db_code = EnterpriseCode(
@@ -122,7 +117,6 @@ class EnterpriseService:
         db.refresh(db_code)
         return db_code
 
-                                                                        
     @staticmethod
     def get_membership(
         db: Session, user_id: int, enterprise_id: int
@@ -137,12 +131,12 @@ class EnterpriseService:
         )
 
     @staticmethod
-    def get_user_memberships(
-        db: Session, user_id: int
-    ) -> list[EnterpriseMember]:
+    def get_user_memberships(db: Session, user_id: int) -> list[EnterpriseMember]:
         return (
             db.query(EnterpriseMember)
-            .filter(EnterpriseMember.user_id == user_id, EnterpriseMember.is_active == True)
+            .filter(
+                EnterpriseMember.user_id == user_id, EnterpriseMember.is_active == True
+            )
             .all()
         )
 
@@ -174,7 +168,6 @@ class EnterpriseService:
             .all()
         )
 
-                                                                         
     @staticmethod
     def create_active_break(
         db: Session, break_in: ActiveBreakCreate
@@ -194,12 +187,12 @@ class EnterpriseService:
         return db_break
 
     @staticmethod
-    def get_active_break_by_id(
-        db: Session, break_id: int
-    ) -> ActiveBreakSession | None:
+    def get_active_break_by_id(db: Session, break_id: int) -> ActiveBreakSession | None:
         return (
             db.query(ActiveBreakSession)
-            .filter(ActiveBreakSession.id == break_id, ActiveBreakSession.is_active == True)
+            .filter(
+                ActiveBreakSession.id == break_id, ActiveBreakSession.is_active == True
+            )
             .first()
         )
 
@@ -211,14 +204,20 @@ class EnterpriseService:
         skip: int = 0,
         limit: int = 50,
     ) -> list[ActiveBreakSession]:
-        query = db.query(ActiveBreakSession).filter(ActiveBreakSession.is_active == True)
+        query = db.query(ActiveBreakSession).filter(
+            ActiveBreakSession.is_active == True
+        )
         if duration:
             query = query.filter(ActiveBreakSession.duration_minutes == duration)
         if category:
             query = query.filter(ActiveBreakSession.category == category)
-        return query.order_by(ActiveBreakSession.created_at.desc()).offset(skip).limit(limit).all()
+        return (
+            query.order_by(ActiveBreakSession.created_at.desc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
 
-                                                                        
     @staticmethod
     def start_break_log(
         db: Session,
@@ -257,16 +256,11 @@ class EnterpriseService:
 
     @staticmethod
     def get_user_break_stats(db: Session, user_id: int) -> dict:
-        logs = (
-            db.query(ActiveBreakLog)
-            .filter(ActiveBreakLog.user_id == user_id)
-            .all()
-        )
+        logs = db.query(ActiveBreakLog).filter(ActiveBreakLog.user_id == user_id).all()
 
         total_started = len(logs)
         total_completed = sum(1 for l in logs if l.completed)
 
-                                                     
         total_minutes = 0
         by_category: dict[str, int] = {}
 

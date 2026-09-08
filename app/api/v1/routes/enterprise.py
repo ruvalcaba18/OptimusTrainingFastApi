@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
@@ -208,6 +207,4 @@ def get_my_stats(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> ActiveBreakStatsResponse:
-    return enterprise_controller.get_my_stats(
-        db, current_user=current_user
-    )
+    return enterprise_controller.get_my_stats(db, current_user=current_user)

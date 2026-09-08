@@ -14,4 +14,5 @@ class OutdoorEquipmentController:
     def list_outdoor_equipment(db: Session) -> list[OutdoorEquipmentModel]:
         return outdoor_equipment_service.list_outdoor_equipment(db)
 
+
 outdoor_equipment_controller = OutdoorEquipmentController()

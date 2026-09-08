@@ -20,13 +20,14 @@ from app.services import user_service
 
 @final
 class AuthController:
-
     @staticmethod
     @handle_controller_errors
     def login(db: Session, user_in: UserLogin) -> Token:
         user = user_service.get_by_email(db, email=user_in.email)
 
-        if not user or not security.verify_password(user_in.password, user.hashed_password):
+        if not user or not security.verify_password(
+            user_in.password, user.hashed_password
+        ):
             raise InvalidCredentialsError()
         if not user.is_active:
             raise InactiveAccountError()
@@ -48,7 +49,9 @@ class AuthController:
     @handle_controller_errors
     def refresh_access_token(db: Session, refresh_token: str) -> Token:
         try:
-            payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+            payload = jwt.decode(
+                refresh_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+            )
             if payload.get("type") != "refresh":
                 raise JWTError("Invalid token type")
 
@@ -70,7 +73,9 @@ class AuthController:
 
         return Token(
             access_token=security.create_access_token(user.email, access_token_expires),
-            refresh_token=security.create_refresh_token(user.email, refresh_token_expires),
+            refresh_token=security.create_refresh_token(
+                user.email, refresh_token_expires
+            ),
             token_type="bearer",
         )
 
@@ -78,12 +83,15 @@ class AuthController:
     @handle_controller_errors
     def recover_password(db: Session, email: str) -> dict:
         from app.services import email_service
+
         user = user_service.get_by_email(db, email=email)
         if user:
             token = security.create_password_reset_token(email)
             email_service.send_password_reset_email(email, token)
 
-        return {"message": "Si el correo está registrado, se ha enviado un enlace de recuperación."}
+        return {
+            "message": "Si el correo está registrado, se ha enviado un enlace de recuperación."
+        }
 
     @staticmethod
     @handle_controller_errors

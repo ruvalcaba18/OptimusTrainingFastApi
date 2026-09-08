@@ -15,4 +15,6 @@ class Equipment(Base):
     name_es = Column(String(100), nullable=True)
     image_url = Column(String(500), nullable=True)
 
-    excersices_association = relationship("ExcersiceEquipment", back_populates="equipment", cascade="all, delete-orphan")
+    excersices_association = relationship(
+        "ExcersiceEquipment", back_populates="equipment", cascade="all, delete-orphan"
+    )

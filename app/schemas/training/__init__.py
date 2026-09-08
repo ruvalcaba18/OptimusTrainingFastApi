@@ -67,4 +67,3 @@ __all__ = [
     "WorkoutPlacementSchema",
     "WorkoutStatus",
 ]
-

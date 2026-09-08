@@ -29,10 +29,11 @@ class ValidateCodeRequest(BaseModel):
 
 class CodeGenerateRequest(BaseModel):
     enterprise_id: int = Field(..., description="ID de la empresa")
-    quantity: int = Field(..., ge=1, le=500, description="Cantidad de códigos a generar")
+    quantity: int = Field(
+        ..., ge=1, le=500, description="Cantidad de códigos a generar"
+    )
     expire_in_days: int = Field(
-        default=7, ge=1, le=365,
-        description="Días hasta que los códigos expiren"
+        default=7, ge=1, le=365, description="Días hasta que los códigos expiren"
     )
 
 

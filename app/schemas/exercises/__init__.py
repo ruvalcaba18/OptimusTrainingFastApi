@@ -7,5 +7,5 @@ __all__ = [
     "BodyPartResponse",
     "EquipmentCatalogResponse",
     "ExerciseTypeResponse",
-    "MuscleResponse"
+    "MuscleResponse",
 ]

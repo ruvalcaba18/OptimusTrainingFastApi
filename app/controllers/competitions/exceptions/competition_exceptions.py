@@ -11,12 +11,16 @@ class CompetitionNotFoundError(NotFoundError):
 
 
 class CompetitionFullError(BadRequestError):
-    def __init__(self, message: str = "La competencia ha alcanzado el máximo de participantes"):
+    def __init__(
+        self, message: str = "La competencia ha alcanzado el máximo de participantes"
+    ):
         super().__init__(message=message)
 
 
 class CompetitionCancelledError(BadRequestError):
-    def __init__(self, message: str = "No puedes inscribirte en una competencia cancelada"):
+    def __init__(
+        self, message: str = "No puedes inscribirte en una competencia cancelada"
+    ):
         super().__init__(message=message)
 
 

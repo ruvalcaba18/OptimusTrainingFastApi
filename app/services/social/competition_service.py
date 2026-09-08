@@ -1,4 +1,3 @@
-
 from sqlalchemy import func as sa_func
 from sqlalchemy.orm import Session
 
@@ -7,11 +6,8 @@ from app.schemas.competitions import CompetitionCreate, CompetitionUpdate
 
 
 class CompetitionService:
-                                                                
     @staticmethod
-    def create(
-        db: Session, creator_id: int, comp_in: CompetitionCreate
-    ) -> Competition:
+    def create(db: Session, creator_id: int, comp_in: CompetitionCreate) -> Competition:
         db_comp = Competition(
             creator_id=creator_id,
             title=comp_in.title,
@@ -84,7 +80,6 @@ class CompetitionService:
         db.refresh(db_obj)
         return db_obj
 
-                                                                       
     @staticmethod
     def get_participant(
         db: Session, comp_id: int, user_id: int
@@ -160,9 +155,7 @@ class CompetitionService:
         db.flush()
 
     @staticmethod
-    def get_ranking(
-        db: Session, comp_id: int
-    ) -> list[CompetitionParticipant]:
+    def get_ranking(db: Session, comp_id: int) -> list[CompetitionParticipant]:
         return (
             db.query(CompetitionParticipant)
             .filter(CompetitionParticipant.competition_id == comp_id)

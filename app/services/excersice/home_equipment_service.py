@@ -10,4 +10,5 @@ class HomeEquipmentService:
     def list_home_equipment(self, db: Session) -> list[HomeEquipmentModel]:
         return db.query(HomeEquipmentModel).order_by(HomeEquipmentModel.id).all()
 
+
 home_equipment_service = HomeEquipmentService()

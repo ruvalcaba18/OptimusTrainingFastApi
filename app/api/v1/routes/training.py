@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
@@ -70,7 +69,9 @@ def add_workout_to_plan(
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
 ) -> DailyWorkoutResponse:
-    return training_controller.add_workout_to_plan(db, plan_id, workout_in, current_user)
+    return training_controller.add_workout_to_plan(
+        db, plan_id, workout_in, current_user
+    )
 
 
 @router.put(

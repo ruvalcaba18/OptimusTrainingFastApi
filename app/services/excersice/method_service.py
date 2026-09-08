@@ -1,4 +1,3 @@
-
 from sqlalchemy.orm import Session
 
 from app.models import Method
@@ -10,5 +9,6 @@ class MethodService:
         if category:
             query = query.filter(Method.category == category)
         return query.order_by(Method.code).all()
+
 
 method_service = MethodService()

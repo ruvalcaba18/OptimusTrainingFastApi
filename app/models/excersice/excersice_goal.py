@@ -9,5 +9,9 @@ from app.database import Base
 class ExcersiceGoal(Base):
     __tablename__ = "excersice_goal"
 
-    excersice_id = Column(Integer, ForeignKey("excersices.id", ondelete="CASCADE"), primary_key=True)
-    goal_id = Column(Integer, ForeignKey("goals.id", ondelete="CASCADE"), primary_key=True)
+    excersice_id = Column(
+        Integer, ForeignKey("excersices.id", ondelete="CASCADE"), primary_key=True
+    )
+    goal_id = Column(
+        Integer, ForeignKey("goals.id", ondelete="CASCADE"), primary_key=True
+    )

@@ -13,7 +13,9 @@ class PaginatedResponse(BaseModel, Generic[T]):
     has_more: bool = False
 
     @classmethod
-    def from_items(cls, items: list[T], total: int, skip: int, limit: int) -> "PaginatedResponse[T]":
+    def from_items(
+        cls, items: list[T], total: int, skip: int, limit: int
+    ) -> "PaginatedResponse[T]":
         return cls(
             items=items,
             total=total,

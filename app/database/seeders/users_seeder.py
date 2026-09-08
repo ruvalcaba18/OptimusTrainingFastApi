@@ -78,13 +78,13 @@ class UsersSeeder(BaseSeeder):
         goals_map: dict,
         levels_map: dict,
     ) -> None:
-        already_exists = (
-            self.session.query(User).filter_by(email=data["email"]).first()
-        )
+        already_exists = self.session.query(User).filter_by(email=data["email"]).first()
         if already_exists:
             return
 
-        password = _ADMIN_PASSWORD if data["password_key"] == "admin" else _APPLE_PASSWORD
+        password = (
+            _ADMIN_PASSWORD if data["password_key"] == "admin" else _APPLE_PASSWORD
+        )
 
         user = User(
             email=data["email"],

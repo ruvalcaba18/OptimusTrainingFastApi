@@ -1,4 +1,3 @@
-
 from sqlalchemy.orm import Session
 
 from app.core.error_handlers import handle_controller_errors
@@ -7,7 +6,6 @@ from app.services import goal_service
 
 
 class GoalController:
-
     @staticmethod
     @handle_controller_errors
     def list_goals(db: Session) -> list[Goal]:

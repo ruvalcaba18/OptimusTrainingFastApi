@@ -10,4 +10,5 @@ class OutdoorEquipmentService:
     def list_outdoor_equipment(self, db: Session) -> list[OutdoorEquipmentModel]:
         return db.query(OutdoorEquipmentModel).order_by(OutdoorEquipmentModel.id).all()
 
+
 outdoor_equipment_service = OutdoorEquipmentService()

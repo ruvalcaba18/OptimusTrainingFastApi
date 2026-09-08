@@ -1,7 +1,13 @@
 class PhoneValidator:
     _COUNTRY_DIGITS = {
-        "1": 10, "34": 9, "51": 9, "52": 10,
-        "54": 10, "55": 11, "56": 9, "57": 10,
+        "1": 10,
+        "34": 9,
+        "51": 9,
+        "52": 10,
+        "54": 10,
+        "55": 11,
+        "56": 9,
+        "57": 10,
     }
 
     @classmethod
@@ -26,7 +32,7 @@ class PhoneValidator:
     @classmethod
     def _check_country_length(cls, raw: str):
         code = raw[:2] if raw[:2] in cls._COUNTRY_DIGITS else raw[:1]
-        
+
         expected = cls._COUNTRY_DIGITS.get(code)
         if expected and len(raw) - len(code) != expected:
             raise ValueError(f"Se esperan {expected} dígitos para +{code}")

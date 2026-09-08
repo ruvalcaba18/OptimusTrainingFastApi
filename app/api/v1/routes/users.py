@@ -29,7 +29,12 @@ def read_users(
     return user_controller.list_users(db, skip=skip, limit=limit)
 
 
-@router.post("/", response_model=UserRegistrationResponse, status_code=status.HTTP_201_CREATED, summary="Crear usuario")
+@router.post(
+    "/",
+    response_model=UserRegistrationResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Crear usuario",
+)
 def create_user(
     user_in: UserCreate,
     db: Session = Depends(get_db),
@@ -38,7 +43,7 @@ def create_user(
     try:
         result = user_controller.create_user(db, user_in=user_in)
         logger.info(f"User registered successfully: {user_in.email}")
-        
+
         return result
     except Exception as e:
         logger.error(f"Error registering user {user_in.email}: {e!s}")
@@ -52,9 +57,13 @@ def read_user_me(
     return current_user
 
 
-@router.get("/plans/tiers", summary="Obtener los tipos de planes/suscripciones de usuario disponibles")
+@router.get(
+    "/plans/tiers",
+    summary="Obtener los tipos de planes/suscripciones de usuario disponibles",
+)
 def get_user_tiers() -> list[str]:
     from app.models.Enums.UserTier import UserTier
+
     return [tier.value for tier in UserTier]
 
 
@@ -74,7 +83,9 @@ def update_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> UserResponse:
-    return user_controller.update_user(db, user_id=user_id, user_in=user_in, current_user=current_user)
+    return user_controller.update_user(
+        db, user_id=user_id, user_in=user_in, current_user=current_user
+    )
 
 
 @router.post(
@@ -85,7 +96,9 @@ def update_user(
 )
 async def upload_profile_picture(
     user_id: int,
-    file: UploadFile = File(..., description="Imagen de perfil (JPG, PNG o WEBP, máx 5 MB)"),
+    file: UploadFile = File(
+        ..., description="Imagen de perfil (JPG, PNG o WEBP, máx 5 MB)"
+    ),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> UserResponse:
@@ -103,12 +116,16 @@ def delete_user(
     return user_controller.delete_user(db, user_id=user_id, current_user=current_user)
 
 
-@router.put("/me/profile", response_model=UserResponse, summary="Actualizar perfil de entrenamiento, equipamiento y condiciones médicas")
+@router.put(
+    "/me/profile",
+    response_model=UserResponse,
+    summary="Actualizar perfil de entrenamiento, equipamiento y condiciones médicas",
+)
 def update_user_profile(
     profile_in: UserTrainingProfileUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> UserResponse:
-    return user_controller.update_training_profile(db, profile_in=profile_in, current_user=current_user)
-
-
+    return user_controller.update_training_profile(
+        db, profile_in=profile_in, current_user=current_user
+    )

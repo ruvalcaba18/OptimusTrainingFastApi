@@ -11,17 +11,22 @@ from app.core.cache.service import CacheTTL, cache_service
 async def cache_get(key: str):
     return await cache_service.get(key)
 
+
 async def cache_set(key: str, value: Any, ttl: int):
     return await cache_service.set(key, value, ttl)
+
 
 async def cache_delete(key: str):
     return await cache_service.delete(key)
 
+
 async def cache_delete_pattern(pattern: str):
     return await cache_service.delete_pattern(pattern)
 
+
 def make_key(*parts):
     return cache_service.make_key(*parts)
+
 
 __all__ = [
     "CacheError",
@@ -33,5 +38,5 @@ __all__ = [
     "cache_get",
     "cache_service",
     "cache_set",
-    "make_key"
+    "make_key",
 ]

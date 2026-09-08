@@ -14,4 +14,5 @@ class GymEquipmentController:
     def list_gym_equipment(db: Session) -> list[GymEquipmentModel]:
         return gym_equipment_service.list_gym_equipment(db)
 
+
 gym_equipment_controller = GymEquipmentController()

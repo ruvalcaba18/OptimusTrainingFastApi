@@ -13,73 +13,79 @@ def seed_test_db(db):
     seeder = DatabaseSeeder(db, data_dir)
     seeder.seed_all(include_matrix=True)
 
+
 def test_generate_routine_without_profile(client, auth_headers):
     resp = client.post("/api/v1/routines/generate", headers=auth_headers)
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
     assert "perfil" in resp.json()["error"]["message"].lower()
 
+
 def test_generate_routine_with_basic_profile(client, db, test_user, auth_headers):
     goal = db.query(Goal).filter(Goal.code == "PG").first()
     level = db.query(Level).filter(Level.code == "NIV1").first()
-    
+
     test_user.goal_id = goal.id
     test_user.level_id = level.id
     test_user.age = 25
     test_user.weight = 70.0
     test_user.height = 170.0
     db.add(test_user)
-    
+
     mancuernas = db.query(Equipment).filter(Equipment.name == "Mancuernas").first()
     if mancuernas:
         test_user.equipments.append(mancuernas)
     barra = db.query(Equipment).filter(Equipment.name == "Barra").first()
     if barra:
         test_user.equipments.append(barra)
-    
+
     db.commit()
-    
+
     resp = client.post("/api/v1/routines/generate", headers=auth_headers)
     assert resp.status_code == status.HTTP_200_OK
     data = resp.json()
     assert data["goal"] == goal.name
     assert data["level"] == level.name
-    assert data["sets"] == 3 
+    assert data["sets"] == 3
     assert data["reps"] == "12-15 reps"
     assert len(data["exercises"]) > 0
 
     for ex in data["exercises"]:
         assert ex["complexity"] in ["Baja", "Baja-Media", "Media", "Media-Alta", "Alta"]
 
-def test_generate_routine_excludes_forbidden_conditions(client, db, test_user, auth_headers):
+
+def test_generate_routine_excludes_forbidden_conditions(
+    client, db, test_user, auth_headers
+):
     goal = db.query(Goal).filter(Goal.code == "PG").first()
     level = db.query(Level).filter(Level.code == "NIV1").first()
-    
+
     test_user.goal_id = goal.id
     test_user.level_id = level.id
     test_user.age = 25
     test_user.weight = 70.0
     test_user.height = 170.0
     db.add(test_user)
-    
 
     hernia = db.query(Condition).filter(Condition.code == "PAT002").first()
     if hernia:
         test_user.pathologies.append(hernia)
-        
 
     all_equip = db.query(Equipment).all()
     test_user.equipments.extend(all_equip)
-    
+
     db.commit()
-    
+
     resp = client.post("/api/v1/routines/generate", headers=auth_headers)
     assert resp.status_code == status.HTTP_200_OK
     data = resp.json()
-    
+
     exercises = data["exercises"]
     assert not any(ex["code"] == "PIE001" for ex in exercises)
 
-def test_update_week_routine_forbidden_for_basic_user(client, db, test_user, auth_headers):
+
+def test_update_week_routine_forbidden_for_basic_user(
+    client, db, test_user, auth_headers
+):
     goal = db.query(Goal).filter(Goal.code == "PG").first()
     level = db.query(Level).filter(Level.code == "NIV1").first()
     test_user.goal_id = goal.id
@@ -91,7 +97,10 @@ def test_update_week_routine_forbidden_for_basic_user(client, db, test_user, aut
     assert resp.status_code == status.HTTP_403_FORBIDDEN
     assert "Premium" in resp.json()["error"]["message"]
 
-def test_update_week_routine_success_for_premium_user(client, db, test_user, auth_headers):
+
+def test_update_week_routine_success_for_premium_user(
+    client, db, test_user, auth_headers
+):
     goal = db.query(Goal).filter(Goal.code == "PG").first()
     level = db.query(Level).filter(Level.code == "NIV1").first()
     test_user.goal_id = goal.id
@@ -109,4 +118,3 @@ def test_update_week_routine_success_for_premium_user(client, db, test_user, aut
     for day_res in data["routines"]:
         assert day_res["week"] == 2
         assert len(day_res["routine"]["exercises"]) > 0
-

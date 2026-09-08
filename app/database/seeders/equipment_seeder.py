@@ -17,7 +17,11 @@ class EquipmentSeeder(BaseSeeder):
         with open(file_path, "r", encoding="utf-8") as f:
             for line in f:
                 line_str = line.strip()
-                if not line_str or "\t" not in line_str or line_str.startswith("code\t"):
+                if (
+                    not line_str
+                    or "\t" not in line_str
+                    or line_str.startswith("code\t")
+                ):
                     continue
                 cols = [c.strip() for c in line_str.split("\t")]
                 name_en = cols[1]

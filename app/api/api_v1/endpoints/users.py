@@ -11,6 +11,7 @@ from app.services import user_service
 
 router = APIRouter()
 
+
 @router.get("/", response_model=list[UserResponse])
 def read_users(
     db: Session = Depends(get_db),
@@ -21,11 +22,9 @@ def read_users(
     users = user_service.get_multi(db, skip=skip, limit=limit)
     return users
 
+
 @router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-def create_user(
-    user_in: UserCreate,
-    db: Session = Depends(get_db)
-) -> Any:
+def create_user(user_in: UserCreate, db: Session = Depends(get_db)) -> Any:
     user = user_service.get_by_email(db, email=user_in.email)
     if user:
         raise HTTPException(
@@ -34,11 +33,13 @@ def create_user(
         )
     return user_service.create(db, user_in=user_in)
 
+
 @router.get("/me", response_model=UserResponse)
 def read_user_me(
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:
     return current_user
+
 
 @router.get("/{user_id}", response_model=UserResponse)
 def read_user_by_id(
@@ -50,6 +51,7 @@ def read_user_by_id(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
 
 @router.put("/{user_id}", response_model=UserResponse)
 def update_user(
@@ -63,6 +65,7 @@ def update_user(
         raise HTTPException(status_code=404, detail="User not found")
     user = user_service.update(db, db_obj=user, user_in=user_in)
     return user
+
 
 @router.delete("/{user_id}", response_model=UserResponse)
 def delete_user(

@@ -8,5 +8,7 @@ class SessionDurationSchema(BaseModel):
     code: str
     name: str
     description: str | None = None
-    
-    model_config = ConfigDict(from_attributes=True,extra='forbid', str_strip_whitespace=True)
+
+    model_config = ConfigDict(
+        from_attributes=True, extra="forbid", str_strip_whitespace=True
+    )

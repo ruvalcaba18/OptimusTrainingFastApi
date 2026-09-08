@@ -56,7 +56,9 @@ class ApplicationBuilder:
             if await cache_service.health_check():
                 logger.info("Redis connected: %s", settings.REDIS_URL)
         except Exception as exc:
-            logger.warning("Redis not available — caching/blacklisting disabled: %s", exc)
+            logger.warning(
+                "Redis not available — caching/blacklisting disabled: %s", exc
+            )
 
     @classmethod
     @asynccontextmanager
@@ -67,17 +69,17 @@ class ApplicationBuilder:
 
         # Configurar bus de eventos y suscriptores
         from app.events import register_event_handlers
+
         register_event_handlers()
 
         yield
         await cache_service.close()
         logger.info("App shutdown complete.")
 
-
     @classmethod
     def build(cls) -> FastAPI:
         setup_logging()
-        
+
         app = FastAPI(
             title=settings.PROJECT_NAME,
             description="API de deportes y entrenamiento — escalable a 1 millón de usuarios.",
@@ -87,26 +89,26 @@ class ApplicationBuilder:
             redoc_url=f"{settings.API_V1_STR}/redoc",
             lifespan=cls.lifespan,
         )
-        
+
         # Configure Rate Limiter
         app.state.limiter = limiter
         app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-        
+
         # Register Exception Handlers
         register_exception_handlers(app)
-        
+
         # Register Middlewares
         MiddlewareConfigurator.register(app)
-        
+
         # Mount Uploads Static Files
         uploads_dir = Path(__file__).parent.parent / "uploads"
         uploads_dir.mkdir(exist_ok=True)
         app.mount("/uploads", StaticFiles(directory=str(uploads_dir)), name="uploads")
-        
+
         # Include API Routers
         app.include_router(api_router, prefix=settings.API_V1_STR)
-        
+
         # Include Health/Root Router
         app.include_router(health_router)
-        
+
         return app

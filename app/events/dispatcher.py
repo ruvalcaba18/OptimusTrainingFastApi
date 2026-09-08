@@ -13,7 +13,11 @@ class EventDispatcher:
 
         if handler not in self._subscribers[event_type]:
             self._subscribers[event_type].append(handler)
-            logger.info("Subscribed handler '%s' to event '%s'", handler.__name__, event_type.__name__)
+            logger.info(
+                "Subscribed handler '%s' to event '%s'",
+                handler.__name__,
+                event_type.__name__,
+            )
 
     def dispatch(self, event: object, db_session=None) -> None:
         event_type = type(event)
@@ -23,7 +27,9 @@ class EventDispatcher:
             logger.debug("No handlers registered for event: %s", event_type.__name__)
             return
 
-        logger.info("Dispatching event: %s to %d handler(s)", event_type.__name__, len(handlers))
+        logger.info(
+            "Dispatching event: %s to %d handler(s)", event_type.__name__, len(handlers)
+        )
 
         for handler in handlers:
             try:
@@ -37,7 +43,7 @@ class EventDispatcher:
                     getattr(handler, "__name__", str(handler)),
                     event_type.__name__,
                     exc,
-                    exc_info=True
+                    exc_info=True,
                 )
 
     def clear(self) -> None:

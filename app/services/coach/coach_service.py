@@ -1,4 +1,3 @@
-
 from sqlalchemy import func as sa_func
 from sqlalchemy.orm import Session
 
@@ -7,22 +6,13 @@ from app.schemas.coaches import BookingCreate, CoachCreate, CoachUpdate
 
 
 class CoachService:
-                                                          
     @staticmethod
     def get_by_user_id(db: Session, user_id: int) -> CoachProfile | None:
-        return (
-            db.query(CoachProfile)
-            .filter(CoachProfile.user_id == user_id)
-            .first()
-        )
+        return db.query(CoachProfile).filter(CoachProfile.user_id == user_id).first()
 
     @staticmethod
     def get_by_id(db: Session, coach_id: int) -> CoachProfile | None:
-        return (
-            db.query(CoachProfile)
-            .filter(CoachProfile.id == coach_id)
-            .first()
-        )
+        return db.query(CoachProfile).filter(CoachProfile.id == coach_id).first()
 
     @staticmethod
     def get_multi(
@@ -90,7 +80,6 @@ class CoachService:
         db.refresh(db_obj)
         return db_obj
 
-                                                                        
     @staticmethod
     def get_nearby(
         db: Session,
@@ -106,16 +95,14 @@ class CoachService:
         dlat = sa_func.radians(CoachProfile.latitude - lat)
         dlng = sa_func.radians(CoachProfile.longitude - lng)
 
-        a = (
-            sa_func.sin(dlat / 2) * sa_func.sin(dlat / 2)
-            + sa_func.cos(sa_func.radians(lat))
-            * sa_func.cos(sa_func.radians(CoachProfile.latitude))
-            * sa_func.sin(dlng / 2)
-            * sa_func.sin(dlng / 2)
-        )
+        a = sa_func.sin(dlat / 2) * sa_func.sin(dlat / 2) + sa_func.cos(
+            sa_func.radians(lat)
+        ) * sa_func.cos(sa_func.radians(CoachProfile.latitude)) * sa_func.sin(
+            dlng / 2
+        ) * sa_func.sin(dlng / 2)
 
-        distance = earth_radius_km * 2 * sa_func.atan2(
-            sa_func.sqrt(a), sa_func.sqrt(1 - a)
+        distance = (
+            earth_radius_km * 2 * sa_func.atan2(sa_func.sqrt(a), sa_func.sqrt(1 - a))
         )
 
         distance_label = distance.label("distance_km")
@@ -130,14 +117,8 @@ class CoachService:
         if specialty:
             query = query.filter(CoachProfile.specialty == specialty)
 
-        return (
-            query.order_by(distance_label)
-            .offset(skip)
-            .limit(limit)
-            .all()
-        )
+        return query.order_by(distance_label).offset(skip).limit(limit).all()
 
-                                                                       
     @staticmethod
     def get_by_id_for_update(db: Session, coach_id: int) -> CoachProfile | None:
         return (
@@ -165,7 +146,7 @@ class CoachService:
         athlete_id: int,
         booking_in: BookingCreate,
     ) -> CoachBooking:
-                                                               
+
         hours = booking_in.duration_minutes / 60.0
         total_price = round(coach.hourly_rate * hours, 2)
 
@@ -174,7 +155,9 @@ class CoachService:
             athlete_id=athlete_id,
             scheduled_date=booking_in.scheduled_date,
             duration_minutes=booking_in.duration_minutes,
-            session_type=booking_in.session_type.value if booking_in.session_type else None,
+            session_type=booking_in.session_type.value
+            if booking_in.session_type
+            else None,
             location_name=booking_in.location_name,
             latitude=booking_in.latitude,
             longitude=booking_in.longitude,
@@ -190,11 +173,7 @@ class CoachService:
 
     @staticmethod
     def get_booking_by_id(db: Session, booking_id: int) -> CoachBooking | None:
-        return (
-            db.query(CoachBooking)
-            .filter(CoachBooking.id == booking_id)
-            .first()
-        )
+        return db.query(CoachBooking).filter(CoachBooking.id == booking_id).first()
 
     @staticmethod
     def get_bookings_by_athlete(
@@ -237,7 +216,6 @@ class CoachService:
         db.refresh(booking)
         return booking
 
-                                                                       
     @staticmethod
     def add_review(
         db: Session,
